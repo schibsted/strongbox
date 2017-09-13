@@ -1,0 +1,155 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 Schibsted Products & Technology AS
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import static java.lang.System.getenv
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        //Check for the latest version here: https://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0"
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
+        classpath "com.netflix.nebula:gradle-lint-plugin:7.9.1"
+    }
+}
+
+version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: "com.jfrog.artifactory"
+    apply plugin: 'jacoco'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'nebula.lint'
+
+    repositories {
+        jcenter()
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    gradleLint.rules = ['unused-dependency']
+
+    compileJava {
+        sourceCompatibility = '1.8'
+    }
+
+    ext {
+        airlineVersion = '0.8'
+        archaiusVersion = '0.7.5'
+        awsEncryptionVersion = '0.0.1'
+        awsVersion = '1.11.124'
+        // can't update guava to latest version until airline is fixed, see https://github.com/airlift/airline/pull/53
+        guavaVersion = '20.0'
+        hamcrestVersion = '1.3'
+        jacksonVersion = '2.8.9'
+        mockitoVersion = '2.8.47'
+        slf4jVersion = '1.7.25'
+        testngVersion = '6.11'
+    }
+
+    jacoco {
+        // Broken in newer versions. Need this version for now.
+        toolVersion = '0.7.4+'
+    }
+
+    shadowJar {
+        relocate 'com.amazonaws', 'shaded.com.amazonaws'
+        relocate 'com.fasterxml', 'shaded.com.fasterxml'
+        relocate 'com.google', 'shaded.com.google'
+        relocate 'org.bouncycastle', 'shaded.org.bouncycastle'
+        relocate 'org.slf4j', 'shaded.org.slf4j'
+        relocate 'org.apache', 'shaded.org.apache'
+        relocate 'org.joda', 'shaded.org.joda'
+    }
+}
+
+subprojects {
+    test {
+        // enable TestNG support (default is JUnit)
+        useTestNG()
+    }
+}
+
+task install(dependsOn: 'cli:installDist') {
+    doLast {
+        // If user has overridden the install directory, use the override, else default to the build directory
+        // so that it will be cleaned up by the gradlew clean command.
+        def installRoot = "$buildDir"
+        if (project.hasProperty("installDir")) {
+            installRoot = project.installDir
+            assert installRoot != ""
+        }
+
+        def cliInstallRoot = 'cli/build/install/cli'
+        def cliBin = cliInstallRoot + '/bin/'
+        def cliLib = cliInstallRoot + '/lib/'
+
+        // The copy won't fail if the directories don't exist, so check that they were actually generated before
+        // continuing. It will make debugging problems faster.
+        assert file(cliBin).exists()
+        assert file(cliLib).exists()
+        copy {
+            from cliBin
+            into installRoot + '/bin'
+        }
+        copy {
+            from cliLib
+            into installRoot + '/lib'
+        }
+        println 'Finished installing to ' + installRoot + '/bin'
+    }
+}
+
+idea {
+    project {
+        jdkName = sourceCompatibility
+        languageLevel = sourceCompatibility
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}

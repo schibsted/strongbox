@@ -1,0 +1,109 @@
+################################################################################
+#                                                                              #
+# Strongbox                                                                    #
+# Copyright (c) 2016 Schibsted Products & Technology AS                        #
+#                                                                              #
+################################################################################
+
+The binary releases dependend on the following projects:
+
+# STRONGBOX SDK DEPENDECIES
+
+AWS SDK for Java
+  LICENSE: Apache 2.0,
+           https://github.com/aws/aws-sdk-java/blob/master/LICENSE.txt
+  NOTICE:  https://github.com/aws/aws-sdk-java/blob/master/NOTICE.txt 
+
+Google Guava
+  LICENSE: Apache 2.0,
+           https://github.com/google/guava/blob/master/COPYING
+
+slf4j
+  LICENSE: MIT,
+           https://github.com/qos-ch/slf4j/blob/master/LICENSE.txt
+
+FasterXML Jackson Annotations
+  LICENSE: Apache 2.0,
+           https://github.com/FasterXML/jackson-annotations
+
+FasterXML Jackson Datatype JDK8
+  LICENSE: Apache 2.0,
+           https://github.com/FasterXML/jackson-modules-java8
+
+FasterXML Jackson Datatype
+  LICENSE: Apache 2.0,
+           https://github.com/FasterXML/jackson-databind
+
+FasterXML Jackson Core
+  LICENSE: Apache 2.0,
+           https://github.com/FasterXML/jackson-core
+
+# TRANSITIVE DEPENDENCIES FOR THE STRONGBOX SDK
+
+Amazon Ion Java
+  LICENSE: Apache 2.0,
+           https://github.com/amzn/ion-java/blob/master/LICENSE
+  NOTICE:  https://github.com/amzn/ion-java/blob/master/NOTICE
+
+The Bouncy Castle Crypto Package For Java
+  LICENSE: MIT,
+           https://github.com/bcgit/bc-java/blob/master/LICENSE.html
+
+FasterXML Jackson CBOR
+  LICENSE: Apache 2.0,
+           https://github.com/FasterXML/jackson-dataformats-binary
+
+Joda-Time
+  LICENSE: Apache 2.0,
+           https://github.com/JodaOrg/joda-time/blob/master/LICENSE.txt
+  NOTICE:  https://github.com/JodaOrg/joda-time/blob/master/NOTICE.txt
+  
+Apache Commons Codec
+  LICENSE: Apache 2.0,
+           https://github.com/apache/commons-codec/blob/trunk/LICENSE.txt
+  NOTICE:  https://github.com/apache/commons-codec/blob/trunk/NOTICE.txt
+
+Apache Commons Lang
+  LICENSE: Apache 2.0,
+           https://github.com/apache/commons-lang/blob/master/LICENSE.txt
+  NOTICE:  https://github.com/apache/commons-lang/blob/master/NOTICE.txt
+
+Apache Commons Logging
+  LICENSE: Apache 2.0,
+           https://github.com/apache/commons-logging/blob/trunk/LICENSE.txt 
+  NOTICE:  https://github.com/apache/commons-logging/blob/trunk/NOTICE.txt 
+
+Apache HttpComponents Client
+  LICENSE: Apache 2.0,
+           https://github.com/apache/httpcomponents-client/blob/master/LICENSE.txt
+  NOTICE:  https://github.com/apache/httpcomponents-client/blob/master/NOTICE.txt
+
+Apache HttpComponents Core
+  LICENSE: Apache 2.0,
+           https://github.com/apache/httpcomponents-core/blob/master/LICENSE.txt
+  NOTICE:  https://github.com/apache/httpcomponents-core/blob/master/NOTICE.txt
+
+# ADDITIONAL STRONGBOX CLI DEPENDENCIES
+
+Airline
+  LICENSE: Apache 2.0,
+           https://github.com/airlift/airline/blob/master/license.txt
+
+javax-inject
+  LICENSE: Apache 2.0,
+           https://github.com/javax-inject/javax-inject
+
+findbugs jsr305
+  LICENSE: BSD 2-Clause,
+           https://github.com/findbugsproject/findbugs/blob/master/findbugs/licenses/LICENSE-jsr305.txt 
+
+# ADDITIONAL STRONGBOX ARCHAIUS DEPENDENCIES
+
+Netflix Archaius
+  LICENSE: Apache 2.0,
+           https://github.com/Netflix/archaius/blob/master/LICENSE
+
+Apache Commons Configuration
+  LICENSE: Apache 2.0,
+           https://github.com/apache/commons-configuration/blob/trunk/LICENSE.txt
+  NOTICE:  https://github.com/apache/commons-configuration/blob/trunk/NOTICE.txt

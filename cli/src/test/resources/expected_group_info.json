@@ -1,0 +1,19 @@
+{
+  "srn" : "srn:aws:strongbox:eu-west-1:12345:group/mygroup",
+  "groupIdentifier" : {
+    "region" : "eu-west-1",
+    "name" : "mygroup"
+  },
+  "encryptorArn" : "dummy:encryptor",
+  "storageArn" : "dummy:storage",
+  "adminPolicyArn" : "dummy:admin",
+  "readOnlyPolicyArn" : "dummy:readonly",
+  "admin" : [ {
+    "type" : "role",
+    "name" : "role1"
+  } ],
+  "readOnly" : [ {
+    "type" : "role",
+    "name" : "role2"
+  } ]
+}

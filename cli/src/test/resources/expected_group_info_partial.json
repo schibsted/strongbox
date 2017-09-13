@@ -1,0 +1,13 @@
+{
+  "srn" : "srn:aws:strongbox:eu-west-1:12345:group/mygroup",
+  "groupIdentifier" : {
+    "region" : "eu-west-1",
+    "name" : "mygroup"
+  },
+  "encryptorArn" : null,
+  "storageArn" : null,
+  "adminPolicyArn" : null,
+  "readOnlyPolicyArn" : null,
+  "admin" : [ ],
+  "readOnly" : [ ]
+}

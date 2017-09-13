@@ -1,0 +1,131 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 Schibsted Products & Technology AS
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+import org.ajoberstar.grgit.Grgit
+import java.time.Instant
+import static java.lang.System.getenv
+
+plugins {
+    id 'nebula.ospackage' version '3.4.0'
+    id "org.ajoberstar.grgit" version "1.4.2"
+}
+
+apply plugin: 'application'
+apply plugin: 'nebula.deb'
+
+mainClassName = 'com.schibsted.security.strongbox.cli.StrongboxCLI'
+version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
+
+dependencies {
+    compile project(':sdk')
+
+    compile "com.amazonaws:aws-java-sdk-iam:$awsVersion"
+    compile "com.amazonaws:aws-java-sdk-sts:$awsVersion"
+    compile "com.amazonaws:aws-java-sdk-core:$awsVersion"
+
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+
+    compile "io.airlift:airline:$airlineVersion"
+
+    runtime "org.slf4j:slf4j-jcl:$slf4jVersion"
+
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testCompile "org.hamcrest:hamcrest-core:$hamcrestVersion"
+    testCompile ("org.testng:testng:$testngVersion") {
+        exclude module : 'junit'
+    }
+}
+
+installDist {
+    doLast {
+        def cliBase = 'build/install/cli/'
+        def cliBin = cliBase + 'bin/'
+        def projectRoot = project.parent.projectDir.absoluteFile.toString() + '/'
+
+        file(cliBin + 'cli').renameTo(file(cliBin + '/strongbox'))
+        file(cliBin + 'cli.bat').renameTo(file(cliBin + 'strongbox.bat'))
+
+        copy {
+            from  projectRoot + 'LICENSE', projectRoot + 'NOTICE'
+            into cliBase
+        }
+    }
+}
+
+ospackage {
+    packageName = "strongbox-cli"
+
+    user = 'root'
+    from(installDist)
+    into '/opt/strongbox-cli'
+    prefix '/opt'
+
+    ext.repo = Grgit.open(project.file('..'))
+    epoch = Instant.now().epochSecond
+    release = "${repo.head().abbreviatedId}"
+    println "Inferred release: $release"
+
+    release = "1"
+
+    url = "https://github.com/schibsted/strongbox"
+    vendor = "Schibsted Products & Technology AS"
+    packageDescription = "This package contains GUI and CLI tools to manage and fetch secrets."
+    summary = "Strongbox is a secrets management solution using Amazon Web Services."
+
+    os = LINUX
+}
+
+tasks.withType(Jar) {
+    from(project.parent.projectDir) {
+        include 'LICENSE', 'NOTICE'
+        into 'META-INF'
+    }
+}
+
+task cliDeb(type: Deb, dependsOn: "installDist") {
+    requires('java8-runtime-headless')
+
+    link('/usr/bin/strongbox', '/opt/strongbox-cli/bin/strongbox', 0550)
+}
+
+task cliRpm(type: Rpm, dependsOn: "installDist") {
+    arch = X86_64
+
+    requires('java-1.8.0')
+
+    link('/usr/bin/strongbox', '/opt/strongbox-cli/bin/strongbox', 0550)
+}
+
+task cliTar(type: Tar, dependsOn: "installDist") {
+    from(installDist)
+    into('strongbox-cli')
+    archiveName = 'strongbox-cli' + version + '.tar.gz'
+
+    extension = 'tar.gz'
+    compression = Compression.GZIP
+}

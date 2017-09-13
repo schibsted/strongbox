@@ -1,0 +1,9 @@
+SRN: srn:aws:strongbox:eu-west-1:12345:group/mygroup
+Group Name: mygroup
+Region: eu-west-1
+KMS ARN: <not present>
+Storage ARN: <not present>
+Admin Policy ARN: <not present>
+Readonly Policy ARN: <not present>
+Admin Principals: <not present>
+Read Only Principals: <not present>

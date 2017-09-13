@@ -1,0 +1,7 @@
+.gradle/
+*.idea/
+*.iml
+build/
+bin/
+lib/
+*.sbx

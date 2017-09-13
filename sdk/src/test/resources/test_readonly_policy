@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+        "Sid": "DynamoDB",
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:Query",
+            "dynamodb:Scan"
+        ],
+        "Resource": "arn:aws:dynamodb:us-west-1:1234:table/strongbox_us-west-1_test-group"
+    },
+    {
+        "Sid": "KMS",
+        "Effect": "Allow",
+        "Action": [
+            "kms:Decrypt",
+            "kms:DescribeKey"
+        ],
+        "Resource": "arn:aws:kms:us-west-1:1234:key/d413a4de-5eb5-4eb4-b4af-373bcba5efdf"
+    }
+  ]
+}

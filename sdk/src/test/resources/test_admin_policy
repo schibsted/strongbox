@@ -1,0 +1,62 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+        "Sid": "KMS",
+        "Effect": "Allow",
+        "Action": [
+            "kms:*"
+        ],
+        "Resource": "arn:aws:kms:us-west-1:1234:key/d413a4de-5eb5-4eb4-b4af-373bcba5efdf"
+    },
+    {
+        "Sid": "DynamoDB",
+        "Effect": "Allow",
+        "Action": [
+            "dynamodb:*"
+        ],
+        "Resource": "arn:aws:dynamodb:us-west-1:1234:table/strongbox_us-west-1_test-group"
+    },
+    {
+        "Sid": "IAMListAllPolicies",
+        "Effect": "Allow",
+        "Action": [
+            "iam:ListPolicies"
+        ],
+        "Resource": "arn:aws:iam::1234:policy/strongbox/"
+    },
+    {
+        "Sid": "IAMSecretGroupPolicies",
+        "Effect": "Allow",
+        "Action": [
+            "iam:ListEntitiesForPolicy",
+            "iam:GetPolicy"
+        ],
+        "Resource": [
+            "arn:aws:iam::1234:policy/strongbox/strongbox_us-west-1_test-group_admin",
+            "arn:aws:iam::1234:policy/strongbox/strongbox_us-west-1_test-group_readonly"
+        ]
+    },
+    {
+        "Sid": "IAMManagePolicies",
+        "Effect": "Allow",
+        "Action": [
+            "iam:AttachRolePolicy",
+            "iam:AttachGroupPolicy",
+            "iam:AttachUserPolicy",
+            "iam:DetachRolePolicy",
+            "iam:DetachGroupPolicy",
+            "iam:DetachUserPolicy"
+        ],
+        "Resource": "*",
+        "Condition": {
+            "ArnEquals": {
+                "iam:PolicyArn": [
+                    "arn:aws:iam::1234:policy/strongbox/strongbox_us-west-1_test-group_admin",
+                    "arn:aws:iam::1234:policy/strongbox/strongbox_us-west-1_test-group_readonly"
+                ]
+            }
+        }
+    }
+  ]
+}
