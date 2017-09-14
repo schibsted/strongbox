@@ -124,7 +124,7 @@ task cliRpm(type: Rpm, dependsOn: "installDist") {
 task cliTar(type: Tar, dependsOn: "installDist") {
     from(installDist)
     into('strongbox-cli')
-    archiveName = 'strongbox-cli' + version + '.tar.gz'
+    archiveName = 'strongbox-cli-' + version + '.tar.gz'
 
     extension = 'tar.gz'
     compression = Compression.GZIP

@@ -147,7 +147,7 @@ bintray {
     publish = true
     pkg {
         repo = 'strongbox-maven'
-        name = 'strongbox-cli'
+        name = 'strongbox-sdk'
         userOrg = 'strongbox'
         licenses = ['MIT']
         websiteUrl = 'https://github.com/schibsted/strongbox'
