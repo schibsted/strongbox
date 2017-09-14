@@ -23,6 +23,9 @@
 
 import static java.lang.System.getenv
 
+apply plugin: 'jacoco'
+apply plugin: 'com.jfrog.bintray'
+
 group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
@@ -76,6 +79,18 @@ task integrationTest(type: Test) {
     useTestNG()
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+task jacocoIntegrationTestReport(type: JacocoReport) {
+   sourceSets sourceSets.main
+   executionData integrationTest
+}
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
@@ -123,4 +138,21 @@ publishing {
 
 javadoc {
     exclude("**/internal/**")
+}
+
+bintray {
+    user = getenv('BINTRAY_USER')
+    key = getenv('BINTRAY_KEY')
+    publications = ['mavenJava']
+    publish = true
+    pkg {
+        repo = 'strongbox-maven'
+        name = 'strongbox-cli'
+        userOrg = 'strongbox'
+        licenses = ['MIT']
+        websiteUrl = 'https://github.com/schibsted/strongbox'
+        issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
+        vcsUrl = 'https://github.com/schibsted/strongbox.git'
+        publicDownloadNumbers = false
+    }
 }
