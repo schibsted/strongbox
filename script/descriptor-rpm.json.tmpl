@@ -1,0 +1,35 @@
+{
+  "package": {
+    "name": "strongbox-cli",
+    "repo": "strongbox-rpm",
+    "subject": "strongbox",
+    "desc": "Secrets management CLI for AWS",
+    "website_url": "https://github.com/schibsted/strongbox",
+    "issue_tracker_url": "https://github.com/schibsted/strongbox/issues",
+    "vcs_url": "https://github.com/schibsted/strongbox.git",
+    "public_download_numbers": false,
+    "public_stats": false,
+    "licenses": [
+      "MIT"
+    ],
+    "labels": [
+      "aws",
+      "secrets management"
+    ]
+  },
+  "version": {
+    "name": "@PKG_VERSION@",
+    "desc": "Automated RPM package release from master",
+    "released": "@DATE@"
+  },
+  "files": [
+    {
+      "includePattern": "cli/build/distributions/(.*\\.rpm)",
+      "uploadPattern": "$1",
+      "matrixParams": {
+        "override": 1
+      }
+    }
+  ],
+  "publish": true
+}
