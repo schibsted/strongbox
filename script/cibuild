@@ -4,12 +4,14 @@ set -e
 
 ./gradlew check installDist
 
-if [ "${TRAVIS_BRANCH}" == "master" ]; then 
-	./gradlew integrationTest
-	./gradlew jacocoIntegrationTestReport
-	
-	# For coverage badges 
-	bash <(curl -s https://codecov.io/bash)
-fi
+# TODO:
+# - enable
+#if [ "${TRAVIS_BRANCH}" == "master" ]; then 
+#	./gradlew integrationTest
+#	./gradlew jacocoIntegrationTestReport
+#	
+#	# For coverage badges 
+#	bash <(curl -s https://codecov.io/bash)
+#fi
 
 ./gradlew javadoc
