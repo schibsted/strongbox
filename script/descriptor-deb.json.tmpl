@@ -7,6 +7,8 @@
     "website_url": "https://github.com/schibsted/strongbox",
     "issue_tracker_url": "https://github.com/schibsted/strongbox/issues",
     "vcs_url": "https://github.com/schibsted/strongbox.git",
+    "public_download_numbers": false,
+    "public_stats": false,
     "licenses": [
       "MIT"
     ],
@@ -22,7 +24,7 @@
   },
   "files": [
     {
-      "includePattern": "build/distributions/(.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "xenial",
@@ -32,7 +34,7 @@
       }
     },
     {
-      "includePattern": "build/distributions/(.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "trusty",
@@ -42,7 +44,7 @@
       }
     },
     {
-      "includePattern": "build/distributions/(.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "stretch",
