@@ -1,0 +1,67 @@
+language: java
+jdk:
+  - oraclejdk8
+script: ./script/cibuild
+before_deploy: ./script/cipackage 
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+
+env:
+  global:
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "WWiLKX5dCwBI6xrUoQqQaSN0gSCw71RZy3zcwgz5l44X5bPOTetX3sAmXeRxsf9pnXJc9iB0r3Zv5SX1K++hFOBSdb2Yb6vCYXCD2rwmOoGQiuE4Q3K22lwKPp3UloCxD2TseQ7GutklHW5rO20HLitoN5lUkElsE9SOCFbtw0/IpnvXl0U837NoZg7I71pe+UK2j1+c6u2uOVqg2hZFlTvZOdWhqmcbDSb+KUaOxdEONljXw3XRxm8OAZm5pSg9XdrTpg/eCbifA2CTKqbqTXe8W1rPHm9T98VlmDVXgMYfpak08goWfglmKiHE4hk4/lvFoIoNVZntzgAgM89MP7FNUXVM+f5L+UQK/Qn3srU7411RLaf6A7xKNyis13H8bkWtL6ZYNwOktBQeSt+r6TC/R+qGGmrPnpg8DAfMfX3H+wm3LWdNlYLlhCIQx1hghQkCbQik+R+wI04zhRKwH1pcl6WKh8h1+Jn6nY8jLBgNTf60r2kCpKhdn7WSsD4G5Ug4cLfFpjyqaUapmLS6oCUE/4EQg4Z5t6BEWWvuNEnVUa/wAVR0qRUwq5ymzrmkau1erY+UQ70JkrYeMSGpp4PxXrrihrZYRJZHcyqPgnaIrKaPQEr3fCjjIl+0SfHhCZ02Wyq4ZsN5PJmdNPvZ601Cy/ykU5qoxfDw0U9d0SQ="    
+    # AWS_ACCESS_KEY_ID
+    - secure: "P+abl8pB6BOjZ499GW2Tk2QarUDmhNwkjre88b3r3nJ9MxnYpZfG0+jYQgkgrFPQHaMbOL5EpWrmddblnCkZaodN+jkP+PheXe2MBfLYILCuQpc+nL7Feh16yViGfhhhvHC2HlumbF4nLzTXImxya9EoIAFuzPjF9jOXGYj6uLjBd+IUsSbSO9ocWEBW92AfULgP86ZPSgZ4THqDaSZtTt5TUsPeXQSYfIpl4nKLEKHqje+s6GGl6TY+71MwMofpkhXXWt2jwcEEOpz7DMuszJIVSYXMk2p+DHS19LNpPPxluIZHIp/yBXOnI378wL5jybMB165p+sswKOTg4MLmPK6t7gTl24NvjZH7dimsl4t0kSAypUfM273OnkumacoNxZu+265vyIs6JaonbUxdUFajTJ6NCnPty8Wlw8i24nod0ykdZxA+wnrWUimZcruyiqgdpXC3sbwl/WP4S/GVW/agbA8tpNLKOFYum2SXFgfi/olFt/Tw9SMVDGaIWrX0Tz4tLbb1BfWZbOf6xv30aggEX500lpUAu41bReJtUwZnokGz8il7BpsD4a4rYmxLxX6u61cwzOOKfiI97RQ+3YTE6W8KMHbzUBRjDixd9bgKOQfjVTDwZwaDgP6FV37L/K9QX65DwjZoEpEVUXbhuTRmSljF1xbgRlJ9eSGs+0c="
+    # GITHUB_TOKEN
+    - secure: "gNgTzkocKb3fpQ1bMITgUAT2K5hIpBcFRfRYoU+IHjWqfQy9Ocefs28Tp21KHVWklm4Kv8+HsrxvJ3c5ORjYAbavh6vQ8LDz8yRB+VsseasVWClFMnLt25SWcMpsGlfAta+NNcBRGmb1OSq3Cso7shU8fZfzbXFoiG5iJ5pCXH1cbn8TK8cDSP+t2JMD7AsK5yhOYUDcoyp8ifK+fzhI3p3e9bfGPFsVJdcDteWwcxQXwHCnU+ii87BtjW49ZiOfVYszY3S3msl0mHFoxBCc7aZN1mhI9MfUNQV0sqQ7E5aqsp3sJ+pyHrOxSlSNUv9SSeXRDKHM20uo3FDYu3xNRYKtdlHVzEponmEmhZHDygnz9Au+VXJjAEUg14bcbfyRjp4fQK2M5UycaXEa0rrLCwM4N0iIDEj+F4NkLPFx3EA0kwL0KL1JJSCxH7zSjr/58mT4KcPnvr5qcCAFSO0qOt0L+vxwVgnSIAINGvz82p0BT2DkIGM3ZsDrFOEAHoZQFIqOO4MjYzDTmvR+ajVUAI1GF2NUv/oXBRWp4V+TpJbB5fg5IkvIkwfuYQR1tQQ3kHm6G7+s41SlHdpGkf8cj1CyEOhlnAYAhd1jFL20Arwtj0fjhuMirkADz5uPKlackzSmf+J03zJ32IHXbP0GHm/3K+BZ4waFodrEYa97iso="
+    # BINTRAY_KEY
+    - secure: "evdg1LKpTgHf8s9XerAPH2pAg80IJxWq1YTLdCH1nBnXjj9ooMOIdHr5iPLw9IrGFjyiY7W87crBnzNbrPOmBoSvaTQYtpi+S/tWh9wqJgXA1q9jiNR2LoorAMjtSlvJwzgqzB8s0/Vld9dpOAPq8OouApkDKPJw+skivZZvVNpdAG715kTTSeiAfU+21/OtrPzzk6YdnXqsRqi9EUCUkgZfgQoqOAO8Rw0H14HWQwViA5W7HfCGP9OQNaabO3nDpJhSgUgNdzfFxEum7xbO08igQxYvGgxYYP1DHCktFgUYBl1ODZi4xjUZ6dGDUdGUTj+pFMbReNm0I1CV7TsqPk0N3qL0gGCcYiJdORFFkqJs41W1xCy7pC5vBcaS2FGYViFEOQXKbIIgeNOHOBJDBItwqzo8e9YnLCnvfUAYuSZeX3efOrxezXyeAuMHckwnNhkC7B+QQmyxNgPywRlKEx7yR54TjwottMq8545oy/Cl6e5JNoAy3oDjDa8GgpsDdZ9Lwlp/i/IkHY3WSnbmxW6juXdMbgkBCUCmeEtWHuGCJ4Vl9O2cY2vNsLXSk38iJTWN9KSzJAnv0RXm7320/7xwjREy9Glx8pCgClml98575iI2MEb+1TFyIo0Gj7rt3giUMq1E4CVCfrSnFPPxcatm1hhgu6v32zketZMczqU="
+    # BINTRAY_USER
+    - secure: "rSHqdaewVm3Ub+CL/WKnKEYYP7S4oG6yJrz9VxZ7sUdqmWZHkUj/H7SBx5Kd8faTyGeVSUROoDESkn44xNWmcsEynn+mnJyGt+0OoDiKoC16KXZEhRrtPrXnt2Ipn5Ahqx/MhU3Fv5kc2qhXjKKJPRQp6wY0M+mHvpQmtYQv8RpzIo2eSW/FJ8lQ1q4goBAvfZ1kXLYm8YqmaA/q1kTm1zGjAzdtORldKLpMbTl7lR5ERreEte63ZUiWY1os0DBYe4w95Tna6881lGP0AV9DxbbZT12lXTisR0LWFQXKhCyBfvY1xRONt7oBx/KO8vi8k/h+wRcSjVflhE3EJh2Vg+EbVAtVLUqYcH7uCxz8hDPASqGs13toG6iquA3NDXNNFxqYfLY4+9g36wgqNXsv74AF6QNip6EaJYwFJzxCxQTKeGJFj+Qzpx7ch+ngEO6xx/z6g8YIiR/Pe6CXgdLzEJWbjS5ffW1rK/VGnmo9AbS6joeq7fP56OEXYNg2Z3Qvqvouz2XmNqG55WqBfM41BLk6TzCO0VIGByUTkko6tJlR4yizzNfivofyDhkqbgMJ3ISj+xbjOOSsIcogykok3Srce+exJRsRGitOn7AbrGTMdlyUJiWDv7fcaqMrsLuTGcxH8HDrTM6X/uqOVhH6bLTM6bWjAIyNy4yQi5Qv95Q=" 
+
+deploy:
+  # Documentation
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: build/docs/javadoc/
+    on:
+      tags: true
+      branch: master
+  # Maven
+  - provider: script
+    script: ./gradlew -info bintrayUpload 
+    on: 
+      tags: true
+      branch: master
+  # DEB
+  - provider: bintray
+    file: "bintray/descriptor-deb.json"
+    user: $BINTRAY_USER
+    key: $BINTRAY_KEY
+    on:
+      tags: true
+      branch: master
+  # RPM
+  - provider: bintray
+    file: "bintray/descriptor-rpm.json"
+    user: $BINTRAY_USER
+    key: $BINTRAY_KEY
+    on:
+      tags: true
+      branch: master
+ # Tarball 
+  - provider: bintray
+    file: "bintray/descriptor-tar.json"
+    user: $BINTRAY_USER
+    key: $BINTRAY_KEY
+    on:
+      tags: true
+      branch: master

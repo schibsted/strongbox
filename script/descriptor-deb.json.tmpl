@@ -1,0 +1,56 @@
+{
+  "package": {
+    "name": "strongbox-cli",
+    "repo": "strongbox-deb",
+    "subject": "strongbox",
+    "desc": "Secrets management CLI for AWS",
+    "website_url": "https://github.com/schibsted/strongbox",
+    "issue_tracker_url": "https://github.com/schibsted/strongbox/issues",
+    "vcs_url": "https://github.com/schibsted/strongbox.git",
+    "licenses": [
+      "MIT"
+    ],
+    "labels": [
+      "aws",
+      "secrets management"
+    ]
+  },
+  "version": {
+    "name": "@PKG_VERSION@",
+    "desc": "Automated DEB package release from master",
+    "released": "@DATE@"
+  },
+  "files": [
+    {
+      "includePattern": "build/distributions/(.*\\.deb)",
+      "uploadPattern": "pool/main/s/$1",
+      "matrixParams": {
+        "deb_distribution": "xenial",
+        "deb_component": "main",
+        "deb_architecture": "amd64",
+        "override": 1
+      }
+    },
+    {
+      "includePattern": "build/distributions/(.*\\.deb)",
+      "uploadPattern": "pool/main/s/$1",
+      "matrixParams": {
+        "deb_distribution": "trusty",
+        "deb_component": "main",
+        "deb_architecture": "amd64",
+        "override": 1
+      }
+    },
+    {
+      "includePattern": "build/distributions/(.*\\.deb)",
+      "uploadPattern": "pool/main/s/$1",
+      "matrixParams": {
+        "deb_distribution": "stretch",
+        "deb_component": "main",
+        "deb_architecture": "amd64",
+        "override": 1
+      }
+    }
+  ],
+  "publish": true
+}
