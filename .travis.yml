@@ -31,7 +31,7 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
-    local_dir: build/docs/javadoc/
+    local_dir: sdk/build/docs/javadoc/
     on:
       tags: true
       branch: master
