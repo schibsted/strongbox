@@ -61,7 +61,7 @@ $ strongbox --region eu-west-1 secret get --group team.project --name MySecret
 For more examples please see [the Wiki](https://github.com/schibsted/strongbox/wiki/Fetch-Secrets-With-the-CLI).
 
 #### Java SDK
-The following is from the [example repo](https://github.com/schibsted/strongbox-example/tree/master/sdk). Add the Gradle dependency (make sure you have added the repository)
+The following is from the [example repo](https://github.com/schibsted/strongbox-examples/tree/master/sdk). Add the Gradle dependency (make sure you have added the repository)
 ```
 compile 'com.schibsted.security:strongbox-sdk:0.2.0'
 ```
@@ -72,7 +72,7 @@ SimpleSecretsGroup secretsGroup = new DefaultSimpleSecretsGroup(new SecretsGroup
 Optional<String> secret = secretsGroup.getStringSecret("MySecret");
 ```
 #### Archaius (Experimental)
-Please see the [example repo](https://github.com/schibsted/strongbox-example/tree/master/archaius).
+Please see the [example repo](https://github.com/schibsted/strongbox-examples/tree/master/archaius).
 
 ## Development status
 Strongbox is in active development, and will soon allow external contributions.
