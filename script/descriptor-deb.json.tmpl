@@ -24,7 +24,7 @@
   },
   "files": [
     {
-      "includePattern": "cli/build/distributions/(.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*ubuntu16\\.04.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "xenial",
@@ -34,7 +34,7 @@
       }
     },
     {
-      "includePattern": "cli/build/distributions/(.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*ubuntu14\\.04.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "trusty",
@@ -44,7 +44,7 @@
       }
     },
     {
-      "includePattern": "cli/build/distributions/(.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*debian9.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "stretch",
