@@ -103,6 +103,7 @@ ospackage {
             signingKeyId project.getProperty('signing.keyId')
             signingKeyPassphrase getenv('GPG_SIGNING_KEY_PASSPHRASE')
             signingKeyRingFile file(project.getProperty('signing.secretKeyRingFile'))
+            println "Signing package with key ID " + signingKeyId
     }
 }
 
