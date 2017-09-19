@@ -2,6 +2,21 @@
 
 export ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 
-./gradlew cliRpm cliDeb cliTar
+export GPG_KEYRING_PATH="${ROOT_DIR}/.gnupg/secring.gpg"
+export GPG_KEYID="7E9660AC"
+
+if [[ ! -n "${TRAVIS_TAG}" ]]; then
+    echo 'No $TRAVIS_TAG environment variable found!'
+    exit 1
+fi
+
+# Decrypt signing key file and import it
+openssl aes-256-cbc -K $encrypted_550d7473c60b_key -iv $encrypted_550d7473c60b_iv -in ${ROOT_DIR}/.secrets/signing_key.asc.enc -d | \
+    gpg --homedir=${ROOT_DIR} --import
+
+# Build packages
+./gradlew -Psigning.secretKeyRingFile="${GPG_KEYRING_PATH}" \
+          -Psigning.keyId="${GPG_KEYID}" \
+          cliRpm cliDeb cliTar
 
 ${ROOT_DIR}/script/generate-bintray-json.sh
