@@ -1,3 +1,4 @@
+.gnupg/
 .gradle/
 *.idea/
 *.iml
@@ -5,3 +6,5 @@ build/
 bin/
 lib/
 *.sbx
+.secrets/signing_key.asc
+bintray/

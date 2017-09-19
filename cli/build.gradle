@@ -98,6 +98,12 @@ ospackage {
     summary = "Strongbox is a secrets management solution using Amazon Web Services."
 
     os = LINUX
+
+    if(getenv('GPG_SIGNING_KEY_PASSPHRASE') && project.hasProperty('signing.keyId') && project.hasProperty('signing.secretKeyRingFile')) {
+            signingKeyId project.getProperty('signing.keyId')
+            signingKeyPassphrase getenv('GPG_SIGNING_KEY_PASSPHRASE')
+            signingKeyRingFile file(project.getProperty('signing.secretKeyRingFile'))
+    }
 }
 
 tasks.withType(Jar) {
