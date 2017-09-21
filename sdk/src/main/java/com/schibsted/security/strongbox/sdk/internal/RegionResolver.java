@@ -23,9 +23,9 @@
 
 package com.schibsted.security.strongbox.sdk.internal;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.regions.DefaultAwsRegionProviderChain;
 import com.amazonaws.regions.Regions;
+import com.schibsted.security.strongbox.sdk.exceptions.FailedToResolveRegionException;
+import com.schibsted.security.strongbox.sdk.internal.config.CustomRegionProviderChain;
 import com.schibsted.security.strongbox.sdk.types.Region;
 
 import java.util.Optional;
@@ -38,16 +38,25 @@ import java.util.Optional;
  */
 public class RegionResolver {
     private static Optional<Region> userSetRegion = Optional.empty();
+    private static Optional<Region> cachedRegion = Optional.empty();
 
     public static String getRegion() {
         if (userSetRegion.isPresent()) {
             return userSetRegion.get().getName();
         }
 
-        DefaultAwsRegionProviderChain providerChain = new DefaultAwsRegionProviderChain();
+        if (cachedRegion.isPresent()) {
+            return cachedRegion.get().getName();
+        }
+
+        CustomRegionProviderChain regionProvider = new CustomRegionProviderChain();
         try {
-            return providerChain.getRegion();
-        } catch (SdkClientException e) {
+            Region region = regionProvider.resolveRegion();
+
+            cachedRegion = Optional.of(region);
+
+            return region.getName();
+        } catch (FailedToResolveRegionException e) {
             return Regions.DEFAULT_REGION.getName();
         }
     }
