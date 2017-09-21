@@ -21,7 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.config;
+package com.schibsted.security.strongbox.sdk.internal.config;
+
+import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -140,5 +142,13 @@ public class AWSCLIConfigFile {
             this.key = key;
             this.value = value;
         }
+    }
+
+    public static Optional<File> getCredentialProfilesFile() {
+        return Optional.ofNullable(AwsProfileFileLocationProvider.DEFAULT_CREDENTIALS_LOCATION_PROVIDER.getLocation());
+    }
+
+    public static Optional<File> getConfigFile() {
+        return Optional.ofNullable(AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER.getLocation());
     }
 }

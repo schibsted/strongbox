@@ -21,25 +21,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.mfa;
-
-import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
-import org.testng.annotations.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+package com.schibsted.security.strongbox.sdk.types;
 
 /**
+ * AWS profile used in AWS CLI credential and config files
+ *
  * @author stiankri
  */
-public class SessionCacheTest {
-    @Test
-    public void resolve_filename() {
-        ProfileIdentifier profile = new ProfileIdentifier("my-profile");
-        String arn = "arn:test/dummy";
+public class ProfileIdentifier {
+    public final String name;
 
-        SessionCache sessionCache = new SessionCache(profile, arn);
-
-        assertThat(sessionCache.resolveFileName(), is("my-profile--arn_test-dummy.json"));
+    public ProfileIdentifier(final String name) {
+        this.name = name;
     }
 }

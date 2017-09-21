@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.config;
+package com.schibsted.security.strongbox.sdk.internal.config;
 
 import org.testng.annotations.Test;
 

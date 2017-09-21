@@ -26,7 +26,7 @@ package com.schibsted.security.strongbox.cli.mfa;
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.securitytoken.model.AssumedRoleUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.schibsted.security.strongbox.cli.types.ProfileIdentifier;
+import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
 
 import java.io.File;
 import java.io.IOException;

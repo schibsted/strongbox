@@ -23,7 +23,6 @@
 
 package com.schibsted.security.strongbox.cli.viewmodel;
 
-import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -35,21 +34,19 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfilesConfigFile;
 import com.amazonaws.auth.profile.internal.BasicProfile;
 import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
-import com.amazonaws.regions.DefaultAwsRegionProviderChain;
 import com.amazonaws.services.identitymanagement.model.InvalidInputException;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
 import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
 import com.amazonaws.services.securitytoken.model.Credentials;
-import com.amazonaws.util.EC2MetadataUtils;
-import com.schibsted.security.strongbox.cli.config.AWSCLIConfigFile;
 import com.schibsted.security.strongbox.cli.mfa.SessionCache;
-import com.schibsted.security.strongbox.cli.types.ProfileIdentifier;
 import com.schibsted.security.strongbox.cli.view.OutputFormat;
 import com.schibsted.security.strongbox.cli.viewmodel.types.ProxyInformation;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupIdentifierView;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupInfoView;
+import com.schibsted.security.strongbox.sdk.internal.config.AWSCLIConfigFile;
+import com.schibsted.security.strongbox.sdk.internal.config.CustomRegionProviderChain;
 import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
 import com.schibsted.security.strongbox.sdk.internal.RegionResolver;
 import com.schibsted.security.strongbox.sdk.internal.access.PrincipalAutoSuggestion;
@@ -66,6 +63,7 @@ import com.schibsted.security.strongbox.sdk.types.ClientConfiguration;
 import com.schibsted.security.strongbox.sdk.types.EncryptionStrength;
 import com.schibsted.security.strongbox.sdk.types.Principal;
 import com.schibsted.security.strongbox.sdk.types.PrincipalType;
+import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
 import com.schibsted.security.strongbox.sdk.types.Region;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupIdentifier;
 import org.slf4j.Logger;
@@ -107,7 +105,8 @@ public class GroupModel {
         this.saveToFilePath = extractSaveToFilePath(saveToFilePath);
 
         Optional<ProfileIdentifier> profileIdentifier = resolveProfile(rawProfileIdentifier);
-        this.region = resolveRegion(region, profileIdentifier);
+        CustomRegionProviderChain regionProvider = new CustomRegionProviderChain();
+        this.region = regionProvider.resolveRegion(Optional.ofNullable(region), profileIdentifier);
         RegionResolver.setRegion(this.region);
 
         ClientConfiguration clientConfiguration = getClientConfiguration();
@@ -125,7 +124,7 @@ public class GroupModel {
 
     private AWSCredentialsProvider resolveBaseCredentials(final ClientConfiguration clientConfiguration, final Optional<ProfileIdentifier> profileIdentifier) {
         if (profileIdentifier.isPresent()) {
-            Optional<File> credentialsFile = getCredentialProfilesFile();
+            Optional<File> credentialsFile = AWSCLIConfigFile.getCredentialProfilesFile();
 
             if (!credentialsFile.isPresent()) {
                 throw new IllegalStateException("When using --profile, an AWS credentials file must be present");
@@ -159,14 +158,6 @@ public class GroupModel {
         }
 
         return basicProfile;
-    }
-
-    private Optional<File> getCredentialProfilesFile() {
-        return Optional.ofNullable(AwsProfileFileLocationProvider.DEFAULT_CREDENTIALS_LOCATION_PROVIDER.getLocation());
-    }
-
-    private Optional<File> getConfigFile() {
-        return Optional.ofNullable(AwsProfileFileLocationProvider.DEFAULT_CONFIG_LOCATION_PROVIDER.getLocation());
     }
 
     private AWSCredentialsProvider resolveExplicitAssumeRole(final AWSCredentialsProvider baseCredentials, final ClientConfiguration clientConfiguration, String assumeRole) {
@@ -353,88 +344,6 @@ public class GroupModel {
 
     public Region getRegion() {
         return region;
-    }
-
-    // https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-region-selection.html#automatically-determine-the-aws-region-from-the-environment
-    private Region resolveRegion(String region, Optional<ProfileIdentifier> profile) {
-        Optional<Region> resolvedRegion = Optional.empty();
-
-        if (region != null) {
-            resolvedRegion = Optional.of(Region.fromName(region));
-        }
-        if (!resolvedRegion.isPresent()){
-            resolvedRegion = getRegionFromEnvironment();
-        }
-        if (!resolvedRegion.isPresent()){
-            resolvedRegion = getRegionFromProfile(profile);
-        }
-        if (!resolvedRegion.isPresent()){
-            resolvedRegion = getRegionFromMetadata();
-        }
-
-        if (!resolvedRegion.isPresent()) {
-            throw new RuntimeException("A region must be specified");
-        }
-
-        return resolvedRegion.get();
-    }
-
-    private Optional<Region> getRegionFromEnvironment() {
-        Region resolvedRegion = null;
-        if (System.getenv("AWS_REGION") != null) {
-            resolvedRegion = Region.fromName(System.getenv("AWS_REGION"));
-        } else if (System.getenv("AWS_DEFAULT_REGION") != null) {
-            resolvedRegion = Region.fromName(System.getenv("AWS_DEFAULT_REGION"));
-        }
-        return Optional.ofNullable(resolvedRegion);
-    }
-
-    private Optional<Region> getRegionFromProfile(Optional<ProfileIdentifier> profile) {
-        String profileInConfig = profile.map(p -> p.name).orElse("default");
-        return getDefaultRegionFromConfigFile(profileInConfig);
-    }
-
-    private Optional<Region> getRegionFromMetadata() {
-        try {
-            Region resolvedRegion = null;
-            if (EC2MetadataUtils.getInstanceInfo() != null) {
-                if (EC2MetadataUtils.getInstanceInfo().getRegion() != null) {
-                    resolvedRegion = Region.fromName(EC2MetadataUtils.getInstanceInfo().getRegion());
-                } else { // fallback to provider chain if region is not exposed
-                    resolvedRegion = Region.fromName(new DefaultAwsRegionProviderChain().getRegion());
-                }
-            }
-            return Optional.ofNullable(resolvedRegion);
-        } catch (SdkClientException e) {
-            return Optional.empty();
-        }
-    }
-
-    private Optional<Region> getDefaultRegionFromConfigFile(String profile) {
-
-        Optional<String> region = getCredentialProfilesFile()
-                .flatMap(file -> getRegionFromConfigFile(file, profile));
-
-        if (!region.isPresent()) {
-            region = getConfigFile()
-                    .flatMap(file -> getRegionFromConfigFile(file, profile));
-        }
-
-        return region.map(Region::fromName);
-    }
-
-    private static Optional<String> getRegionFromConfigFile(File file, String profile) {
-        AWSCLIConfigFile configFile = new AWSCLIConfigFile(file);
-        AWSCLIConfigFile.Config config = configFile.getConfig();
-
-        Optional<AWSCLIConfigFile.Section> profileSection = config.getSection(profile);
-
-        // Legacy fallback
-        if (!profileSection.isPresent()) {
-            profileSection = config.getSection("profile " + profile);
-        }
-
-        return profileSection.flatMap(s -> s.getProperty("region"));
     }
 
     public SecretsGroupInfoView createGroup(String groupName, String storageType, String file, Boolean allowKeyReuse) {

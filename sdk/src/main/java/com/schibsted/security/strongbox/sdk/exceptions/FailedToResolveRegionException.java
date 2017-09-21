@@ -21,17 +21,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.types;
+package com.schibsted.security.strongbox.sdk.exceptions;
 
 /**
- * AWS profile used in AWS CLI credential and config files
- *
  * @author stiankri
  */
-public class ProfileIdentifier {
-    public final String name;
+public class FailedToResolveRegionException extends RuntimeException {
 
-    public ProfileIdentifier(final String name) {
-        this.name = name;
+    public FailedToResolveRegionException(String message) {
+        super(message);
+    }
+
+    public FailedToResolveRegionException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
