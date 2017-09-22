@@ -97,6 +97,10 @@ publishing {
                 }
             }
         }
+        shaded(MavenPublication) {
+            artifactId = 'strongbox-' + project.name + '-shaded'
+            from components.shadow
+        }
     }
 }
 
