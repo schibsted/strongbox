@@ -27,3 +27,8 @@ done
 rm -f ${ROOT_DIR}/cli/build/distributions/${PKG}
 
 ${ROOT_DIR}/script/generate-bintray-json.sh
+
+# Javadoc
+mkdir -p ${ROOT_DIR}/build/gh-pages/javadoc
+cp -r ${ROOT_DIR}/sdk/build/docs/javadoc ${ROOT_DIR}/build/gh-pages/javadoc/sdk
+cp -r ${ROOT_DIR}/archaius/build/docs/javadoc ${ROOT_DIR}/build/gh-pages/javadoc/archaius
