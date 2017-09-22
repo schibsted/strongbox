@@ -21,6 +21,13 @@ shadowJar {
     classifier = ''
 }
 
+tasks.withType(Jar) {
+    from(project.parent.projectDir) {
+        include 'LICENSE', 'NOTICE'
+        into 'META-INF'
+    }
+}
+
 /*
  * The MIT License (MIT)
  *
