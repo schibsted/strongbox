@@ -36,7 +36,9 @@ import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupIdentifier;
 import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author stiankri
@@ -84,6 +86,18 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
         return getStringSecret(new SecretIdentifier(secretIdentifier), version);
     }
 
+
+    @Override
+    public Map<String, String> getAllLatestActiveStringSecrets() {
+        return secretsGroup.getLatestActiveVersionOfAllSecrets()
+                .stream()
+                .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.UTF8)
+                .collect(Collectors.toMap(
+                        secretEntry -> secretEntry.secretIdentifier.name,
+                        secretEntry -> secretEntry.secretValue.asString()
+                ));
+    }
+
     @Override
     public Optional<byte[]> getBinarySecret(final SecretIdentifier secretIdentifier) {
         return asBinary(secretsGroup.getLatestActiveVersion(secretIdentifier));
@@ -102,6 +116,17 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
     @Override
     public Optional<byte[]> getBinarySecret(String secretIdentifier, long version) {
         return getBinarySecret(new SecretIdentifier(secretIdentifier), version);
+    }
+
+    @Override
+    public Map<String, byte[]> getAllLatestActiveByteSecrets() {
+        return secretsGroup.getLatestActiveVersionOfAllSecrets()
+                .stream()
+                .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.BINARY)
+                .collect(Collectors.toMap(
+                        secretEntry -> secretEntry.secretIdentifier.name,
+                        secretEntry -> secretEntry.secretValue.asByteArray()
+                ));
     }
 
     private Optional<String> asString(final Optional<SecretEntry> secretEntry) {

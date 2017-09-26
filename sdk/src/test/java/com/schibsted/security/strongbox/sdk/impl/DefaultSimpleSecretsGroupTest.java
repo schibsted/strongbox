@@ -23,14 +23,19 @@
 
 package com.schibsted.security.strongbox.sdk.impl;
 
+import com.google.common.collect.ImmutableMap;
 import com.schibsted.security.strongbox.sdk.SecretsGroup;
 import com.schibsted.security.strongbox.sdk.exceptions.EncodingException;
 import com.schibsted.security.strongbox.sdk.internal.impl.DefaultSecretsGroup;
 import com.schibsted.security.strongbox.sdk.testing.SecretEntryMock;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
+import com.schibsted.security.strongbox.sdk.types.SecretType;
+import com.schibsted.security.strongbox.sdk.types.SecretValue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.doReturn;
@@ -63,6 +68,15 @@ public class DefaultSimpleSecretsGroupTest {
         SecretEntryMock latestStringSecret = SecretEntryMock.builder().secretValue(value1).build();
         SecretEntryMock versionedStringSecret = SecretEntryMock.builder().secretValue(value2).build();
 
+        SecretValue secretString = new SecretValue("secret1", SecretType.OPAQUE);
+        SecretValue secretString2 = new SecretValue("secret2", SecretType.OPAQUE);
+        SecretValue secretBinary = new SecretValue("binary".getBytes(), SecretType.OPAQUE);
+        SecretValue secretBinary2 = new SecretValue("binary2".getBytes(), SecretType.OPAQUE);
+        SecretEntryMock secretStringEntry = SecretEntryMock.builder().secretValue(secretString).secretIdentifier("secretString").build();
+        SecretEntryMock secretStringEntry2 = SecretEntryMock.builder().secretValue(secretString2).secretIdentifier("secretString2").build();
+        SecretEntryMock secretBinaryEntry = SecretEntryMock.builder().secretValue(secretBinary).secretIdentifier("secretBinary").build();
+        SecretEntryMock secretBinaryEntry2 = SecretEntryMock.builder().secretValue(secretBinary2).secretIdentifier("secretBinary2").build();
+
         SecretEntryMock latestBinarySecret = SecretEntryMock.builder().secretValue(value3).build();
         SecretEntryMock versionedBinarySecret = SecretEntryMock.builder().secretValue(value4).build();
 
@@ -70,10 +84,23 @@ public class DefaultSimpleSecretsGroupTest {
         doReturn(Optional.of(versionedStringSecret)).when(mockSecretsGroup).getActive(stringSecretIdentifier, version);
         doReturn(Optional.of(latestBinarySecret)).when(mockSecretsGroup).getLatestActiveVersion(binarySecretIdentifier);
         doReturn(Optional.of(versionedBinarySecret)).when(mockSecretsGroup).getActive(binarySecretIdentifier, version);
+        doReturn(Arrays.asList(secretStringEntry, secretStringEntry2, secretBinaryEntry, secretBinaryEntry2)).when(mockSecretsGroup).getLatestActiveVersionOfAllSecrets();
 
         simpleSecretsGroup = new DefaultSimpleSecretsGroup(mockSecretsGroup);
     }
 
+    @Test
+    public void getAllStringSecrets() {
+        Map<String, String> secrets = simpleSecretsGroup.getAllLatestActiveStringSecrets();
+        assertThat(secrets, is(ImmutableMap.of("secretString", "secret1", "secretString2", "secret2")));
+    }
+
+    @Test
+    public void getAllByteSecrets() {
+        Map<String, byte[]> secrets = simpleSecretsGroup.getAllLatestActiveByteSecrets();
+        assertThat(secrets.get("secretBinary"), is("binary".getBytes()));
+        assertThat(secrets.get("secretBinary2"), is("binary2".getBytes()));
+    }
     @Test
     public void getStringSecret() {
         Optional<String> result = simpleSecretsGroup.getStringSecret(stringSecretIdentifier);
