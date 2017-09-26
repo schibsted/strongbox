@@ -147,6 +147,7 @@ task sourceJar(type: Jar) {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId 'com.schibsted.security'
             from components.java
             artifact sourceJar {
                 classifier "sources"
