@@ -55,7 +55,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifactId 'strongbox-' + project.name
-            groupId 'com.schibsted.test'
+            groupId group
 
             artifact sourceJar
 
@@ -66,16 +66,22 @@ publishing {
                 configurations.runtime.allDependencies.each {
                     if (it.group != null && it.name != null) {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
+                        if (it.group == group && it.name == "sdk") {
+                            dependencyNode.appendNode('groupId', group)
+                            dependencyNode.appendNode('artifactId', "strongbox-sdk")
+                            dependencyNode.appendNode('version', version)
+                        } else {
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
 
-                        if (it.excludeRules.size() > 0) {
-                            def exclusionsNode = dependencyNode.appendNode('exclusions')
-                            it.excludeRules.each { rule ->
-                                def exclusionNode = exclusionsNode.appendNode('exclusion')
-                                exclusionNode.appendNode('groupId', rule.group)
-                                exclusionNode.appendNode('artifactId', rule.module)
+                            if (it.excludeRules.size() > 0) {
+                                def exclusionsNode = dependencyNode.appendNode('exclusions')
+                                it.excludeRules.each { rule ->
+                                    def exclusionNode = exclusionsNode.appendNode('exclusion')
+                                    exclusionNode.appendNode('groupId', rule.group)
+                                    exclusionNode.appendNode('artifactId', rule.module)
+                                }
                             }
                         }
                     }
