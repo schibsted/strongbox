@@ -56,8 +56,10 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId 'strongbox-' + project.name
             groupId group
-
-            artifact sourceJar
+            artifact jar
+            artifact sourceJar {
+                classifier "sources"
+            }
 
             // Workaround: https://github.com/gradle/gradle/issues/1061
             pom.withXml {
