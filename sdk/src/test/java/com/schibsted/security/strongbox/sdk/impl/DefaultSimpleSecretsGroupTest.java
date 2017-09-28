@@ -98,7 +98,7 @@ public class DefaultSimpleSecretsGroupTest {
 
     @Test
     public void getAllStringSecrets() {
-        List<StringSecretEntry> secrets = simpleSecretsGroup.getAllLatestActiveStringSecrets();
+        List<StringSecretEntry> secrets = simpleSecretsGroup.getAllStringSecrets();
         StringSecretEntry one = new StringSecretEntry(stringSecretIdentifier2, stringSecretValue2.asString(), 1l);
         StringSecretEntry two = new StringSecretEntry(stringSecretIdentifier3, stringSecretValue3.asString(), 1l);
         assertThat(secrets, is(Arrays.asList(one, two)));
@@ -106,7 +106,7 @@ public class DefaultSimpleSecretsGroupTest {
 
     @Test
     public void getAllByteSecrets() {
-        List<ByteSecretEntry> secrets = simpleSecretsGroup.getAllLatestActiveByteSecrets();
+        List<ByteSecretEntry> secrets = simpleSecretsGroup.getAllByteSecrets();
         ByteSecretEntry one = new ByteSecretEntry(binarySecretIdentifier2, binarySecretValue2.asByteArray(), 1l);
         ByteSecretEntry two = new ByteSecretEntry(binarySecretIdentifier3, binarySecretValue3.asByteArray(), 1l);
         assertThat(secrets, is(Arrays.asList(one, two)));

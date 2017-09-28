@@ -89,7 +89,7 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
     }
 
     @Override
-    public List<StringSecretEntry> getAllLatestActiveStringSecrets() {
+    public List<StringSecretEntry> getAllStringSecrets() {
         return secretsGroup.getLatestActiveVersionOfAllSecrets()
                 .stream()
                 .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.UTF8)
@@ -118,7 +118,7 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
     }
 
     @Override
-    public List<ByteSecretEntry> getAllLatestActiveByteSecrets() {
+    public List<ByteSecretEntry> getAllByteSecrets() {
         return secretsGroup.getLatestActiveVersionOfAllSecrets()
                 .stream()
                 .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.BINARY)

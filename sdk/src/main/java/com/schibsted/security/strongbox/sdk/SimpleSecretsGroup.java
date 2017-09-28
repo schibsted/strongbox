@@ -81,7 +81,7 @@ public interface SimpleSecretsGroup {
      *
      * @return List with {@code StringSecretEntry}
      */
-    List<StringSecretEntry> getAllLatestActiveStringSecrets();
+    List<StringSecretEntry> getAllStringSecrets();
 
     /**
      * Get the latest secret value as a {@code byte[]}
@@ -126,5 +126,5 @@ public interface SimpleSecretsGroup {
      *
      * @return List with {@code ByteSecretEntry}
      */
-    List<ByteSecretEntry> getAllLatestActiveByteSecrets();
+    List<ByteSecretEntry> getAllByteSecrets();
 }
