@@ -30,13 +30,15 @@ import com.schibsted.security.strongbox.sdk.SecretsGroup;
 import com.schibsted.security.strongbox.sdk.SimpleSecretsGroup;
 import com.schibsted.security.strongbox.sdk.exceptions.EncodingException;
 import com.schibsted.security.strongbox.sdk.internal.SessionName;
+import com.schibsted.security.strongbox.sdk.types.ByteSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.Encoding;
 import com.schibsted.security.strongbox.sdk.types.SecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupIdentifier;
+import com.schibsted.security.strongbox.sdk.types.StringSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -86,16 +88,13 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
         return getStringSecret(new SecretIdentifier(secretIdentifier), version);
     }
 
-
     @Override
-    public Map<String, String> getAllLatestActiveStringSecrets() {
+    public List<StringSecretEntry> getAllLatestActiveStringSecrets() {
         return secretsGroup.getLatestActiveVersionOfAllSecrets()
                 .stream()
                 .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.UTF8)
-                .collect(Collectors.toMap(
-                        secretEntry -> secretEntry.secretIdentifier.name,
-                        secretEntry -> secretEntry.secretValue.asString()
-                ));
+                .map(StringSecretEntry::of)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -119,14 +118,12 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
     }
 
     @Override
-    public Map<String, byte[]> getAllLatestActiveByteSecrets() {
+    public List<ByteSecretEntry> getAllLatestActiveByteSecrets() {
         return secretsGroup.getLatestActiveVersionOfAllSecrets()
                 .stream()
                 .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.BINARY)
-                .collect(Collectors.toMap(
-                        secretEntry -> secretEntry.secretIdentifier.name,
-                        secretEntry -> secretEntry.secretValue.asByteArray()
-                ));
+                .map(ByteSecretEntry::of)
+                .collect(Collectors.toList());
     }
 
     private Optional<String> asString(final Optional<SecretEntry> secretEntry) {

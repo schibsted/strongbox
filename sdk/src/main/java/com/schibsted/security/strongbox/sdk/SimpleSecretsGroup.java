@@ -23,10 +23,12 @@
 
 package com.schibsted.security.strongbox.sdk;
 
+import com.schibsted.security.strongbox.sdk.types.ByteSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 import com.schibsted.security.strongbox.sdk.exceptions.EncodingException;
+import com.schibsted.security.strongbox.sdk.types.StringSecretEntry;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,11 +77,11 @@ public interface SimpleSecretsGroup {
     Optional<String> getStringSecret(String secretIdentifier, long version);
 
     /**
-     * Get all latest active versions of secrets
+     * Get all latest active versions of String secrets
      *
-     * @return Map with secret name and secret value as {@code String}
+     * @return List with {@code StringSecretEntry}
      */
-    Map<String, String> getAllLatestActiveStringSecrets();
+    List<StringSecretEntry> getAllLatestActiveStringSecrets();
 
     /**
      * Get the latest secret value as a {@code byte[]}
@@ -120,9 +122,9 @@ public interface SimpleSecretsGroup {
     Optional<byte[]> getBinarySecret(String secretIdentifier, long version);
 
     /**
-     * Get all latest active versions of secrets
+     * Get all latest active versions of byte secrets
      *
-     * @return Map with secret name and secret value as {@code byte}
+     * @return List with {@code ByteSecretEntry}
      */
-    Map<String, byte[]> getAllLatestActiveByteSecrets();
+    List<ByteSecretEntry> getAllLatestActiveByteSecrets();
 }
