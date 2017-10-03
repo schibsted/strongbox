@@ -126,5 +126,5 @@ public interface SimpleSecretsGroup {
      *
      * @return List with {@code ByteSecretEntry}
      */
-    List<ByteSecretEntry> getAllByteSecrets();
+    List<ByteSecretEntry> getAllBinarySecrets();
 }

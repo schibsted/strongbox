@@ -118,7 +118,7 @@ public class DefaultSimpleSecretsGroup implements SimpleSecretsGroup {
     }
 
     @Override
-    public List<ByteSecretEntry> getAllByteSecrets() {
+    public List<ByteSecretEntry> getAllBinarySecrets() {
         return secretsGroup.getLatestActiveVersionOfAllSecrets()
                 .stream()
                 .filter(secretEntry -> secretEntry.secretValue.encoding == Encoding.BINARY)
