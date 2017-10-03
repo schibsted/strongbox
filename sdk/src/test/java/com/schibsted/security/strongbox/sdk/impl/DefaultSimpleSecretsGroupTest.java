@@ -79,10 +79,10 @@ public class DefaultSimpleSecretsGroupTest {
         SecretEntryMock latestStringSecret = SecretEntryMock.builder().secretValue(value1).build();
         SecretEntryMock versionedStringSecret = SecretEntryMock.builder().secretValue(value2).build();
 
-        SecretEntryMock secretStringEntry2 = SecretEntryMock.builder().secretValue(stringSecretValue2).secretIdentifier(stringSecretIdentifier2).build();
-        SecretEntryMock secretStringEntry3 = SecretEntryMock.builder().secretValue(stringSecretValue3).secretIdentifier(stringSecretIdentifier3).build();
-        SecretEntryMock secretBinaryEntry2 = SecretEntryMock.builder().secretValue(binarySecretValue2).secretIdentifier(binarySecretIdentifier2).build();
-        SecretEntryMock secretBinaryEntry3 = SecretEntryMock.builder().secretValue(binarySecretValue3).secretIdentifier(binarySecretIdentifier3).build();
+        SecretEntryMock secretStringEntry2 = SecretEntryMock.builder().secretValue(stringSecretValue2).version(1l).secretIdentifier(stringSecretIdentifier2).build();
+        SecretEntryMock secretStringEntry3 = SecretEntryMock.builder().secretValue(stringSecretValue3).version(1l).secretIdentifier(stringSecretIdentifier3).build();
+        SecretEntryMock secretBinaryEntry2 = SecretEntryMock.builder().secretValue(binarySecretValue2).version(1l).secretIdentifier(binarySecretIdentifier2).build();
+        SecretEntryMock secretBinaryEntry3 = SecretEntryMock.builder().secretValue(binarySecretValue3).version(1l).secretIdentifier(binarySecretIdentifier3).build();
 
         SecretEntryMock latestBinarySecret = SecretEntryMock.builder().secretValue(value3).build();
         SecretEntryMock versionedBinarySecret = SecretEntryMock.builder().secretValue(value4).build();
@@ -99,16 +99,16 @@ public class DefaultSimpleSecretsGroupTest {
     @Test
     public void getAllStringSecrets() {
         List<StringSecretEntry> secrets = simpleSecretsGroup.getAllStringSecrets();
-        StringSecretEntry one = new StringSecretEntry(stringSecretIdentifier2, stringSecretValue2.asString(), 1l);
-        StringSecretEntry two = new StringSecretEntry(stringSecretIdentifier3, stringSecretValue3.asString(), 1l);
+        StringSecretEntry one = new StringSecretEntry(stringSecretIdentifier2, 1l, stringSecretValue2.asString());
+        StringSecretEntry two = new StringSecretEntry(stringSecretIdentifier3, 1l, stringSecretValue3.asString());
         assertThat(secrets, is(Arrays.asList(one, two)));
     }
 
     @Test
     public void getAllByteSecrets() {
         List<ByteSecretEntry> secrets = simpleSecretsGroup.getAllByteSecrets();
-        ByteSecretEntry one = new ByteSecretEntry(binarySecretIdentifier2, binarySecretValue2.asByteArray(), 1l);
-        ByteSecretEntry two = new ByteSecretEntry(binarySecretIdentifier3, binarySecretValue3.asByteArray(), 1l);
+        ByteSecretEntry one = new ByteSecretEntry(binarySecretIdentifier2, 1l, binarySecretValue2.asByteArray());
+        ByteSecretEntry two = new ByteSecretEntry(binarySecretIdentifier3, 1l, binarySecretValue3.asByteArray());
         assertThat(secrets, is(Arrays.asList(one, two)));
     }
     @Test

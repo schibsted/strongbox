@@ -30,30 +30,32 @@ import java.util.Arrays;
 public class ByteSecretEntry {
 
     public final SecretIdentifier secretIdentifer;
-    public final byte[] value;
     public final long version;
+    public final byte[] value;
 
-    public ByteSecretEntry(SecretIdentifier secretIdentifer, byte[] value, long version) {
+    public ByteSecretEntry(SecretIdentifier secretIdentifer, long version, byte[] value) {
         this.secretIdentifer = secretIdentifer;
-        this.value = value;
         this.version = version;
+        this.value = value;
     }
 
     public static ByteSecretEntry of(SecretEntry secretEntry) {
-        return new ByteSecretEntry(secretEntry.secretIdentifier, secretEntry.secretValue.asByteArray(), secretEntry.version);
+        return new ByteSecretEntry(secretEntry.secretIdentifier, secretEntry.version, secretEntry.secretValue.asByteArray());
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        ByteSecretEntry that = (ByteSecretEntry) obj;
-        return Objects.equal(secretIdentifer, that.secretIdentifer) && Arrays.equals(value, that.value);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ByteSecretEntry that = (ByteSecretEntry) o;
+        return version == that.version &&
+                Objects.equal(secretIdentifer, that.secretIdentifer) &&
+                Arrays.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(secretIdentifer, value);
+        return Objects.hashCode(secretIdentifer, version, value);
     }
 
 }

@@ -28,30 +28,33 @@ import com.google.common.base.Objects;
 public class StringSecretEntry {
 
     public final SecretIdentifier secretIdentifer;
-    public final String value;
     public final long version;
+    public final String value;
 
 
-    public StringSecretEntry(SecretIdentifier secretIdentifer, String value, long version) {
+
+    public StringSecretEntry(SecretIdentifier secretIdentifer, long version, String value) {
         this.secretIdentifer = secretIdentifer;
-        this.value = value;
         this.version = version;
+        this.value = value;
     }
 
     public static StringSecretEntry of(SecretEntry secretEntry) {
-        return new StringSecretEntry(secretEntry.secretIdentifier, secretEntry.secretValue.asString(), secretEntry.version);
+        return new StringSecretEntry(secretEntry.secretIdentifier, secretEntry.version, secretEntry.secretValue.asString());
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (obj == this) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        StringSecretEntry that = (StringSecretEntry) obj;
-        return Objects.equal(secretIdentifer, that.secretIdentifer) && Objects.equal(value, that.value);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StringSecretEntry that = (StringSecretEntry) o;
+        return version == that.version &&
+                Objects.equal(secretIdentifer, that.secretIdentifer) &&
+                Objects.equal(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(secretIdentifer);
+        return Objects.hashCode(secretIdentifer, version, value);
     }
 }
