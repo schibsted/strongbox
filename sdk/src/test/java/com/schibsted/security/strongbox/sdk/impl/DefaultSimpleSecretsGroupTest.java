@@ -106,7 +106,7 @@ public class DefaultSimpleSecretsGroupTest {
 
     @Test
     public void getAllByteSecrets() {
-        List<ByteSecretEntry> secrets = simpleSecretsGroup.getAllByteSecrets();
+        List<ByteSecretEntry> secrets = simpleSecretsGroup.getAllBinarySecrets();
         ByteSecretEntry one = new ByteSecretEntry(binarySecretIdentifier2, 1l, binarySecretValue2.asByteArray());
         ByteSecretEntry two = new ByteSecretEntry(binarySecretIdentifier3, 1l, binarySecretValue3.asByteArray());
         assertThat(secrets, is(Arrays.asList(one, two)));
