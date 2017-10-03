@@ -23,9 +23,12 @@
 
 package com.schibsted.security.strongbox.sdk;
 
+import com.schibsted.security.strongbox.sdk.types.ByteSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 import com.schibsted.security.strongbox.sdk.exceptions.EncodingException;
+import com.schibsted.security.strongbox.sdk.types.StringSecretEntry;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -74,6 +77,13 @@ public interface SimpleSecretsGroup {
     Optional<String> getStringSecret(String secretIdentifier, long version);
 
     /**
+     * Get all latest active versions of String secrets
+     *
+     * @return List with {@code StringSecretEntry}
+     */
+    List<StringSecretEntry> getAllStringSecrets();
+
+    /**
      * Get the latest secret value as a {@code byte[]}
      *
      * @param secretIdentifier identifier of the secret to retrieve
@@ -110,4 +120,11 @@ public interface SimpleSecretsGroup {
      * @throws EncodingException if the secret is not binary
      */
     Optional<byte[]> getBinarySecret(String secretIdentifier, long version);
+
+    /**
+     * Get all latest active versions of byte secrets
+     *
+     * @return List with {@code ByteSecretEntry}
+     */
+    List<ByteSecretEntry> getAllByteSecrets();
 }
