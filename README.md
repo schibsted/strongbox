@@ -61,9 +61,9 @@ $ strongbox --region eu-west-1 secret get --group team.project --name MySecret
 For more examples please see [the Wiki](https://github.com/schibsted/strongbox/wiki/Fetch-Secrets-With-the-CLI).
 
 #### Java SDK
-The following is from the [example repo](https://github.com/schibsted/strongbox-examples/tree/master/sdk). Add the Gradle dependency (make sure you have added the repository)
+The following is from the [example repo](https://github.com/schibsted/strongbox-examples/tree/master/sdk). Add the Gradle dependency (make sure you have added the jcenter repository)
 ```
-compile 'com.schibsted.security:strongbox-sdk:0.2.0'
+compile 'com.schibsted.security:strongbox-sdk:0.2.1'
 ```
 
 Then retrieve the Secret using
