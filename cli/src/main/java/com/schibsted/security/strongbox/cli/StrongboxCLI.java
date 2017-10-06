@@ -46,6 +46,8 @@ public class StrongboxCLI {
                 .withDefaultCommand(Help.class)
                 .withCommands(Help.class);
 
+        builder.withCommand(Global.CustomHelp.class);
+
         builder.withGroup("group")
                 .withDescription("Manage Secret Groups")
                 .withDefaultCommand(Group.List.class)
@@ -77,7 +79,10 @@ public class StrongboxCLI {
                         "  e.g. 'strongbox --global-option global-value <command> [<args>]'\n" +
                         "  see 'strongbox help <command>' for more information about ordering.",
                         globalOptions.get()));
+            } else {
+                System.err.println("See 'strongbox help'.");
             }
+
             System.exit(1);
         }
     }
