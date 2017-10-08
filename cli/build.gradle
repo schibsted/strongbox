@@ -107,6 +107,13 @@ ospackage {
     }
 }
 
+jar {
+    manifest {
+        attributes("Implementation-Version": version)
+        Grgit.hashCode();
+    }
+}
+
 tasks.withType(Jar) {
     from(project.parent.projectDir) {
         include 'LICENSE', 'NOTICE'
