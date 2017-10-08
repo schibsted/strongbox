@@ -34,7 +34,7 @@ import io.airlift.airline.Command;
  * @author stiankri
  */
 public class Gui {
-    @Command(name = "open", description = "Open Graphical User Interface")
+    @Command(name = "gui", description = "Open Graphical User Interface")
     public static class OpenGui extends Global.BaseCommand {
         @Override
         public void run() {
