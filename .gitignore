@@ -1,10 +1,15 @@
 .gnupg/
 .gradle/
-*.idea/
-*.iml
 build/
 bin/
 lib/
 *.sbx
 .secrets/signing_key.asc
 bintray/
+
+# Intellij
+*.idea/
+*.iml
+sdk/out
+cli/out
+archaius/out
