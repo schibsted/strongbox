@@ -87,7 +87,7 @@ public class Global {
     public static class CustomHelp extends Help {
     }
 
-    @io.airlift.airline.Command(name = Option.Constants.VERSION, description = Option.Constants.VERSION_DESCRIPTION)
+    @io.airlift.airline.Command(name = "version", description = Option.Constants.VERSION_DESCRIPTION)
     public static class Version implements Runnable {
 
         @Arguments
@@ -101,6 +101,11 @@ public class Global {
             System.out.println(String.format("strongbox version '%s'", version));
         }
     }
+
+    @io.airlift.airline.Command(name = Option.Constants.VERSION, description = Option.Constants.VERSION_DESCRIPTION, hidden = true)
+    public static class VersionOption extends Version {
+    }
+
 
 
     public enum Option {
