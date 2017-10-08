@@ -47,6 +47,8 @@ import java.util.Optional;
  * @author stiankri
  */
 public class StrongboxCLI {
+    public static GlobalMetadata globalMetadata;
+
     public static void main(String[] args) {
         CliBuilder<Runnable> builder = Cli.<Runnable>builder("strongbox")
                 .withDescription("Strongbox")
@@ -59,12 +61,12 @@ public class StrongboxCLI {
 
         builder.withGroup("group")
                 .withDescription("Manage Secret Groups")
-                .withDefaultCommand(Group.List.class)
+                .withDefaultCommand(Group.GroupHelp.class)
                 .withCommands(Group.Create.class, Group.List.class, Group.Info.class, Group.Delete.class, Group.AttachAdmin.class, Group.DetachAdmin.class, Group.AttachReadOnly.class, Group.DetachReadOnly.class, Group.BackupCommand.class, Group.RestoreCommand.class, Group.MigrateCommand.class);
 
         builder.withGroup("secret")
                 .withDescription("Manage Secrets for a Secret Group")
-                .withDefaultCommand(Secret.ListNames.class)
+                .withDefaultCommand(Secret.SecretHelp.class)
                 .withCommands(Secret.Create.class, Secret.AddVersion.class, Secret.Get.class, Secret.GetLatest.class, Secret.Delete.class, Secret.ListNames.class, Secret.ListVersions.class, Secret.Update.class);
 
         builder.withGroup("gui")
@@ -73,6 +75,7 @@ public class StrongboxCLI {
                 .withCommands(Gui.OpenGui.class);
 
         Cli<Runnable> parser = builder.build();
+        globalMetadata = parser.getMetadata();
 
         try {
             parser.parse(args).run();

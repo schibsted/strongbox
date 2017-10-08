@@ -23,9 +23,13 @@
 
 package com.schibsted.security.strongbox.cli.view;
 
+import com.schibsted.security.strongbox.cli.StrongboxCLI;
 import com.schibsted.security.strongbox.cli.viewmodel.SecretModel;
 import io.airlift.airline.Command;
+import io.airlift.airline.Help;
 import io.airlift.airline.Option;
+
+import java.util.Collections;
 
 /**
  * CLI commands related to managing Secrets within a Strongbox Secrets Group
@@ -34,6 +38,15 @@ import io.airlift.airline.Option;
  * @author hawkaa
  */
 public class Secret {
+
+    @Command(name = "secret-help", description = "Display help information for 'secret'")
+    public static class SecretHelp implements Runnable {
+        @Override
+        public void run() {
+            Help.help(StrongboxCLI.globalMetadata, Collections.singletonList("secret"));
+        }
+    }
+
     public static class SecretsGroupBaseCommand extends Global.BaseCommand {
         @Option(name = "--group", description = "Group", required=true)
         public String groupName;
