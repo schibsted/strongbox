@@ -38,13 +38,21 @@ public class Gui {
     public static class OpenGui extends Global.BaseCommand {
         @Override
         public void run() {
-            GroupModel groupModel = groupModel();
-            Singleton.secretsGroupManager = groupModel.getSecretsGroupManager();
-            Singleton.region = groupModel.getRegion();
-            Singleton.randomGenerator = groupModel.getRandomGenerator();
-            Singleton.principalAutoSuggestion = groupModel.getPrincipalAutoSuggestion();
-            StrongboxGUI strongboxGUI = new StrongboxGUI();
-            strongboxGUI.run();
+            try {
+                GroupModel groupModel = groupModel();
+                Singleton.secretsGroupManager = groupModel.getSecretsGroupManager();
+                Singleton.region = groupModel.getRegion();
+                Singleton.randomGenerator = groupModel.getRandomGenerator();
+                Singleton.principalAutoSuggestion = groupModel.getPrincipalAutoSuggestion();
+                StrongboxGUI strongboxGUI = new StrongboxGUI();
+                strongboxGUI.run();
+            } catch (java.lang.NoClassDefFoundError e) {
+                if (e.getMessage().equals("javafx/application/Application")) {
+                    throw new RuntimeException("Unable to launch GUI since JavaFX is not installed.", e);
+                } else {
+                    throw e;
+                }
+            }
         }
     }
 }
