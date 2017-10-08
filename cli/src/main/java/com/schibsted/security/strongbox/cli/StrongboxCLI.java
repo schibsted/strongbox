@@ -47,6 +47,7 @@ public class StrongboxCLI {
                 .withCommands(Help.class);
 
         builder.withCommand(Global.CustomHelp.class);
+        builder.withCommand(Global.Version.class);
 
         builder.withGroup("group")
                 .withDescription("Manage Secret Groups")

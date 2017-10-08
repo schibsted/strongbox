@@ -24,10 +24,13 @@
 package com.schibsted.security.strongbox.cli.view;
 
 import com.schibsted.security.strongbox.cli.viewmodel.GroupModel;
+import io.airlift.airline.Arguments;
 import io.airlift.airline.Help;
 import io.airlift.airline.OptionType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -79,6 +82,21 @@ public class Global {
 
     @io.airlift.airline.Command(name = Option.Constants.HELP, description = Option.Constants.HELP_DESCRIPTION, hidden = true)
     public static class CustomHelp extends Help {
+    }
+
+    @io.airlift.airline.Command(name = Option.Constants.VERSION, description = Option.Constants.VERSION_DESCRIPTION)
+    public static class Version implements Runnable {
+
+        @Arguments
+        public List<String> ignored = new ArrayList<>();
+
+        @Override
+        public void run() {
+            Package p = getClass().getPackage();
+            String version = p.getImplementationVersion();
+
+            System.out.println(String.format("strongbox version '%s'", version));
+        }
     }
 
     public enum Option {
@@ -135,6 +153,9 @@ public class Global {
 
             static final String HELP = "--help";
             static final String HELP_DESCRIPTION = "Display help information";
+
+            static final String VERSION = "--version";
+            static final String VERSION_DESCRIPTION = "Display version information";
         }
     }
 }
