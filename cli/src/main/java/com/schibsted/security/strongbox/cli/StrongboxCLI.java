@@ -69,10 +69,7 @@ public class StrongboxCLI {
                 .withDefaultCommand(Secret.SecretHelp.class)
                 .withCommands(Secret.Create.class, Secret.AddVersion.class, Secret.Get.class, Secret.GetLatest.class, Secret.Delete.class, Secret.ListNames.class, Secret.ListVersions.class, Secret.Update.class);
 
-        builder.withGroup("gui")
-                .withDescription("Graphical User Interface")
-                .withDefaultCommand(Gui.OpenGui.class)
-                .withCommands(Gui.OpenGui.class);
+        builder.withCommand(Gui.OpenGui.class);
 
         Cli<Runnable> parser = builder.build();
         globalMetadata = parser.getMetadata();
