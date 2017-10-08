@@ -24,6 +24,7 @@
 package com.schibsted.security.strongbox.cli.view;
 
 import com.schibsted.security.strongbox.cli.viewmodel.GroupModel;
+import io.airlift.airline.Help;
 import io.airlift.airline.OptionType;
 
 import java.util.HashMap;
@@ -76,6 +77,10 @@ public class Global {
         }
     }
 
+    @io.airlift.airline.Command(name = Option.Constants.HELP, description = Option.Constants.HELP_DESCRIPTION, hidden = true)
+    public static class CustomHelp extends Help {
+    }
+
     public enum Option {
         ASSUME_ROLE(Constants.ASSUME_ROLE, Constants.ASSUME_ROLE_DESCRIPTION),
         PROFILE(Constants.PROFILE, Constants.PROFILE_DESCRIPTION),
@@ -83,7 +88,8 @@ public class Global {
         OUTPUT(Constants.OUTPUT, Constants.OUTPUT_DESCRIPTION),
         OUTPUT_FIELD_NAMES(Constants.OUTPUT_FIELD_NAMES, Constants.OUTPUT_FIELD_NAMES_DESCRIPTION),
         SPLIT_OUTPUT_INTO_FILES(Constants.SPLIT_OUTPUT_INTO_FILES, Constants.SPLIT_OUTPUT_INTO_FILES_DESCRIPTION),
-        AES_256(Constants.AES_256, Constants.AES_256_DESCRIPTION);
+        AES_256(Constants.AES_256, Constants.AES_256_DESCRIPTION),
+        HELP(Constants.HELP, Constants.HELP_DESCRIPTION);
 
         public final String name;
         public final String description;
@@ -126,6 +132,9 @@ public class Global {
 
             static final String AES_256 = "--use-aes-256-encryption";
             static final String AES_256_DESCRIPTION = "Use AES-256 rather than the default AES-128";
+
+            static final String HELP = "--help";
+            static final String HELP_DESCRIPTION = "Display help information";
         }
     }
 }
