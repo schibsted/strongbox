@@ -23,6 +23,7 @@
 
 package com.schibsted.security.strongbox.cli;
 
+import com.google.common.collect.ListMultimap;
 import com.schibsted.security.strongbox.cli.view.Global;
 import com.schibsted.security.strongbox.cli.view.Group;
 import com.schibsted.security.strongbox.cli.view.Gui;
@@ -30,8 +31,14 @@ import com.schibsted.security.strongbox.cli.view.Secret;
 import io.airlift.airline.Cli;
 import io.airlift.airline.Cli.CliBuilder;
 import io.airlift.airline.Help;
+import io.airlift.airline.OptionType;
 import io.airlift.airline.ParseArgumentsUnexpectedException;
+import io.airlift.airline.Parser;
+import io.airlift.airline.model.GlobalMetadata;
+import io.airlift.airline.model.OptionMetadata;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -85,6 +92,41 @@ public class StrongboxCLI {
             }
 
             System.exit(1);
+        } catch (Exception e) {
+            boolean stacktrace = stacktraceIsSet(parser.getMetadata(), args);
+
+            if (!stacktrace) {
+                System.err.println(e.getMessage());
+                System.exit(1);
+            }
+            throw e;
         }
+    }
+
+    /**
+     * We check if the option is set here rather than in each command
+     * to have a single place to catch all exceptions.
+     *
+     * Given that we first catch ParseArgumentsUnexpectedException we
+     * do expect that parsing the same input again will not throw an exception.
+     */
+    private static boolean stacktraceIsSet(final GlobalMetadata globalMetadata, final String[] args) {
+        try {
+            Parser p = new Parser();
+            ListMultimap<OptionMetadata, Object> options = p.parse(globalMetadata, args).getParsedOptions();
+
+            for (Map.Entry<OptionMetadata, Collection<Object>> option : options.asMap().entrySet()) {
+                OptionMetadata metadata = option.getKey();
+
+                if (metadata.getOptionType() == OptionType.GLOBAL
+                        && metadata.getOptions().contains("--stacktrace")) {
+                    return option.getValue().contains(true);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to determine if the stacktrace should be shown. Please report this bug.");
+        }
+
+        return false;
     }
 }

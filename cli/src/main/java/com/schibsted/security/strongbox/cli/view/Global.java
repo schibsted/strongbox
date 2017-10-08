@@ -64,6 +64,9 @@ public class Global {
         @io.airlift.airline.Option(type = OptionType.GLOBAL, name = Option.Constants.AES_256, description = Option.Constants.AES_256_DESCRIPTION)
         public boolean useAES256;
 
+        @io.airlift.airline.Option(type = OptionType.GLOBAL, name = Option.Constants.STACKTRACE, description = Option.Constants.STACKTRACE_DESCRIPTION)
+        public boolean stacktrace;
+
         protected GroupModel groupModel() {
             if (!this.groupModel.isPresent()) {
                 this.groupModel = Optional.of(new GroupModel(profile, role, region, useAES256, outputFormat, fieldName, outputPath));
@@ -98,6 +101,7 @@ public class Global {
             System.out.println(String.format("strongbox version '%s'", version));
         }
     }
+
 
     public enum Option {
         ASSUME_ROLE(Constants.ASSUME_ROLE, Constants.ASSUME_ROLE_DESCRIPTION),
@@ -156,6 +160,9 @@ public class Global {
 
             static final String VERSION = "--version";
             static final String VERSION_DESCRIPTION = "Display version information";
+
+            static final String STACKTRACE = "--stacktrace";
+            static final String STACKTRACE_DESCRIPTION = "Print out stacktrace for exceptions";
         }
     }
 }
