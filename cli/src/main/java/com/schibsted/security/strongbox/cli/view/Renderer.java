@@ -164,7 +164,7 @@ public class Renderer {
         if (map.containsKey(fieldName)) {
             return map.get(fieldName);
         } else {
-            throw new IllegalArgumentException(String.format("No element called '%s', expected one of {%s}", fieldName, Joiner.on(",").join(map.keySet())));
+            throw new IllegalArgumentException(String.format("No output field called '%s', expected one of {%s}", fieldName, Joiner.on(", ").join(map.keySet())));
         }
     }
 
@@ -174,7 +174,7 @@ public class Renderer {
 
         for (String field : fields) {
             if (!map.containsKey(field)) {
-                throw new IllegalArgumentException(String.format("No element called '%s', expected one of {%s}", fieldName, Joiner.on(",").join(map.keySet())));
+                throw new IllegalArgumentException(String.format("No output field called '%s', expected one of {%s}", fieldName, Joiner.on(", ").join(map.keySet())));
             }
         }
 
