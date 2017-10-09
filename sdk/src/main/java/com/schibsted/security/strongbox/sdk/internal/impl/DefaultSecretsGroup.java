@@ -23,6 +23,7 @@
 
 package com.schibsted.security.strongbox.sdk.internal.impl;
 
+import com.schibsted.security.strongbox.sdk.exceptions.AlreadyExistsException;
 import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShredder;
 import com.schibsted.security.strongbox.sdk.internal.encryption.DefaultEncryptionContext;
 import com.schibsted.security.strongbox.sdk.internal.encryption.EncryptionContext;
@@ -91,6 +92,8 @@ public class DefaultSecretsGroup implements SecretsGroup {
             entry.bestEffortShred();
 
             return entry;
+        } catch (AlreadyExistsException e) {
+            throw new AlreadyExistsException(String.format("A secret named '%s' already exists", newSecretEntry.secretIdentifier.name), e);
         } finally {
             readWriteLock.writeLock().unlock();
         }
