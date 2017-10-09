@@ -43,15 +43,15 @@ public final class UserAlias {
         int length = Encoder.asUTF8(alias).length;
 
         if (length < ALIAS_MIN_LENGTH) {
-            throw new IllegalArgumentException(String.format("The alias '%s' must be at least %d characters long", alias, ALIAS_MIN_LENGTH));
+            throw new IllegalArgumentException(String.format("The user alias '%s' must be at least %d characters long", alias, ALIAS_MIN_LENGTH));
         }
 
         if (length > ALIAS_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format("The alias '%s' cannot be longer than %d characters", alias, ALIAS_MAX_LENGTH));
+            throw new IllegalArgumentException(String.format("The user alias '%s' cannot be longer than %d characters", alias, ALIAS_MAX_LENGTH));
         }
 
         if (!pattern.matcher(alias).find()) {
-            throw new IllegalArgumentException(String.format("The alias '%s' did not match the regular expression '%s'", alias, ALIAS_REGEX));
+            throw new IllegalArgumentException(String.format("The user alias '%s' did not match the regular expression '%s'", alias, ALIAS_REGEX));
         }
 
         this.alias = alias;

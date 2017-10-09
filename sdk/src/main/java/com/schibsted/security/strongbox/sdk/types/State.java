@@ -25,6 +25,7 @@ package com.schibsted.security.strongbox.sdk.types;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Joiner;
 import com.schibsted.security.strongbox.sdk.internal.json.StateDeserializer;
 import com.schibsted.security.strongbox.sdk.internal.json.StateSerializer;
 
@@ -61,7 +62,8 @@ public enum State {
     public static State fromString(String state) {
         State s = stateMap.get(state);
         if (s == null) {
-            throw new IllegalArgumentException("Unrecognized state '" + state + "', expected one of " + stateMap.keySet());
+            throw new IllegalArgumentException(String.format("Unrecognized state '%s', expected one of {%s}",
+                    state, Joiner.on(", ").join(stateMap.keySet())));
         }
         return s;
     }

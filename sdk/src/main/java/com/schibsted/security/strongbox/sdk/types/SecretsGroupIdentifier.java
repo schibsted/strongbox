@@ -46,15 +46,15 @@ public final class SecretsGroupIdentifier implements Comparable<SecretsGroupIden
     public SecretsGroupIdentifier(@JsonProperty("region") Region region,
                                   @JsonProperty("name") String name) {
         if (name.length() < NAME_MIN_LENGTH) {
-            throw new IllegalArgumentException(String.format("The name '%s' must be at least %d characters long", name, NAME_MIN_LENGTH));
+            throw new IllegalArgumentException(String.format("The group name '%s' must be at least %d characters long", name, NAME_MIN_LENGTH));
         }
 
         if (name.length() > NAME_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format("The name '%s' can at most be %d characters long", name, NAME_MAX_LENGTH));
+            throw new IllegalArgumentException(String.format("The group name '%s' can at most be %d characters long", name, NAME_MAX_LENGTH));
         }
 
         if (!pattern.matcher(name).find()) {
-            throw new IllegalArgumentException(String.format("The name '%s' must match the regular expression '%s'", name, NAME_REGEX));
+            throw new IllegalArgumentException(String.format("The group name '%s' must match the regular expression '%s'", name, NAME_REGEX));
         }
 
         this.region = region;
