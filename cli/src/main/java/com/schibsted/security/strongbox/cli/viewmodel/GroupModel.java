@@ -304,7 +304,7 @@ public class GroupModel {
                 case "csv":
                     return OutputFormat.CSV;
                 default:
-                    throw new IllegalArgumentException(String.format("Unrecognized output format '%s', expected {text, json}", outputFormat));
+                    throw new IllegalArgumentException(String.format("Unrecognized output format '%s', expected one of {text, json, csv, raw}", outputFormat));
             }
         } else {
             return OutputFormat.TEXT;
