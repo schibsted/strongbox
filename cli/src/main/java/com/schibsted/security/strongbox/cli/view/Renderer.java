@@ -97,7 +97,7 @@ public class Renderer {
             this.outputStream.write(data);
             this.outputStream.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to write output");
+            throw new RuntimeException("Failed to write output from CLI", e);
         }
     }
 
@@ -106,7 +106,7 @@ public class Renderer {
         try {
             Files.write(file.toPath(), singleOutput(object).asByteArray());
         } catch (IOException e) {
-            throw new RuntimeException(String.format("Failed to write to file %s", file));
+            throw new RuntimeException(String.format("Failed to write to file '%s'", file), e);
         }
     }
 
@@ -116,7 +116,7 @@ public class Renderer {
             try {
                 Files.createDirectory(path.toPath());
             } catch (IOException e) {
-                throw new RuntimeException(String.format("Failed to create directory %s", path));
+                throw new RuntimeException(String.format("Failed to create directory '%s'", path), e);
             }
         }
     }
@@ -157,7 +157,7 @@ public class Renderer {
 
     private BinaryString outputRaw(View view, String fieldName) {
         if (fieldName.contains(",")) {
-            throw new IllegalArgumentException(String.format("You can only output a single field of a single value, got '%s'", fieldName));
+            throw new IllegalArgumentException(String.format("You can only output a single field of a single value when using '--output raw', but got '%s'", fieldName));
         }
 
         Map<String, BinaryString> map = view.toMap();
@@ -206,7 +206,7 @@ public class Renderer {
         try {
             return m.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize to JSON");
+            throw new RuntimeException("Failed to serialize output to JSON", e);
         }
     }
 }
