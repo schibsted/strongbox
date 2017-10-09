@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 import static java.util.Locale.ENGLISH;
@@ -77,7 +78,11 @@ public class FormattedTimestamp {
     }
 
     public static ZonedDateTime fromDate(String date) {
-        return LocalDate.parse(date, localDate).atStartOfDay(utc);
+        try {
+            return LocalDate.parse(date, localDate).atStartOfDay(utc);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(String.format("Unable to parse '%s' as a date, expected it to be on the form 'YYYY-MM-DD'", date));
+        }
     }
 
     public static Long epoch(ZonedDateTime timestamp) {
