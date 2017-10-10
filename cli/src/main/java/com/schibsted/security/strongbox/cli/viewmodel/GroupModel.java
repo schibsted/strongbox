@@ -127,7 +127,7 @@ public class GroupModel {
             CustomRegionProviderChain regionProvider = new CustomRegionProviderChain();
             return regionProvider.resolveRegion(Optional.ofNullable(region), profileIdentifier);
         } catch (FailedToResolveRegionException e) {
-            throw new FailedToResolveRegionException("A region must be specified, e.g. with '--region <region>' or in the aws config/credential file");
+            throw new FailedToResolveRegionException("A region must be specified, e.g. with '--region <region>' or in the '~/.aws/config' file");
         }
 
     }
