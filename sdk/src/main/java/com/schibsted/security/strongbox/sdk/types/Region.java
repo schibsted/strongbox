@@ -23,6 +23,11 @@
 
 package com.schibsted.security.strongbox.sdk.types;
 
+import com.google.common.base.Joiner;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This is a copy of AWS' Regions class to avoid exposing AWS classes in the Strongbox API
  */
@@ -42,6 +47,14 @@ public enum Region {
     CN_NORTH_1("cn-north-1"),
     ;
 
+    private static Map<String, Region> regionMap = new HashMap();
+
+    static {
+        for (Region region : values()) {
+            regionMap.put(region.name, region);
+        }
+    }
+
     public final String name;
 
     Region(String name) {
@@ -53,11 +66,13 @@ public enum Region {
     }
 
     public static Region fromName(String regionName) {
-        for (Region region : Region.values()) {
-            if (regionName.equals(region.getName())) {
-                return region;
-            }
+        Region region = regionMap.get(regionName);
+
+        if (region == null) {
+            throw new IllegalArgumentException(String.format("No region called '%s', expected one of {%s}",
+                    regionName, Joiner.on(", ").join(regionMap.keySet())));
         }
-        throw new IllegalArgumentException("Cannot create enum from " + regionName + " value!");
+
+        return region;
     }
 }

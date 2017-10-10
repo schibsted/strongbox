@@ -85,7 +85,7 @@ public class StrongboxCLI {
             if (globalOptions.isPresent()) {
                 System.err.println(String.format(
                         "Please note: global options like '%s' must be placed before the command,\n" +
-                        "  e.g. 'strongbox --global-option global-value <command> [<args>]'\n" +
+                        "  e.g. 'strongbox --global-option [global-option-value] <command> [<args>]'\n" +
                         "  see 'strongbox help <command>' for more information about ordering.",
                         globalOptions.get()));
             } else {

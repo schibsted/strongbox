@@ -50,15 +50,15 @@ public final class SecretIdentifier {
     @JsonCreator
     public SecretIdentifier(@JsonProperty("name") String name) {
         if (name.length() < NAME_MIN_LENGTH) {
-            throw new IllegalArgumentException(String.format("The name '%s' must be at least %d characters long", name, NAME_MIN_LENGTH));
+            throw new IllegalArgumentException(String.format("The secret name '%s' must be at least %d characters long", name, NAME_MIN_LENGTH));
         }
 
         if (name.length() > NAME_MAX_LENGTH) {
-            throw new IllegalArgumentException(String.format("The name '%s' cannot be longer than %d characters", name, NAME_MAX_LENGTH));
+            throw new IllegalArgumentException(String.format("The secret name '%s' cannot be longer than %d characters", name, NAME_MAX_LENGTH));
         }
 
         if (!pattern.matcher(name).find()) {
-            throw new IllegalArgumentException(String.format("The name '%s' did not match the regular expression '%s'", name, NAME_REGEX));
+            throw new IllegalArgumentException(String.format("The secret name '%s' did not match the regular expression '%s'", name, NAME_REGEX));
         }
 
         this.name = name;

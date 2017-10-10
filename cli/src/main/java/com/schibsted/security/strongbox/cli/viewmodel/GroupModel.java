@@ -45,6 +45,7 @@ import com.schibsted.security.strongbox.cli.view.OutputFormat;
 import com.schibsted.security.strongbox.cli.viewmodel.types.ProxyInformation;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupIdentifierView;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupInfoView;
+import com.schibsted.security.strongbox.sdk.exceptions.FailedToResolveRegionException;
 import com.schibsted.security.strongbox.sdk.internal.config.AWSCLIConfigFile;
 import com.schibsted.security.strongbox.sdk.internal.config.CustomRegionProviderChain;
 import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
@@ -105,8 +106,7 @@ public class GroupModel {
         this.saveToFilePath = extractSaveToFilePath(saveToFilePath);
 
         Optional<ProfileIdentifier> profileIdentifier = resolveProfile(rawProfileIdentifier);
-        CustomRegionProviderChain regionProvider = new CustomRegionProviderChain();
-        this.region = regionProvider.resolveRegion(Optional.ofNullable(region), profileIdentifier);
+        this.region = resolveRegion(region, profileIdentifier);
         RegionResolver.setRegion(this.region);
 
         ClientConfiguration clientConfiguration = getClientConfiguration();
@@ -120,6 +120,16 @@ public class GroupModel {
         this.principalAutoSuggestion = PrincipalAutoSuggestion.fromCredentials(credentials, clientConfiguration);
 
         this.secretsGroupManager = new DefaultSecretsGroupManager(credentials, userConfig, encryptionStrength, clientConfiguration);
+    }
+
+    private Region resolveRegion(String region, Optional<ProfileIdentifier> profileIdentifier) {
+        try {
+            CustomRegionProviderChain regionProvider = new CustomRegionProviderChain();
+            return regionProvider.resolveRegion(Optional.ofNullable(region), profileIdentifier);
+        } catch (FailedToResolveRegionException e) {
+            throw new FailedToResolveRegionException("A region must be specified, e.g. with '--region <region>' or in the '~/.aws/config' file");
+        }
+
     }
 
     private AWSCredentialsProvider resolveBaseCredentials(final ClientConfiguration clientConfiguration, final Optional<ProfileIdentifier> profileIdentifier) {
@@ -304,7 +314,7 @@ public class GroupModel {
                 case "csv":
                     return OutputFormat.CSV;
                 default:
-                    throw new IllegalArgumentException(String.format("Unrecognized output format '%s', expected {text, json}", outputFormat));
+                    throw new IllegalArgumentException(String.format("Unrecognized output format '%s', expected one of {text, json, csv, raw}", outputFormat));
             }
         } else {
             return OutputFormat.TEXT;

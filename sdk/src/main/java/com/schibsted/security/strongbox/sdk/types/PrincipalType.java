@@ -24,6 +24,7 @@
 package com.schibsted.security.strongbox.sdk.types;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.common.base.Joiner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +52,8 @@ public enum PrincipalType {
     public static PrincipalType fromString(String principalType) {
         PrincipalType type = typeMap.get(principalType);
         if (type == null) {
-            throw new IllegalArgumentException("Unrecognized principalType '" + principalType + "', expected one of " + typeMap.keySet());
+            throw new IllegalArgumentException(String.format("Unrecognized PrincipalType '%s', expected one of {%s}",
+                    principalType, Joiner.on(", ").join(typeMap.keySet())));
         }
         return type;
     }

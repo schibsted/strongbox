@@ -66,7 +66,7 @@ public class SessionCache {
                 return Optional.empty();
             }
         } catch (IOException e) {
-            throw new RuntimeException(String.format("Failed to load session cache '%s'", file.getAbsolutePath()), e);
+            throw new RuntimeException(String.format("Failed to load session cache from '%s'", file.getAbsolutePath()), e);
         }
     }
 
@@ -78,7 +78,7 @@ public class SessionCache {
         try {
             objectMapper.writeValue(file, cache);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save cache", e);
+            throw new RuntimeException(String.format("Failed to save session cache to '%s'", file.getAbsolutePath()), e);
         }
     }
 

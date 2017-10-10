@@ -53,6 +53,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -175,8 +176,10 @@ public class SecretModel implements AutoCloseable {
     private static byte[] extractValueFromFile(String valueFile) {
         try {
             return Files.readAllBytes(Paths.get(valueFile));
+        } catch (NoSuchFileException e) {
+            throw new RuntimeException(String.format("Failed to read secret value from file '%s'. The file does not exists.", valueFile), e);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read value from file");
+            throw new RuntimeException(String.format("Failed to read secret value from file '%s'", valueFile), e);
         }
     }
 
@@ -199,11 +202,19 @@ public class SecretModel implements AutoCloseable {
 
     // TODO: return same data as in SDK
     public void setMetadata(String secretName, String versionString, String stateName, String comment) {
-        long version = Long.parseLong(versionString);
+        long version = parseVersion(versionString);
         Optional<State> state = (stateName != null) ? Optional.of(State.fromString(stateName)) : Optional.empty();
 
         SecretMetadata secretMetadata = new SecretMetadata(new SecretIdentifier(secretName), version, state, Optional.empty(), Optional.empty(), extractComment(comment).map(Optional::of));
         secretsGroup.update(secretMetadata);
+    }
+
+    private long parseVersion(String version) {
+        try {
+            return Long.parseLong(version);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(String.format("Version must be an integer, not '%s'", version));
+        }
     }
 
     private static State extractEnabledDisabled(String state) {
@@ -320,7 +331,7 @@ public class SecretModel implements AutoCloseable {
 
     private Optional<Long> decodeVersion(String version) {
         return (version != null) ?
-                Optional.of(Long.valueOf(version)) :
+                Optional.of(parseVersion(version)) :
                 Optional.empty();
     }
 
