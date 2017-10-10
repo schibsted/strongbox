@@ -108,7 +108,7 @@ public class AWSCLIConfigFile {
     public static class Config {
         private final Map<String, Section> sections;
 
-        private Config(final Map<String, Section> sections) {
+        Config(final Map<String, Section> sections) {
             this.sections = sections;
         }
 
@@ -121,11 +121,11 @@ public class AWSCLIConfigFile {
         private final Map<String, String> properties = new HashMap<>();
         public final String sectionName;
 
-        private Section(final String sectionName) {
+        Section(final String sectionName) {
             this.sectionName = sectionName;
         }
 
-        private void addProperty(final Property property) {
+        void addProperty(final Property property) {
             properties.put(property.key, property.value);
         }
 

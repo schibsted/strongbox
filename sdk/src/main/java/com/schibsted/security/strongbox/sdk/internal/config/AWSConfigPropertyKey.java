@@ -21,26 +21,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.mfa;
+package com.schibsted.security.strongbox.sdk.internal.config;
 
-import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
-import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
-import org.testng.annotations.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import com.amazonaws.auth.profile.internal.ProfileKeyConstants;
 
 /**
  * @author stiankri
  */
-public class SessionCacheTest {
-    @Test
-    public void resolve_filename() {
-        ProfileIdentifier profile = new ProfileIdentifier("my-profile");
-        RoleARN arn = new RoleARN("arn:test/dummy");
+public enum AWSConfigPropertyKey {
+    MFA_SERIAL("mfa_serial"),
+    SOURCE_PROFILE(ProfileKeyConstants.SOURCE_PROFILE),
+    ROLE_ARN(ProfileKeyConstants.ROLE_ARN),
+    AWS_ACCESS_KEY_ID(ProfileKeyConstants.AWS_ACCESS_KEY_ID),
+    AWS_SECRET_ACCESS_KEY(ProfileKeyConstants.AWS_SECRET_ACCESS_KEY);
 
-        SessionCache sessionCache = new SessionCache(profile, arn);
+    private final String name;
 
-        assertThat(sessionCache.resolveFileName(), is("my-profile--arn_test-dummy.json"));
+    AWSConfigPropertyKey(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

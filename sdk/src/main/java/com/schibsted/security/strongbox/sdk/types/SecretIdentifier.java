@@ -79,7 +79,7 @@ public final class SecretIdentifier {
         if(obj instanceof SecretIdentifier){
             final SecretIdentifier other = (SecretIdentifier) obj;
             return Objects.equal(name, other.name);
-        } else{
+        } else {
             return false;
         }
     }

@@ -23,6 +23,7 @@
 
 package com.schibsted.security.strongbox.sdk.types.arn;
 
+import com.google.common.base.Objects;
 import com.schibsted.security.strongbox.sdk.exceptions.InvalidResourceName;
 import com.schibsted.security.strongbox.sdk.types.Region;
 
@@ -85,5 +86,20 @@ public class ARN {
 
     public String toArn() {
         return this.arn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(arn);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ARN) {
+            final ARN other = (ARN) obj;
+            return Objects.equal(arn, other.arn);
+        } else {
+            return false;
+        }
     }
 }
