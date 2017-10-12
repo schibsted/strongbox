@@ -150,7 +150,17 @@ public class GroupModel {
         if (profile != null) {
             return new ProfileIdentifier(profile);
         } else {
-            return new ProfileIdentifier(AwsProfileNameLoader.INSTANCE.loadProfileName());
+            String resolvedProfile = AwsProfileNameLoader.INSTANCE.loadProfileName();
+
+            if (resolvedProfile.equals(AwsProfileNameLoader.DEFAULT_PROFILE_NAME)) {
+                String awsDefaultProfile = System.getenv("AWS_DEFAULT_PROFILE");
+
+                if (awsDefaultProfile != null) {
+                    resolvedProfile = awsDefaultProfile;
+                }
+            }
+
+            return new ProfileIdentifier(resolvedProfile);
         }
     }
 

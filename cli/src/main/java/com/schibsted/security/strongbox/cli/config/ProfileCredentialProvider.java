@@ -84,22 +84,6 @@ public class ProfileCredentialProvider implements AWSCredentialsProvider {
         }
     }
 
-    private Optional<ProfileIdentifier> resolveProfile(Optional<ProfileIdentifier> profile) {
-        String awsProfile = System.getenv("AWS_PROFILE");
-        String awsDefaultProfile = System.getenv("AWS_DEFAULT_PROFILE");
-
-        if (!profile.isPresent()) {
-            if (awsProfile != null) {
-                profile = Optional.ofNullable(awsProfile).map(ProfileIdentifier::new);
-            }
-            if (awsDefaultProfile != null) {
-                profile = Optional.ofNullable(awsDefaultProfile).map(ProfileIdentifier::new);
-            }
-        }
-
-        return profile;
-    }
-
     /**
      * Resolve AWS credentials based on MFA/Assume role
      *
