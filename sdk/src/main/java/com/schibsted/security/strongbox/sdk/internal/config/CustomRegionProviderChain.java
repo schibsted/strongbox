@@ -24,6 +24,7 @@
 package com.schibsted.security.strongbox.sdk.internal.config;
 
 import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.profile.internal.AwsProfileNameLoader;
 import com.amazonaws.regions.DefaultAwsRegionProviderChain;
 import com.amazonaws.util.EC2MetadataUtils;
 import com.schibsted.security.strongbox.sdk.exceptions.FailedToResolveRegionException;
@@ -39,11 +40,11 @@ import java.util.Optional;
 public class CustomRegionProviderChain {
 
     public Region resolveRegion() {
-        return resolveRegion(Optional.empty(), Optional.empty());
+        return resolveRegion(Optional.empty(), new ProfileIdentifier(AwsProfileNameLoader.DEFAULT_PROFILE_NAME));
     }
 
     // https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-region-selection.html#automatically-determine-the-aws-region-from-the-environment
-    public Region resolveRegion(Optional<String> region, Optional<ProfileIdentifier> profile) {
+    public Region resolveRegion(Optional<String> region, ProfileIdentifier profile) {
         Optional<Region> resolvedRegion = Optional.empty();
 
         if (region.isPresent()) {
@@ -76,9 +77,8 @@ public class CustomRegionProviderChain {
         return Optional.ofNullable(resolvedRegion);
     }
 
-    private Optional<Region> getRegionFromProfile(Optional<ProfileIdentifier> profile) {
-        String profileInConfig = profile.map(p -> p.name).orElse("default");
-        return getDefaultRegionFromConfigFile(profileInConfig);
+    private Optional<Region> getRegionFromProfile(ProfileIdentifier profile) {
+        return getDefaultRegionFromConfigFile(profile.name);
     }
 
     private Optional<Region> getRegionFromMetadata() {

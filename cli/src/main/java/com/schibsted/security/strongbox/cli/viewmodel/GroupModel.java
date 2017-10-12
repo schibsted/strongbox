@@ -23,28 +23,18 @@
 
 package com.schibsted.security.strongbox.cli.viewmodel;
 
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.BasicSessionCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
-import com.amazonaws.services.identitymanagement.model.InvalidInputException;
+import com.amazonaws.auth.profile.internal.AwsProfileNameLoader;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
-import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
-import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
-import com.amazonaws.services.securitytoken.model.Credentials;
-import com.schibsted.security.strongbox.cli.mfa.SessionCache;
+import com.schibsted.security.strongbox.cli.config.CustomCredentialsProviderChain;
 import com.schibsted.security.strongbox.cli.view.OutputFormat;
 import com.schibsted.security.strongbox.cli.viewmodel.types.ProxyInformation;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupIdentifierView;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupInfoView;
 import com.schibsted.security.strongbox.sdk.exceptions.FailedToResolveRegionException;
 import com.schibsted.security.strongbox.sdk.internal.config.AWSCLIConfigFile;
-import com.schibsted.security.strongbox.sdk.internal.config.AWSConfigPropertyKey;
-import com.schibsted.security.strongbox.sdk.internal.config.ConfigProviderChain;
 import com.schibsted.security.strongbox.sdk.internal.config.CustomRegionProviderChain;
 import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
 import com.schibsted.security.strongbox.sdk.internal.RegionResolver;
@@ -65,13 +55,10 @@ import com.schibsted.security.strongbox.sdk.types.PrincipalType;
 import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
 import com.schibsted.security.strongbox.sdk.types.Region;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupIdentifier;
-import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -103,7 +90,7 @@ public class GroupModel {
         this.fieldName = extractFieldName(this.outputFormat, fieldName);
         this.saveToFilePath = extractSaveToFilePath(saveToFilePath);
 
-        Optional<ProfileIdentifier> profileIdentifier = resolveProfile(rawProfileIdentifier);
+        ProfileIdentifier profileIdentifier = resolveProfile(rawProfileIdentifier);
         this.region = resolveRegion(region, profileIdentifier);
         RegionResolver.setRegion(this.region);
 
@@ -120,7 +107,7 @@ public class GroupModel {
         this.secretsGroupManager = new DefaultSecretsGroupManager(credentials, userConfig, encryptionStrength, clientConfiguration);
     }
 
-    private Region resolveRegion(String region, Optional<ProfileIdentifier> profileIdentifier) {
+    private Region resolveRegion(String region, ProfileIdentifier profileIdentifier) {
         try {
             CustomRegionProviderChain regionProvider = new CustomRegionProviderChain();
             return regionProvider.resolveRegion(Optional.ofNullable(region), profileIdentifier);
@@ -130,27 +117,15 @@ public class GroupModel {
 
     }
 
-    private AWSCredentialsProvider resolveBaseCredentials(final ClientConfiguration clientConfiguration, final Optional<ProfileIdentifier> profileIdentifier) {
-        if (profileIdentifier.isPresent()) {
-            return getCredentialsFromProfile(clientConfiguration, profileIdentifier.get());
-        } else {
-            try {
-                AWSCredentialsProvider credentialsProvider = new DefaultAWSCredentialsProviderChain();
+    private AWSCredentialsProvider resolveBaseCredentials(final ClientConfiguration clientConfiguration, final ProfileIdentifier profileIdentifier) {
+        try {
+            AWSCredentialsProvider credentialsProvider =  new CustomCredentialsProviderChain(clientConfiguration, profileIdentifier);
 
-                // Test that we can fetch the credentials without throwing
-                credentialsProvider.getCredentials();
+            // Test if getCredentials will throw
+            credentialsProvider.getCredentials();
 
-                return credentialsProvider;
-            } catch (Exception e) {
-                return fallbackToDefaultProfileOrThrow(e);
-            }
-        }
-    }
-
-    private AWSCredentialsProvider fallbackToDefaultProfileOrThrow(Throwable e) {
-        Optional<AWSCredentialsProvider> defaultCredentialsFromFile =  getDefaultCredentialsFromFile();
-
-        if (!defaultCredentialsFromFile.isPresent()) {
+            return credentialsProvider;
+        } catch (Exception e) {
             throw new RuntimeException(String.format("Failed to resolve credentials, could not find them in any of the following places:\n" +
                             " - environment variables\n" +
                             " - system properties\n" +
@@ -159,11 +134,8 @@ public class GroupModel {
                             "\n" +
                             "Please refer to the documentation for how to configure credentials",
                     AWSCLIConfigFile.getCredentialProfilesFile().map(File::getAbsolutePath).orElse("not specified"),
-                    AWSCLIConfigFile.getConfigFile().map(File::getAbsolutePath).orElse("not specified")
-            ), e);
+                    AWSCLIConfigFile.getConfigFile().map(File::getAbsolutePath).orElse("not specified")), e);
         }
-
-        return defaultCredentialsFromFile.get();
     }
 
     private AWSCredentialsProvider resolveExplicitAssumeRole(final AWSCredentialsProvider baseCredentials, final ClientConfiguration clientConfiguration, String assumeRole) {
@@ -174,124 +146,11 @@ public class GroupModel {
         }
     }
 
-    private Optional<ProfileIdentifier> resolveProfile(String profile) {
-        String awsProfile = System.getenv("AWS_PROFILE");
-        String awsDefaultProfile = System.getenv("AWS_DEFAULT_PROFILE");
-
-        if (profile == null && awsProfile != null) {
-            profile = awsProfile;
-        }
-        if (profile == null && awsDefaultProfile != null) {
-            profile = awsDefaultProfile;
-        }
-
-        return Optional.ofNullable(profile).map(ProfileIdentifier::new);
-    }
-
-    private Optional<AWSCredentialsProvider> getDefaultCredentialsFromFile() {
-        ProfileIdentifier defaultProfile = new ProfileIdentifier("default");
-        ConfigProviderChain configProvider = new ConfigProviderChain();
-
-        Optional<String> awsAccessKeyId = configProvider.getAWSAccessKeyId(defaultProfile);
-        Optional<String> awsSecretKey = configProvider.getAWSSecretKey(defaultProfile);
-
-        if (awsAccessKeyId.isPresent() && awsSecretKey.isPresent()) {
-            AWSCredentials baseCredentials = new BasicAWSCredentials(awsAccessKeyId.get(), awsSecretKey.get());
-            return Optional.of(new AWSStaticCredentialsProvider(baseCredentials));
+    private ProfileIdentifier resolveProfile(String profile) {
+        if (profile != null) {
+            return new ProfileIdentifier(profile);
         } else {
-            return Optional.empty();
-        }
-    }
-
-    private AWSCredentialsProvider getCredentialsFromProfile(final ClientConfiguration clientConfiguration,
-                                                             final ProfileIdentifier profile) {
-        ConfigProviderChain configProvider = new ConfigProviderChain();
-        if (!configProvider.hasConfig()) {
-            throw new IllegalStateException("When using '--profile', an AWS credentials or config file must be present");
-        }
-
-        Optional<RoleARN> roleToAssume = configProvider.getRoleArn(profile);
-        if (roleToAssume.isPresent()) {
-            return assumeRole(clientConfiguration, configProvider, profile, roleToAssume.get());
-        } else {
-            return getStaticCredentials(configProvider, profile);
-        }
-    }
-
-    private AWSCredentialsProvider getStaticCredentials(ConfigProviderChain configProviderChain, ProfileIdentifier profile) {
-        AWSCredentials baseCredentials = new BasicAWSCredentials(configProviderChain.getAWSAccessKeyIdOrThrow(profile), configProviderChain.getAWSSecretKeyOrThrow(profile));
-        return new AWSStaticCredentialsProvider(baseCredentials);
-    }
-
-    /**
-     * Resolve AWS credentials based on MFA/Assume role
-     *
-     * We will assume that if mfa_serial is defined, then role_arn and source_profile also has to be specified.
-     *
-     * Please note that Strongbox differ from the AWS CLI in the following:
-     * AWS CLI: 'Note that configuration variables for using IAM roles can only be in the AWS CLI config file.'
-     * Strongbox: '--assume-role' can be specified explicitly
-     *
-     * https://docs.aws.amazon.com/cli/latest/topic/config-vars.html#using-aws-iam-roles
-     */
-    private AWSCredentialsProvider assumeRole(ClientConfiguration clientConfiguration,
-                                              ConfigProviderChain configProvider,
-                                              ProfileIdentifier profile,
-                                              RoleARN roleToAssume) {
-
-        Optional<ProfileIdentifier> sourceProfile = configProvider.getSourceProfile(profile);
-        if (!sourceProfile.isPresent()) {
-            throw new IllegalStateException(String.format("'%s' must be specified when using '%s' for profile '%s'",
-                    AWSConfigPropertyKey.SOURCE_PROFILE,
-                    AWSConfigPropertyKey.ROLE_ARN,
-                    profile.name));
-        }
-
-        SessionCache sessionCache = new SessionCache(profile, roleToAssume);
-        Optional<BasicSessionCredentials> cachedCredentials = sessionCache.load();
-
-        if (cachedCredentials.isPresent()) {
-            return new AWSStaticCredentialsProvider(cachedCredentials.get());
-        } else {
-            AWSCredentialsProvider staticCredentialsProvider = getStaticCredentials(configProvider, sourceProfile.get());
-
-            AWSSecurityTokenService client = AWSSecurityTokenServiceClientBuilder.standard()
-                    .withCredentials(staticCredentialsProvider)
-                    .withClientConfiguration(transformAndVerifyOrThrow(clientConfiguration))
-                    .withRegion(RegionResolver.getRegion())
-                    .build();
-
-            Optional<String> mfaSerial = configProvider.getMFASerial(profile);
-            String token = "";
-            if (mfaSerial.isPresent()) {
-                char[] secretValue = System.console().readPassword("Enter MFA code: ");
-                if (secretValue == null || secretValue.length == 0) {
-                    throw new InvalidInputException("A non-empty MFA code must be entered");
-                }
-                token = new String(secretValue);
-            }
-
-            String sessionId = String.format("strongbox-cli-session-%s", ZonedDateTime.now().toEpochSecond());
-
-            AssumeRoleRequest request = new AssumeRoleRequest();
-            request.withRoleArn(roleToAssume.toArn())
-                    .withRoleSessionName(sessionId);
-
-            if (mfaSerial.isPresent()) {
-                request.withSerialNumber(mfaSerial.get())
-                        .withTokenCode(token);
-            }
-
-            AssumeRoleResult result = client.assumeRole(request);
-            Credentials credentials = result.getCredentials();
-
-            BasicSessionCredentials basicSessionCredentials = new BasicSessionCredentials(credentials.getAccessKeyId(), credentials.getSecretAccessKey(), credentials.getSessionToken());
-
-            sessionCache.save(result.getAssumedRoleUser(),
-                    basicSessionCredentials,
-                    ZonedDateTime.ofInstant(credentials.getExpiration().toInstant(), ZoneId.of("UTC")));
-
-            return new AWSStaticCredentialsProvider(basicSessionCredentials);
+            return new ProfileIdentifier(AwsProfileNameLoader.INSTANCE.loadProfileName());
         }
     }
 
