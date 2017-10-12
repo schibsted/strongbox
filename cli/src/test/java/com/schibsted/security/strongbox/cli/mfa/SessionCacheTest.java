@@ -37,10 +37,10 @@ public class SessionCacheTest {
     @Test
     public void resolve_filename() {
         ProfileIdentifier profile = new ProfileIdentifier("my-profile");
-        RoleARN arn = new RoleARN("arn:test/dummy");
+        RoleARN arn = new RoleARN("arn:aws:iam::12345678910:role/my-role");
 
         SessionCache sessionCache = new SessionCache(profile, arn);
 
-        assertThat(sessionCache.resolveFileName(), is("my-profile--arn_test-dummy.json"));
+        assertThat(sessionCache.resolveFileName(), is("my-profile--arn_aws_iam__12345678910_role-my-role.json"));
     }
 }
