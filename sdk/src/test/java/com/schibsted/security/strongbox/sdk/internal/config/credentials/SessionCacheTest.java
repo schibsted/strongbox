@@ -21,8 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.mfa;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
+import com.schibsted.security.strongbox.sdk.internal.config.credentials.SessionCache;
 import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
 import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
 import org.testng.annotations.Test;

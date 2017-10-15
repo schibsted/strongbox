@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.mfa;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.securitytoken.model.AssumedRoleUser;
@@ -59,7 +59,7 @@ public class SessionCache {
         }
 
         try {
-            Cache cache = objectMapper.readValue(file, Cache.class);
+            SessionCacheSchema cache = objectMapper.readValue(file, SessionCacheSchema.class);
 
             if (ZonedDateTime.now().plusSeconds(EXPIRATION_THRESHOLD_IN_SECONDS).isBefore(cache.credentials.getExpiration())) {
                 return Optional.of(new BasicSessionCredentials(cache.credentials.accessKeyId, cache.credentials.secretAccessKey, cache.credentials.sessionToken));
@@ -74,7 +74,7 @@ public class SessionCache {
     public void save(final AssumedRoleUser assumedRoleUser, final BasicSessionCredentials credentials, final ZonedDateTime expiration) {
         resolveCacheDirectory().mkdirs();
 
-        Cache cache = new Cache(assumedRoleUser.getArn(), assumedRoleUser.getAssumedRoleId(), credentials, expiration);
+        SessionCacheSchema cache = new SessionCacheSchema(assumedRoleUser.getArn(), assumedRoleUser.getAssumedRoleId(), credentials, expiration);
 
         try {
             objectMapper.writeValue(file, cache);

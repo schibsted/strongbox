@@ -28,7 +28,7 @@ import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
 import com.amazonaws.auth.profile.internal.AwsProfileNameLoader;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
-import com.schibsted.security.strongbox.cli.config.CustomCredentialsProviderChain;
+import com.schibsted.security.strongbox.sdk.internal.config.credentials.CustomCredentialsProviderChain;
 import com.schibsted.security.strongbox.cli.view.OutputFormat;
 import com.schibsted.security.strongbox.cli.viewmodel.types.ProxyInformation;
 import com.schibsted.security.strongbox.cli.viewmodel.types.SecretsGroupIdentifierView;

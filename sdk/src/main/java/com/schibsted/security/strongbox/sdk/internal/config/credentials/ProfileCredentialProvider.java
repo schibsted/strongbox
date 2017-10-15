@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.config;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -34,7 +34,6 @@ import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder
 import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
 import com.amazonaws.services.securitytoken.model.AssumeRoleResult;
 import com.amazonaws.services.securitytoken.model.Credentials;
-import com.schibsted.security.strongbox.cli.mfa.SessionCache;
 import com.schibsted.security.strongbox.sdk.internal.RegionResolver;
 import com.schibsted.security.strongbox.sdk.internal.config.AWSConfigPropertyKey;
 import com.schibsted.security.strongbox.sdk.internal.config.ConfigProviderChain;
