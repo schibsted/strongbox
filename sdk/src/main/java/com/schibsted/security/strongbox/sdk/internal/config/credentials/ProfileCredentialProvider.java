@@ -28,7 +28,6 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.BasicSessionCredentials;
-import com.amazonaws.services.identitymanagement.model.InvalidInputException;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenService;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.AssumeRoleRequest;
@@ -44,6 +43,7 @@ import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.schibsted.security.strongbox.sdk.internal.ClientConfigurationHelper.transformAndVerifyOrThrow;
 
@@ -53,10 +53,12 @@ import static com.schibsted.security.strongbox.sdk.internal.ClientConfigurationH
 public class ProfileCredentialProvider implements AWSCredentialsProvider {
     private ClientConfiguration clientConfiguration;
     private ProfileIdentifier profile;
+    private Supplier<MFAToken> mfaTokenSupplier;
 
-    public ProfileCredentialProvider(ClientConfiguration clientConfiguration, ProfileIdentifier profile) {
+    public ProfileCredentialProvider(ClientConfiguration clientConfiguration, ProfileIdentifier profile, Supplier<MFAToken> mfaTokenSupplier) {
         this.clientConfiguration = clientConfiguration;
         this.profile = profile;
+        this.mfaTokenSupplier = mfaTokenSupplier;
     }
 
     @Override
@@ -124,11 +126,8 @@ public class ProfileCredentialProvider implements AWSCredentialsProvider {
             Optional<String> mfaSerial = configProvider.getMFASerial(profile);
             String token = "";
             if (mfaSerial.isPresent()) {
-                char[] secretValue = System.console().readPassword("Enter MFA code: ");
-                if (secretValue == null || secretValue.length == 0) {
-                    throw new InvalidInputException("A non-empty MFA code must be entered");
-                }
-                token = new String(secretValue);
+                MFAToken mfaToken = mfaTokenSupplier.get();
+                token = mfaToken.value;
             }
 
             String sessionId = String.format("strongbox-cli-session-%s", ZonedDateTime.now().toEpochSecond());

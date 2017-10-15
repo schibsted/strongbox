@@ -39,6 +39,7 @@ import com.schibsted.security.strongbox.sdk.internal.config.CustomRegionProvider
 import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
 import com.schibsted.security.strongbox.sdk.internal.RegionResolver;
 import com.schibsted.security.strongbox.sdk.internal.access.PrincipalAutoSuggestion;
+import com.schibsted.security.strongbox.sdk.internal.config.credentials.MFAToken;
 import com.schibsted.security.strongbox.sdk.internal.encryption.FileEncryptionContext;
 import com.schibsted.security.strongbox.sdk.internal.encryption.KMSRandomGenerator;
 import com.schibsted.security.strongbox.sdk.internal.encryption.RandomGenerator;
@@ -119,7 +120,7 @@ public class GroupModel {
 
     private AWSCredentialsProvider resolveBaseCredentials(final ClientConfiguration clientConfiguration, final ProfileIdentifier profileIdentifier) {
         try {
-            AWSCredentialsProvider credentialsProvider =  new CustomCredentialsProviderChain(clientConfiguration, profileIdentifier);
+            AWSCredentialsProvider credentialsProvider =  new CustomCredentialsProviderChain(clientConfiguration, profileIdentifier, MFAToken.defaultMFATokenSupplier());
 
             // Test if getCredentials will throw
             credentialsProvider.getCredentials();

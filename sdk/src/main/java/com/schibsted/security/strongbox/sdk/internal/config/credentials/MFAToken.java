@@ -23,24 +23,52 @@
 
 package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
-import com.amazonaws.auth.AWSCredentialsProviderChain;
-import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
-import com.schibsted.security.strongbox.sdk.types.ClientConfiguration;
-import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
+import com.amazonaws.services.identitymanagement.model.InvalidInputException;
 
+import java.io.Console;
+import java.util.Scanner;
 import java.util.function.Supplier;
 
 /**
  * @author stiankri
  */
-public class CustomCredentialsProviderChain extends AWSCredentialsProviderChain {
+public class MFAToken {
+    public final String value;
 
-    public CustomCredentialsProviderChain(ClientConfiguration clientConfiguration, ProfileIdentifier profile, Supplier<MFAToken> mfaTokenSupplier) {
-        super(new EnvironmentVariableCredentialsProvider(),
-                new SystemPropertiesCredentialsProvider(),
-                new ProfileCredentialProvider(clientConfiguration, profile, mfaTokenSupplier),
-                new EC2ContainerCredentialsProviderWrapper());
+    public MFAToken(String value) {
+        this.value = value;
+    }
+
+    public static Supplier<MFAToken> defaultMFATokenSupplier() {
+        return () -> {
+            Console console = System.console();
+
+            String token = null;
+            if (console != null) {
+                char[] secretValue = console.readPassword("Enter MFA code: ");
+
+                if (secretValue != null) {
+                    token = new String(secretValue);
+                }
+            } else {
+                // probably running in an IDE; fallback to plaintext
+                System.out.print("Enter MFA code: ");
+                Scanner scanner = new Scanner(System.in);
+                token = scanner.nextLine();
+            }
+
+            if (token == null || token.isEmpty()) {
+                throw new InvalidInputException("A non-empty MFA code must be entered");
+            }
+            return new MFAToken(token);
+        };
+    }
+
+
+
+    public static Supplier<MFAToken> missingMFATokenSupplier() {
+        return () -> {
+            throw new RuntimeException("No MFA provider specified");
+        };
     }
 }
