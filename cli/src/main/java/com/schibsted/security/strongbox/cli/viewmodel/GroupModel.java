@@ -40,6 +40,7 @@ import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
 import com.schibsted.security.strongbox.sdk.internal.RegionResolver;
 import com.schibsted.security.strongbox.sdk.internal.access.PrincipalAutoSuggestion;
 import com.schibsted.security.strongbox.sdk.internal.config.credentials.MFAToken;
+import com.schibsted.security.strongbox.sdk.internal.config.credentials.ProfileResolver;
 import com.schibsted.security.strongbox.sdk.internal.encryption.FileEncryptionContext;
 import com.schibsted.security.strongbox.sdk.internal.encryption.KMSRandomGenerator;
 import com.schibsted.security.strongbox.sdk.internal.encryption.RandomGenerator;
@@ -91,7 +92,7 @@ public class GroupModel {
         this.fieldName = extractFieldName(this.outputFormat, fieldName);
         this.saveToFilePath = extractSaveToFilePath(saveToFilePath);
 
-        ProfileIdentifier profileIdentifier = resolveProfile(rawProfileIdentifier);
+        ProfileIdentifier profileIdentifier = ProfileResolver.resolveProfile(Optional.ofNullable(rawProfileIdentifier));
         this.region = resolveRegion(region, profileIdentifier);
         RegionResolver.setRegion(this.region);
 
@@ -144,24 +145,6 @@ public class GroupModel {
             return assumeRole(baseCredentials, clientConfiguration, assumeRole);
         } else {
             return baseCredentials;
-        }
-    }
-
-    private ProfileIdentifier resolveProfile(String profile) {
-        if (profile != null) {
-            return new ProfileIdentifier(profile);
-        } else {
-            String resolvedProfile = AwsProfileNameLoader.INSTANCE.loadProfileName();
-
-            if (resolvedProfile.equals(AwsProfileNameLoader.DEFAULT_PROFILE_NAME)) {
-                String awsDefaultProfile = System.getenv("AWS_DEFAULT_PROFILE");
-
-                if (awsDefaultProfile != null) {
-                    resolvedProfile = awsDefaultProfile;
-                }
-            }
-
-            return new ProfileIdentifier(resolvedProfile);
         }
     }
 
