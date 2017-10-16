@@ -123,22 +123,18 @@ public class ProfileCredentialProvider implements AWSCredentialsProvider {
                     .withRegion(RegionResolver.getRegion())
                     .build();
 
-            Optional<String> mfaSerial = configProvider.getMFASerial(profile);
-            String token = "";
-            if (mfaSerial.isPresent()) {
-                MFAToken mfaToken = mfaTokenSupplier.get();
-                token = mfaToken.value;
-            }
-
             String sessionId = String.format("strongbox-cli-session-%s", ZonedDateTime.now().toEpochSecond());
 
             AssumeRoleRequest request = new AssumeRoleRequest();
             request.withRoleArn(roleToAssume.toArn())
                     .withRoleSessionName(sessionId);
 
+            Optional<String> mfaSerial = configProvider.getMFASerial(profile);
             if (mfaSerial.isPresent()) {
+                MFAToken mfaToken = mfaTokenSupplier.get();
+
                 request.withSerialNumber(mfaSerial.get())
-                        .withTokenCode(token);
+                        .withTokenCode(mfaToken.value);
             }
 
             AssumeRoleResult result = client.assumeRole(request);
