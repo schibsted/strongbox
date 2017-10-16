@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.mfa;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -36,23 +36,23 @@ import java.time.format.DateTimeFormatter;
  * @author stiankri
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Cache {
+public class SessionCacheSchema {
     @JsonProperty("AssumedRoleUser")
     public final AssumedUserRole assumedUserRole;
 
     @JsonProperty("Credentials")
     public final Credentials credentials;
 
-    public Cache(final String arn,
-                 final String assumedRoleId,
-                 final BasicSessionCredentials credentials,
-                 final ZonedDateTime expiration) {
+    public SessionCacheSchema(final String arn,
+                              final String assumedRoleId,
+                              final BasicSessionCredentials credentials,
+                              final ZonedDateTime expiration) {
         this.assumedUserRole = new AssumedUserRole(arn, assumedRoleId);
         this.credentials = new Credentials(credentials, expiration);
     }
 
-    public Cache(@JsonProperty("AssumedRoleUser") final AssumedUserRole assumedUserRole,
-                 @JsonProperty("Credentials") final Credentials credentials) {
+    public SessionCacheSchema(@JsonProperty("AssumedRoleUser") final AssumedUserRole assumedUserRole,
+                              @JsonProperty("Credentials") final Credentials credentials) {
         this.assumedUserRole = assumedUserRole;
         this.credentials = credentials;
     }

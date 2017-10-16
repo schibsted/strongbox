@@ -21,34 +21,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.sdk.types;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
-import com.google.common.base.Objects;
+import com.amazonaws.auth.profile.internal.AwsProfileNameLoader;
+import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
+
+import java.util.Optional;
 
 /**
- * AWS profile used in AWS CLI credential and config files
- *
  * @author stiankri
  */
-public class ProfileIdentifier {
-    public final String name;
-
-    public ProfileIdentifier(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ProfileIdentifier) {
-            final ProfileIdentifier other = (ProfileIdentifier) obj;
-            return Objects.equal(name, other.name);
+public class ProfileResolver {
+    public static ProfileIdentifier resolveProfile(Optional<String> profileOverride) {
+        if (profileOverride.isPresent()) {
+            return new ProfileIdentifier(profileOverride.get());
         } else {
-            return false;
+            String resolvedProfile = AwsProfileNameLoader.INSTANCE.loadProfileName();
+
+            if (resolvedProfile.equals(AwsProfileNameLoader.DEFAULT_PROFILE_NAME)) {
+                String awsDefaultProfile = System.getenv("AWS_DEFAULT_PROFILE");
+
+                if (awsDefaultProfile != null) {
+                    resolvedProfile = awsDefaultProfile;
+                }
+            }
+
+            return new ProfileIdentifier(resolvedProfile);
         }
     }
 }

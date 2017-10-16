@@ -21,34 +21,26 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.sdk.types;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
-import com.google.common.base.Objects;
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
+import com.schibsted.security.strongbox.sdk.types.ClientConfiguration;
+import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
+
+import java.util.function.Supplier;
 
 /**
- * AWS profile used in AWS CLI credential and config files
- *
  * @author stiankri
  */
-public class ProfileIdentifier {
-    public final String name;
+public class CustomCredentialsProviderChain extends AWSCredentialsProviderChain {
 
-    public ProfileIdentifier(final String name) {
-        this.name = name;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ProfileIdentifier) {
-            final ProfileIdentifier other = (ProfileIdentifier) obj;
-            return Objects.equal(name, other.name);
-        } else {
-            return false;
-        }
+    public CustomCredentialsProviderChain(ClientConfiguration clientConfiguration, ProfileIdentifier profile, Supplier<MFAToken> mfaTokenSupplier) {
+        super(new EnvironmentVariableCredentialsProvider(),
+                new SystemPropertiesCredentialsProvider(),
+                new ProfileCredentialProvider(clientConfiguration, profile, mfaTokenSupplier),
+                new EC2ContainerCredentialsProviderWrapper());
     }
 }

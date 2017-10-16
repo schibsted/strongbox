@@ -21,34 +21,27 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.sdk.types;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
-import com.google.common.base.Objects;
+import com.schibsted.security.strongbox.sdk.internal.config.credentials.SessionCache;
+import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
+import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
+import org.testng.annotations.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 /**
- * AWS profile used in AWS CLI credential and config files
- *
  * @author stiankri
  */
-public class ProfileIdentifier {
-    public final String name;
+public class SessionCacheTest {
+    @Test
+    public void resolve_filename() {
+        ProfileIdentifier profile = new ProfileIdentifier("my-profile");
+        RoleARN arn = new RoleARN("arn:aws:iam::12345678910:role/my-role");
 
-    public ProfileIdentifier(final String name) {
-        this.name = name;
-    }
+        SessionCache sessionCache = new SessionCache(profile, arn);
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ProfileIdentifier) {
-            final ProfileIdentifier other = (ProfileIdentifier) obj;
-            return Objects.equal(name, other.name);
-        } else {
-            return false;
-        }
+        assertThat(sessionCache.resolveFileName(), is("my-profile--arn_aws_iam__12345678910_role-my-role.json"));
     }
 }

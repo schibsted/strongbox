@@ -21,12 +21,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.schibsted.security.strongbox.cli.mfa;
+package com.schibsted.security.strongbox.sdk.internal.config.credentials;
 
 import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.securitytoken.model.AssumedRoleUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.schibsted.security.strongbox.sdk.types.ProfileIdentifier;
+import com.schibsted.security.strongbox.sdk.types.arn.RoleARN;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,13 +43,13 @@ public class SessionCache {
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static final int EXPIRATION_THRESHOLD_IN_SECONDS = 60;
 
-    private final String roleArnToAssume;
+    private final RoleARN roleToAssume;
     private final ProfileIdentifier profile;
     private final File file;
 
-    public SessionCache(final ProfileIdentifier profile, final String roleArnToAssume) {
+    public SessionCache(final ProfileIdentifier profile, final RoleARN roleToAssume) {
         this.profile = profile;
-        this.roleArnToAssume = roleArnToAssume;
+        this.roleToAssume = roleToAssume;
         this.file = resolveFile();
     }
 
@@ -58,7 +59,7 @@ public class SessionCache {
         }
 
         try {
-            Cache cache = objectMapper.readValue(file, Cache.class);
+            SessionCacheSchema cache = objectMapper.readValue(file, SessionCacheSchema.class);
 
             if (ZonedDateTime.now().plusSeconds(EXPIRATION_THRESHOLD_IN_SECONDS).isBefore(cache.credentials.getExpiration())) {
                 return Optional.of(new BasicSessionCredentials(cache.credentials.accessKeyId, cache.credentials.secretAccessKey, cache.credentials.sessionToken));
@@ -73,7 +74,7 @@ public class SessionCache {
     public void save(final AssumedRoleUser assumedRoleUser, final BasicSessionCredentials credentials, final ZonedDateTime expiration) {
         resolveCacheDirectory().mkdirs();
 
-        Cache cache = new Cache(assumedRoleUser.getArn(), assumedRoleUser.getAssumedRoleId(), credentials, expiration);
+        SessionCacheSchema cache = new SessionCacheSchema(assumedRoleUser.getArn(), assumedRoleUser.getAssumedRoleId(), credentials, expiration);
 
         try {
             objectMapper.writeValue(file, cache);
@@ -91,6 +92,6 @@ public class SessionCache {
     }
 
     String resolveFileName() {
-        return String.format("%s--%s.json", profile.name, roleArnToAssume.replace(':', '_').replace('/', '-'));
+        return String.format("%s--%s.json", profile.name, roleToAssume.toArn().replace(':', '_').replace('/', '-'));
     }
 }
