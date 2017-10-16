@@ -97,9 +97,9 @@ public class ProfileCredentialProvider implements AWSCredentialsProvider {
      * https://docs.aws.amazon.com/cli/latest/topic/config-vars.html#using-aws-iam-roles
      */
     private AWSCredentials assumeRole(ClientConfiguration clientConfiguration,
-                                              ConfigProviderChain configProvider,
-                                              ProfileIdentifier profile,
-                                              RoleARN roleToAssume) {
+                                      ConfigProviderChain configProvider,
+                                      ProfileIdentifier profile,
+                                      RoleARN roleToAssume) {
 
         Optional<ProfileIdentifier> sourceProfile = configProvider.getSourceProfile(profile);
         if (!sourceProfile.isPresent()) {
