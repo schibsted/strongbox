@@ -20,34 +20,15 @@
   "version": {
     "name": "@PKG_VERSION@",
     "desc": "Automated DEB package release from master",
-    "released": "@DATE@"
+    "released": "@DATE@",
+    "gpgSign": true
   },
   "files": [
     {
-      "includePattern": "cli/build/distributions/(.*ubuntu16\\.04.*\\.deb)",
+      "includePattern": "cli/build/distributions/(.*\\.deb)",
       "uploadPattern": "pool/main/s/$1",
       "matrixParams": {
         "deb_distribution": "xenial",
-        "deb_component": "main",
-        "deb_architecture": "amd64",
-        "override": 1
-      }
-    },
-    {
-      "includePattern": "cli/build/distributions/(.*ubuntu14\\.04.*\\.deb)",
-      "uploadPattern": "pool/main/s/$1",
-      "matrixParams": {
-        "deb_distribution": "trusty",
-        "deb_component": "main",
-        "deb_architecture": "amd64",
-        "override": 1
-      }
-    },
-    {
-      "includePattern": "cli/build/distributions/(.*debian9.*\\.deb)",
-      "uploadPattern": "pool/main/s/$1",
-      "matrixParams": {
-        "deb_distribution": "stretch",
         "deb_component": "main",
         "deb_architecture": "amd64",
         "override": 1
