@@ -18,14 +18,6 @@ openssl aes-256-cbc -K $encrypted_550d7473c60b_key -iv $encrypted_550d7473c60b_i
 ./gradlew -Psigning.secretKeyRingFile="${GPG_KEYRING_PATH}" \
           -Psigning.keyId="${GPG_KEYID}" \
           cliRpm cliDeb cliTar
-
-# For supporting multiple distributions in bintray, we need to upload separate file for every distribution.
-for distro in debian9 ubuntu14.04 ubuntu16.04; do
-    export PKG=strongbox-cli_${TRAVIS_TAG}-1_all.deb
-    cp ${ROOT_DIR}/cli/build/distributions/${PKG} ${ROOT_DIR}/cli/build/distributions/${PKG/_all/_${distro}_all}
-done
-rm -f ${ROOT_DIR}/cli/build/distributions/${PKG}
-
 ${ROOT_DIR}/script/generate-bintray-json.sh
 
 # Javadoc
