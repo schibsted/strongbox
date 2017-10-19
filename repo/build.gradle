@@ -1,0 +1,40 @@
+/*
+ * Copyright 2016 Schibsted Products & Technology AS. Licensed under the terms of the MIT license. See LICENSE in the project root.
+ */
+
+import java.time.Instant
+
+plugins {
+    id 'nebula.ospackage' version '3.4.0'
+}
+
+apply plugin: 'nebula.deb'
+
+ospackage {
+    packageName = "strongbox-release"
+
+    user = 'root'
+
+    epoch = Instant.now().epochSecond
+    version = "1"
+    // Bump release when modifying repository-related files
+    release = "1"
+
+    license = "MIT"
+    url = "https://github.com/schibsted/strongbox"
+    vendor = "Schibsted Products & Technology AS"
+    packageDescription = "This package contains strongbox repository GPG key as well as yum configuration file"
+    summary = "Strongbox repository configuration"
+
+    os = LINUX
+}
+
+task repoRpm(type: Rpm) {
+    from rootDir.path + '/repo/src/main/resources/rpm'
+    into '/'
+}
+
+task repoDeb(type: Deb) {
+    from rootDir.path + '/repo/src/main/resources/deb'
+    into '/'
+}

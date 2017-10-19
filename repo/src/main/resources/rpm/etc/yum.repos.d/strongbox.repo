@@ -1,0 +1,6 @@
+[strongbox]
+name=strongbox
+baseurl=https://dl.bintray.com/strongbox/strongbox-rpm
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-strongbox
