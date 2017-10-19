@@ -46,7 +46,7 @@ public class AWSCLIConfigFile {
             Optional<String> currentSection = Optional.empty();
             String currentLine;
             while ((currentLine = reader.readLine()) != null) {
-                if (currentLine.isEmpty() || currentLine.startsWith(";")) {
+                if (currentLine.isEmpty() || currentLine.startsWith(";") || currentLine.startsWith("#")) {
                     continue;
                 }
 
