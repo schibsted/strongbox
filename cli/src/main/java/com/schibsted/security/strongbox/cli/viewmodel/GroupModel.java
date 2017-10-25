@@ -109,7 +109,11 @@ public class GroupModel {
 
             return credentialsProvider;
         } catch (Exception e) {
-            throw new RuntimeException(String.format("Failed to resolve credentials, could not find them in any of the following places:\n" +
+            throw new RuntimeException(String.format("Failed to resolve credentials.\n" +
+                            "\n" +
+                            "If you entered an MFA token, the token was incorrect, or the MFA is misconfigured\n" +
+                            "\n" +
+                            "The following locations are included in the credentials chain:\n" +
                             " - environment variables\n" +
                             " - system properties\n" +
                             " - credential file (%s) and config file (%s)\n" +
