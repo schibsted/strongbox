@@ -35,7 +35,7 @@ public class AWSCLIConfigFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             return getConfig(bufferedReader);
         } catch (Exception e) {
-            throw new RuntimeException(String.format("Failed to load config from '%s'", file.getAbsolutePath()), e);
+            throw new RuntimeException(String.format("Failed to load config from '%s': %s", file.getAbsolutePath(), e.getMessage()), e);
         }
     }
 
@@ -45,6 +45,7 @@ public class AWSCLIConfigFile {
 
             Optional<String> currentSection = Optional.empty();
             String currentLine;
+            int lineNumber = 1;
             while ((currentLine = reader.readLine()) != null) {
                 if (currentLine.isEmpty() || currentLine.startsWith(";") || currentLine.startsWith("#")) {
                     continue;
@@ -54,7 +55,7 @@ public class AWSCLIConfigFile {
                 if (newSection.isPresent()) {
                     currentSection = newSection;
                 } else {
-                    Property property = extractProperty(currentLine);
+                    Property property = extractProperty(currentLine, lineNumber);
                     Section sectionToUpdate = sections.computeIfAbsent(currentSection.orElse(""), Section::new);
                     sectionToUpdate.addProperty(property);
                 }
@@ -76,11 +77,11 @@ public class AWSCLIConfigFile {
         }
     }
 
-    Property extractProperty(final String line) {
+    Property extractProperty(final String line, int lineNumber) {
         Matcher matcher = propertyPattern.matcher(line);
 
         if (!matcher.find()) {
-            throw new IllegalStateException(String.format("Failed to read '%s' as a property on the form 'key=value'", line));
+            throw new IllegalStateException(String.format("Failed to interpret line #%d as 'key=value'. Please note that comment lines must start with '#'.", lineNumber));
         }
 
         return new Property(matcher.group(1).trim(), matcher.group(2).trim());
