@@ -33,6 +33,8 @@ allprojects {
         jcenter()
     }
 
+    archivesBaseName = 'strongbox-' + project.name
+
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
