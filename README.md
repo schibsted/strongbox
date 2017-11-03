@@ -1,4 +1,5 @@
-<img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-logo.svg?sanitize=true">
+<img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-logo.png?sanitize=true">
+
 
 Strongbox is a CLI/GUI and SDK to manage, store, and retrieve secrets (access tokens, encryption keys, private certificates, etc). Strongbox is a client-side convenience layer on top of AWS KMS, DynamoDB and IAM. It manages the AWS resources for you and configure them in a secure way.
 
