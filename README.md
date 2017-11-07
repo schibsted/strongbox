@@ -7,7 +7,7 @@
   <a title="Stronbox Travis Build" href="https://travis-ci.org/schibsted/strongbox">
     <img src="https://api.travis-ci.org/schibsted/strongbox.svg?branch=master">
   </a>
-  <a title="Slack Status" href="https://slackin-ubkrtqsbds.now.sh">
+  <a title="Slack Status" href="https://slackin-bjmwohmllu.now.sh">
     <img src="https://slackin-bjmwohmllu.now.sh/badge.svg">
   </a>
 </p>
