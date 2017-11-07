@@ -7,6 +7,9 @@
   <a title="Stronbox Travis Build" href="https://travis-ci.org/schibsted/strongbox">
     <img src="https://api.travis-ci.org/schibsted/strongbox.svg?branch=master">
   </a>
+  <a title="Slack Status" href="https://slackin-ubkrtqsbds.now.sh">
+    <img src="https://slackin-ubkrtqsbds.now.sh/badge.svg">
+  </a>
 </p>
 
 Strongbox is a CLI/GUI and SDK to manage, store, and retrieve secrets (access tokens, encryption keys, private certificates, etc). Strongbox is a client-side convenience layer on top of AWS KMS, DynamoDB and IAM. It manages the AWS resources for you and configure them in a secure way.
