@@ -8,7 +8,7 @@
     <img src="https://api.travis-ci.org/schibsted/strongbox.svg?branch=master">
   </a>
   <a title="Slack Status" href="https://slackin-ubkrtqsbds.now.sh">
-    <img src="https://slackin-ubkrtqsbds.now.sh/badge.svg">
+    <img src="https://slackin-bjmwohmllu.now.sh/badge.svg">
   </a>
 </p>
 
