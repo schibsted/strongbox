@@ -2,6 +2,11 @@
 
 [The released artifacts can be found in Bintray](https://bintray.com/strongbox)
 
+## 0.2.4 (2017-11-7)
+
+- Improve help messages when credential resolving fails
+- Prefix JARs with 'strongbox'
+
 ## 0.2.3 (2017-10-19)
 
 - Interpret `#` at the beginning of credentials/config file line as a comment.

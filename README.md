@@ -72,7 +72,7 @@ For more examples please see [the Wiki](https://github.com/schibsted/strongbox/w
 #### Java SDK
 The following is from the [example repo](https://github.com/schibsted/strongbox-examples/tree/master/sdk). Add the Gradle dependency (make sure you have added the jcenter repository)
 ```
-compile 'com.schibsted.security:strongbox-sdk:0.2.1'
+compile 'com.schibsted.security:strongbox-sdk:0.2.4'
 ```
 
 Then retrieve the Secret using
