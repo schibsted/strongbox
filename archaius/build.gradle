@@ -79,7 +79,7 @@ publishing {
                     appendNode('url', 'https://github.com/schibsted/strongbox')
                     appendNode('licenses').with {
                         appendNode('license').with {
-                            appendNode('name', 'MIT')
+                            appendNode('name', 'Apache 2.0')
                             appendNode('url', 'https://github.com/schibsted/strongbox/blob/master/LICENSE')
                         }
                     }
@@ -102,7 +102,7 @@ bintray {
         repo = 'strongbox-maven'
         name = 'strongbox-archaius'
         userOrg = 'strongbox'
-        licenses = ['MIT']
+        licenses = ['Apache 2.0']
         websiteUrl = 'https://github.com/schibsted/strongbox'
         issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
         vcsUrl = 'https://github.com/schibsted/strongbox.git'

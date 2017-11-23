@@ -20,7 +20,7 @@ ospackage {
     // Bump release when modifying repository-related files
     release = "1"
 
-    license = "MIT"
+    license = "Apache 2.0"
     url = "https://github.com/schibsted/strongbox"
     vendor = "Schibsted Products & Technology AS"
     packageDescription = "This package contains strongbox repository GPG key as well as yum configuration file"
