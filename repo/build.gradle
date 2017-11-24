@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Schibsted Products & Technology AS. Licensed under the terms of the MIT license. See LICENSE in the project root.
+ * Copyright (c) 2016 Schibsted Products & Technology AS. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.
  */
 
 import java.time.Instant
@@ -20,7 +20,7 @@ ospackage {
     // Bump release when modifying repository-related files
     release = "1"
 
-    license = "MIT"
+    license = "Apache 2.0"
     url = "https://github.com/schibsted/strongbox"
     vendor = "Schibsted Products & Technology AS"
     packageDescription = "This package contains strongbox repository GPG key as well as yum configuration file"
