@@ -1,7 +1,7 @@
 group = projectGroup
 
 /*
- * Copyright 2016 Schibsted Products & Technology AS. Licensed under the terms of the MIT license. See LICENSE in the project root.
+ * Copyright (c) 2016 Schibsted Products & Technology AS. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.
  */
 
 import static java.lang.System.getenv
@@ -79,7 +79,7 @@ publishing {
                     appendNode('url', 'https://github.com/schibsted/strongbox')
                     appendNode('licenses').with {
                         appendNode('license').with {
-                            appendNode('name', 'MIT')
+                            appendNode('name', 'Apache 2.0')
                             appendNode('url', 'https://github.com/schibsted/strongbox/blob/master/LICENSE')
                         }
                     }
@@ -102,7 +102,7 @@ bintray {
         repo = 'strongbox-maven'
         name = 'strongbox-archaius'
         userOrg = 'strongbox'
-        licenses = ['MIT']
+        licenses = ['Apache 2.0']
         websiteUrl = 'https://github.com/schibsted/strongbox'
         issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
         vcsUrl = 'https://github.com/schibsted/strongbox.git'
