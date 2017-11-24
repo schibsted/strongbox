@@ -86,5 +86,9 @@ Optional<String> secret = secretsGroup.getStringSecret("MySecret");
 #### Archaius (Experimental)
 Please see the [example repo](https://github.com/schibsted/strongbox-examples/tree/master/archaius).
 
+#### Spring Boot Starter
+
+See [spring-boot-starter/README](https://github.com/schibsted/strongbox/spring-boot-starter)
+
 ## Development status
 Strongbox is in active development, and will soon allow external contributions.
