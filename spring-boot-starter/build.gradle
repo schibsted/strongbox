@@ -19,8 +19,8 @@ dependencies {
     compile "org.springframework:spring-core:$springVersion"
     compile "org.springframework:spring-beans:$springVersion"
     compile "com.amazonaws:aws-java-sdk-core:$awsVersion"
-    compile 'commons-logging:commons-logging:1.2'
-    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile "commons-logging:commons-logging:$apacheCommonsVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
 
     testCompile 'org.codehaus.groovy:groovy-all:2.4.6'
     testCompile "org.spockframework:spock-core:1.1-groovy-2.4-rc-3"

@@ -46,6 +46,7 @@ allprojects {
 
     ext {
         airlineVersion = '0.8'
+        apacheCommonsVersion = '1.2'
         archaiusVersion = '0.7.5'
         awsEncryptionVersion = '0.0.1'
         awsVersion = '1.11.124'
