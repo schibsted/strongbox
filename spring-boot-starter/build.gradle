@@ -103,7 +103,7 @@ bintray {
     publish = true
     pkg {
         repo = 'strongbox-maven'
-        name = 'strongbox-archaius'
+        name = 'strongbox-spring-boot-starter'
         userOrg = 'strongbox'
         licenses = ['Apache 2.0']
         websiteUrl = 'https://github.com/schibsted/strongbox'
