@@ -107,3 +107,25 @@ Apache Commons Configuration
   LICENSE: Apache 2.0,
            https://github.com/apache/commons-configuration/blob/trunk/LICENSE.txt
   NOTICE:  https://github.com/apache/commons-configuration/blob/trunk/NOTICE.txt
+
+# ADDITIONAL STRONGBOX SPRING BOOT STARTER DEPENDENCIES
+
+Spring Boot: spring-boot, spring-boot-autoconfigure
+  LICENSE: Apache 2.0
+           https://github.com/spring-projects/spring-boot/blob/master/LICENSE.txt
+  NOTICE:  https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-cli/src/main/content/legal/open_source_licenses.txt
+
+
+Spring Security: spring-security-crypto
+  LICENSE: Apache 2.0
+           https://github.com/spring-projects/spring-security/blob/master/license.txt
+  NOTICE:  https://github.com/spring-projects/spring-security/blob/master/notice.txt
+
+Spring Framework: spring-core, spring-context, spring-expression, spring-beans, spring-aop
+  LICENSE: Apache 2.0
+           https://github.com/spring-projects/spring-framework/blob/master/src/docs/dist/license.txt
+  NOTICE:  https://github.com/spring-projects/spring-framework/blob/master/src/docs/dist/notice.txt
+
+Spring Cloud: spring-cloud-context
+  LICENSE: Apache 2.0
+           https://github.com/spring-cloud/spring-cloud-commons/blob/1.1.x/LICENSE.txt

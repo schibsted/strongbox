@@ -46,6 +46,7 @@ allprojects {
 
     ext {
         airlineVersion = '0.8'
+        apacheCommonsVersion = '1.2'
         archaiusVersion = '0.7.5'
         awsEncryptionVersion = '0.0.1'
         awsVersion = '1.11.124'
@@ -55,6 +56,9 @@ allprojects {
         jacksonVersion = '2.8.9'
         mockitoVersion = '2.8.47'
         slf4jVersion = '1.7.25'
+        springVersion = "4.2.6.RELEASE"
+        springBootVersion = "1.3.5.RELEASE"
+        springCloudVersion = "1.1.0.RELEASE"
         testngVersion = '6.11'
     }
 

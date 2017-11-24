@@ -1,0 +1,114 @@
+/*
+ * Copyright 2017 Schibsted Products & Technology AS. Licensed under the terms of the MIT license. See LICENSE in the project root.
+ */
+import static java.lang.System.getenv
+
+apply plugin: 'jacoco'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'groovy'
+
+group = projectGroup
+version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
+
+dependencies {
+    compile project(':sdk')
+    compile "org.springframework.boot:spring-boot:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    compile "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
+    compile "org.springframework:spring-context:$springVersion"
+    compile "org.springframework:spring-core:$springVersion"
+    compile "org.springframework:spring-beans:$springVersion"
+    compile "com.amazonaws:aws-java-sdk-core:$awsVersion"
+    compile "commons-logging:commons-logging:$apacheCommonsVersion"
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.6'
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4-rc-3"
+    testCompile "cglib:cglib-nodep:3.2.0"
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+
+tasks.withType(Jar) {
+    from(project.parent.projectDir) {
+        include 'LICENSE', 'NOTICE'
+        into 'META-INF'
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId 'strongbox-' + project.name
+            groupId group
+            artifact jar
+            artifact sourceJar {
+                classifier "sources"
+            }
+
+            // Workaround: https://github.com/gradle/gradle/issues/1061
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                configurations.runtime.allDependencies.each {
+                    if (it.group != null && it.name != null) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        if (it.group == group && it.name == "sdk") {
+                            dependencyNode.appendNode('groupId', group)
+                            dependencyNode.appendNode('artifactId', "strongbox-sdk")
+                            dependencyNode.appendNode('version', version)
+                        } else {
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+
+                            if (it.excludeRules.size() > 0) {
+                                def exclusionsNode = dependencyNode.appendNode('exclusions')
+                                it.excludeRules.each { rule ->
+                                    def exclusionNode = exclusionsNode.appendNode('exclusion')
+                                    exclusionNode.appendNode('groupId', rule.group)
+                                    exclusionNode.appendNode('artifactId', rule.module)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // end workaround
+
+            pom.withXml {
+                asNode().with {
+                    appendNode('name', 'Strongbox Spring Boot Starter')
+                    appendNode('description', 'A Spring Boot Starter for Strongbox')
+                    appendNode('url', 'https://github.com/schibsted/strongbox')
+                    appendNode('licenses').with {
+                        appendNode('license').with {
+                            appendNode('name', 'MIT')
+                            appendNode('url', 'https://github.com/schibsted/strongbox/blob/master/LICENSE')
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = getenv('BINTRAY_USER')
+    key = getenv('BINTRAY_KEY')
+    publications = ['mavenJava']
+    publish = true
+    pkg {
+        repo = 'strongbox-maven'
+        name = 'strongbox-archaius'
+        userOrg = 'strongbox'
+        licenses = ['MIT']
+        websiteUrl = 'https://github.com/schibsted/strongbox'
+        issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
+        vcsUrl = 'https://github.com/schibsted/strongbox.git'
+        publicDownloadNumbers = false
+    }
+}
