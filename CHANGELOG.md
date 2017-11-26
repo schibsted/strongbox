@@ -2,6 +2,13 @@
 
 [The released artifacts can be found in Bintray](https://bintray.com/strongbox)
 
+## 0.2.7 (2017-11-24)
+
+- Spring Boot Starter integration
+- Prefix JARs with `strongbox`
+- Improve error handling when credential resolving fails
+- Change license to Apache 2.0
+
 ## 0.2.4 (2017-11-7)
 
 - Improve help messages when credential resolving fails
