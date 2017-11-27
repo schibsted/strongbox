@@ -6,19 +6,19 @@ This is a spring-boot starter for [Strongbox](https://schibsted.com/schibsted/st
 
 ## Usage
 ### Add dependency
-Find the [latest released version](https://github.com/schibsted/strongbox/releases) and add the dependency:
+Find the [latest tagged version](https://github.com/schibsted/strongbox/releases) (0.2.7) and add the dependency:
 
 Maven:    
 
     <dependency>
         <groupId>com.schibsted.security</groupId>
         <artifactId>strongbox-spring-boot-starter</artifactId>
-        <version>LATEST_VERSION</version>
+        <version>0.2.7</version>
     </dependency>
 Gradle:
 
     dependencies: {
-        compile "com.schibsted.security:strongbox-spring-boot-starter:LATEST_VERSION"
+        compile "com.schibsted.security:strongbox-spring-boot-starter:0.2.7"
     }
             
 You will also need to add the AWS dependencies required by Strongbox:
