@@ -88,7 +88,7 @@ Please see the [example repo](https://github.com/schibsted/strongbox-examples/tr
 
 #### Spring Boot Starter
 
-See [spring-boot-starter/README](https://github.com/schibsted/strongbox/spring-boot-starter)
+See [spring-boot-starter/README](https://github.com/schibsted/strongbox/blob/master/spring-boot-starter/README.md)
 
 ## Development status
 Strongbox is in active development, and will soon allow external contributions.
