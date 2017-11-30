@@ -6,8 +6,6 @@ package com.schibsted.security.strongbox.archaius;
 
 import com.netflix.config.DynamicStringProperty;
 import com.schibsted.security.strongbox.sdk.SecretsGroup;
-import com.schibsted.security.strongbox.sdk.types.RawSecretEntry;
-import com.schibsted.security.strongbox.sdk.types.SecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 
 import java.util.Optional;
@@ -34,17 +32,7 @@ public class InMemoryPlaintextSecret extends DynamicStringProperty {
     // TODO synchronize?
     Runnable callback() {
       return () -> {
-          String jsonBlob = super.get();
-
-          if (jsonBlob != null) {
-              RawSecretEntry rawSecretEntry = RawSecretEntry.fromJsonBlob(jsonBlob);
-              SecretEntry secretEntry = secretsGroup.decrypt(rawSecretEntry, secretIdentifier, rawSecretEntry.version);
-              value = Optional.of(secretEntry.secretValue.asString());
-              rawSecretEntry.bestEffortShred();
-              secretEntry.bestEffortShred();
-          } else {
-              value = Optional.of(null);
-          }
+          value = Optional.of(DecryptSecret.fromJsonBlob(super.get(), secretsGroup, secretIdentifier));
         };
     }
 
