@@ -58,7 +58,7 @@ public class SecretsGroupInfoView implements View {
         }
 
         String readOnlyLabel = "Read Only Principals";
-        if (admin.size() > 0) {
+        if (readOnly.size() > 0) {
             sb.append(String.format("%s:\n", readOnlyLabel));
             readOnly.forEach(p -> sb.append(String.format("  %s: %s\n", p.type, p.name)));
         } else {
