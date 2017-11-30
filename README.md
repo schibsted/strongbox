@@ -10,7 +10,9 @@
   <a title="Slack Status" href="https://slackin-bjmwohmllu.now.sh">
     <img src="https://slackin-bjmwohmllu.now.sh/badge.svg">
   </a>
+  <a href="https://snyk.io/test/github/schibsted/strongbox"><img src="https://snyk.io/test/github/schibsted/strongbox/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/schibsted/strongbox" style="max-width:100%;"></a>
 </p>
+
 
 Strongbox is a CLI/GUI and SDK to manage, store, and retrieve secrets (access tokens, encryption keys, private certificates, etc). Strongbox is a client-side convenience layer on top of AWS KMS, DynamoDB and IAM. It manages the AWS resources for you and configure them in a secure way.
 
