@@ -2,7 +2,7 @@
 
 > Strongbox is a CLI/GUI and SDK to manage, store and retrieve secrets (access tokens, encryption keys, private certifiactes, etc). Strongbox is a client-side convenience layer on top of AWS KMS, DynamoDB and IAM. It manages the AWS resources for you and configure them in a secure way.
 
-This is a spring-boot starter for [Strongbox](https://schibsted.com/schibsted/strongbox) that aims to make integration with Strongbox as seamless as possible for Spring Boot applications. It provides an easy way to inject secrets into properties before Spring application context is started
+This is a spring-boot starter for [Strongbox](https://github.com/schibsted/strongbox) that aims to make integration with Strongbox as seamless as possible for Spring Boot applications. It provides an easy way to inject secrets into properties before Spring application context is started
 
 ## Usage
 ### Add dependency
