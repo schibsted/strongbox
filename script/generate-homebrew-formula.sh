@@ -22,3 +22,8 @@ SHA256SUM=$(shasum -a 256 ${ARCHIVE_FILE} | cut -d " " -f1)
 sed -e "s/@PKG_VERSION@/${TRAVIS_TAG}/g" \
 	    -e "s/@SHA_256_SUM@/${SHA256SUM}/g" \
 	    ${INPUT_FILE} > ${OUTPUT_FILE}
+
+if [ ! -f ${OUTPUT_FILE} ]; then
+    echo "Failed to create output file '${OUTPUT_FILE}'"
+    exit 1
+fi
