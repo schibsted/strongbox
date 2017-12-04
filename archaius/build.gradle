@@ -14,6 +14,11 @@ dependencies {
     compile project(':sdk')
 
     compile "com.netflix.archaius:archaius-core:$archaiusVersion"
+
+    testCompile ("org.testng:testng:$testngVersion") {
+        exclude module : 'junit'
+    }
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
 }
 
 task sourceJar(type: Jar) {
