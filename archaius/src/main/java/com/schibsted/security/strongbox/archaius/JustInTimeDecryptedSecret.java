@@ -6,8 +6,6 @@ package com.schibsted.security.strongbox.archaius;
 
 import com.netflix.config.DynamicStringProperty;
 import com.schibsted.security.strongbox.sdk.SecretsGroup;
-import com.schibsted.security.strongbox.sdk.types.RawSecretEntry;
-import com.schibsted.security.strongbox.sdk.types.SecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 
 /**
@@ -35,19 +33,6 @@ public class JustInTimeDecryptedSecret extends DynamicStringProperty {
      */
     @Override
     public String get() {
-        String jsonBlob = super.get();
-        if (jsonBlob != null) {
-            RawSecretEntry rawSecretEntry = RawSecretEntry.fromJsonBlob(jsonBlob);
-            SecretEntry secretEntry = secretsGroup.decrypt(rawSecretEntry, secretIdentifier, rawSecretEntry.version);
-
-            String secret = secretEntry.secretValue.asString();
-
-            rawSecretEntry.bestEffortShred();
-            secretEntry.bestEffortShred();
-
-            return secret;
-        } else {
-            return null;
-        }
+        return DecryptSecret.fromJsonBlob(super.get(), secretsGroup, secretIdentifier);
     }
 }
