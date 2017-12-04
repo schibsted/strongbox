@@ -6,7 +6,7 @@
 set -e
 
 ROOT_DIR=$(cd $(dirname $0)/..; pwd)
-DEST_DIR="${ROOT_DIR}/homebrew"
+DEST_DIR="${ROOT_DIR}/build/homebrew"
 [[ -d "${DEST_DIR}" ]] || mkdir -p "${DEST_DIR}"
 
 INPUT_FILE="${ROOT_DIR}/script/homebrew-formula.tmpl"
@@ -24,6 +24,8 @@ sed -e "s/@PKG_VERSION@/${TRAVIS_TAG}/g" \
 	    ${INPUT_FILE} > ${OUTPUT_FILE}
 
 if [ ! -f ${OUTPUT_FILE} ]; then
-    echo "Failed to create output file '${OUTPUT_FILE}'"
+    echo "Failed to create homebrew formula in '${OUTPUT_FILE}'"
     exit 1
 fi
+
+echo "Created homebrew formula in ${OUTPUT_FILE}"
