@@ -20,6 +20,9 @@ openssl aes-256-cbc -K $encrypted_550d7473c60b_key -iv $encrypted_550d7473c60b_i
           cliRpm cliDeb cliTar
 ${ROOT_DIR}/script/generate-bintray-json.sh
 
+# Homebrew
+${ROOT_DIR}/script/generate-homebrew-formula.sh
+
 # Javadoc
 mkdir -p ${ROOT_DIR}/build/gh-pages/javadoc
 cp -r ${ROOT_DIR}/sdk/build/docs/javadoc ${ROOT_DIR}/build/gh-pages/javadoc/sdk
