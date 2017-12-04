@@ -5,7 +5,7 @@
 
 set -e
 
-WORKING_DIR=$(cd $(dirname $0)/..; pwd)/homebrew
+WORKING_DIR=$(cd $(dirname $0)/..; pwd)/build/homebrew
 GIT_DIR=${WORKING_DIR}/git
 HOMEBREW_FORMULA=${WORKING_DIR}/strongbox.rb
 
