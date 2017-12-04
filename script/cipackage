@@ -24,3 +24,7 @@ ${ROOT_DIR}/script/generate-bintray-json.sh
 mkdir -p ${ROOT_DIR}/build/gh-pages/javadoc
 cp -r ${ROOT_DIR}/sdk/build/docs/javadoc ${ROOT_DIR}/build/gh-pages/javadoc/sdk
 cp -r ${ROOT_DIR}/archaius/build/docs/javadoc ${ROOT_DIR}/build/gh-pages/javadoc/archaius
+
+# Landing page
+mkdir -p ${ROOT_DIR}/build/gh-pages/
+git show documentation:index.html > ${ROOT_DIR}/build/gh-pages/index.html
