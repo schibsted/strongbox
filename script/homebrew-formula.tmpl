@@ -1,0 +1,12 @@
+class Strongbox < Formula
+  desc "Strongbox"
+  homepage "https://github.com/schibsted/strongbox"
+  url "https://dl.bintray.com/strongbox/strongbox-generic/strongbox-cli-@PKG_VERSION@.tar.gz"
+  version "@PKG_VERSION@"
+  sha256 "@SHA_256_SUM@"
+
+  def install
+    bin.install Dir["bin/*"]
+    lib.install Dir["lib/*"]
+  end
+end

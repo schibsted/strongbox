@@ -75,3 +75,9 @@ deploy:
     on:
       tags: true
       branch: master
+  # Homebrew
+  - provider: script
+    script: script/deploy-homebrew-formula.sh
+    on:
+      tags: true
+      branch: master
