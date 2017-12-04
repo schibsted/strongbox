@@ -4,49 +4,20 @@
 
 package com.schibsted.security.strongbox.archaius;
 
-import com.netflix.config.DynamicStringProperty;
 import com.schibsted.security.strongbox.sdk.SecretsGroup;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 
-import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Holds the decrypted secret in-memory. The secret will only be decrypted once per time it changes.
  * This is useful if you do not want the overhead of just-in-time decryption.
  *
  * @author stiankri
+ * @author zamzterz
  */
-public class InMemoryPlaintextSecret extends DynamicStringProperty {
-    private Optional<String> value = Optional.empty();
-    private final SecretsGroup secretsGroup;
-    private final SecretIdentifier secretIdentifier;
-
+public class InMemoryPlaintextSecret extends InMemoryPlaintextSecretDerived<String> {
     public InMemoryPlaintextSecret(SecretsGroup secretsGroup, SecretIdentifier secretIdentifier) {
-        // Please note: null is used as the default value, as it generally does not make sense to have a default secret
-        super(secretsGroup.srn(secretIdentifier).toSrn(), null);
-        this.secretsGroup = secretsGroup;
-        this.secretIdentifier = secretIdentifier;
-        addCallback(callback());
-    }
-
-    // TODO synchronize?
-    Runnable callback() {
-      return () -> {
-          value = Optional.of(DecryptSecret.fromJsonBlob(super.get(), secretsGroup, secretIdentifier));
-        };
-    }
-
-    /**
-     * Get the secret kept in-memory.
-     *
-     * @return The decrypted secret as a {@code String}, or {@code null}
-     */
-    @Override
-    public String get() {
-        if (!value.isPresent()) {
-            callback().run();
-        }
-
-        return value.get();
+        super(secretsGroup, secretIdentifier, Function.identity());
     }
 }

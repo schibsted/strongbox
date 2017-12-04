@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2017 Schibsted Media Group. All rights reserved.
+ * Copyright (c) 2017 Schibsted Products & Technology AS. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.
  */
+
 package com.schibsted.security.strongbox.archaius;
 
 import com.netflix.config.ConfigurationManager;
@@ -12,13 +13,20 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * @author zamzterz
  */
-public class InMemoryPlaintextSecretDerivedTest extends ArchaiusTestBase {
+public class InMemoryPlaintextSecretTest extends ArchaiusTestBase {
     @Test
-    public void testSecretIsDecryptedBeforeBeingPassedToDecoder() {
+    public void testMissingSecretResultsInNull() {
+        InMemoryPlaintextSecret p = new InMemoryPlaintextSecret(mockSecretsGroup, secretIdentifier);
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void testSecretIsDecrypted() {
         String secretValue = "test_secret_value";
         long version = 1;
         RawSecretEntry rawSecret = new RawSecretEntry(secretIdentifier,
@@ -30,10 +38,8 @@ public class InMemoryPlaintextSecretDerivedTest extends ArchaiusTestBase {
         SecretEntry secretEntry = new SecretEntryMock.Builder().secretValue(secretValue).build();
         when(mockSecretsGroup.decrypt(rawSecret, secretIdentifier, version)).thenReturn(secretEntry);
 
-        InMemoryPlaintextSecretDerived<Integer> p = new InMemoryPlaintextSecretDerived<>(mockSecretsGroup,
-                secretIdentifier,
-                String::length);
+        InMemoryPlaintextSecret p = new InMemoryPlaintextSecret(mockSecretsGroup, secretIdentifier);
         ConfigurationManager.getConfigInstance().setProperty(secretIdentifier.name, rawSecret.toJsonBlob());
-        assertEquals(p.getValue().intValue(), secretValue.length());
+        assertEquals(p.getValue(), secretValue);
     }
 }
