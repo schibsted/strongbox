@@ -2,6 +2,12 @@
 
 [The released artifacts can be found in Bintray](https://bintray.com/strongbox)
 
+## 0.2.13 (2017-12-4)
+- Archaius derived property support
+- Automated homebrew release
+- Automated landing page release
+- Minor fixes
+
 ## 0.2.7 (2017-11-24)
 
 - Spring Boot Starter integration
