@@ -13,6 +13,7 @@ plugins {
 
 apply plugin: 'application'
 apply plugin: 'nebula.deb'
+apply plugin: 'signing'
 
 mainClassName = 'com.schibsted.security.strongbox.cli.StrongboxCLI'
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
@@ -121,4 +122,9 @@ task cliTar(type: Tar, dependsOn: "installDist") {
 
     extension = 'tar.gz'
     compression = Compression.GZIP
+}
+
+signing {
+    required { project.hasProperty('signing.password') && project.hasProperty('signing.keyId') && project.hasProperty('signing.secretKeyRingFile') }
+    sign cliTar
 }

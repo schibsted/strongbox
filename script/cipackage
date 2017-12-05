@@ -17,7 +17,8 @@ openssl aes-256-cbc -K $encrypted_550d7473c60b_key -iv $encrypted_550d7473c60b_i
 # Build packages
 ./gradlew -Psigning.secretKeyRingFile="${GPG_KEYRING_PATH}" \
           -Psigning.keyId="${GPG_KEYID}" \
-          cliRpm cliDeb cliTar
+          -Psigning.password="${GPG_SIGNING_KEY_PASSPHRASE}" \
+          cliRpm cliDeb signCliTar
 ${ROOT_DIR}/script/generate-bintray-json.sh
 
 # Homebrew
