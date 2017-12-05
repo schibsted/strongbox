@@ -31,4 +31,10 @@ cp -r ${ROOT_DIR}/archaius/build/docs/javadoc ${ROOT_DIR}/build/gh-pages/javadoc
 # Landing page
 mkdir -p ${ROOT_DIR}/build/gh-pages/
 git fetch origin documentation:refs/remotes/origin/documentation
-git show origin/documentation:index.html > ${ROOT_DIR}/build/gh-pages/index.html
+
+INDEX_FILE=${ROOT_DIR}/build/gh-pages/index.html
+INDEX_FILE_SUBSTITUTED=${INDEX_FILE}_subsituted
+git show origin/documentation:index.html > ${INDEX_FILE}
+sed -e "s/@STRONGBOX_VERSION@/${TRAVIS_TAG}/g" \
+	    ${INDEX_FILE} > ${INDEX_FILE_SUBSTITUTED}
+mv ${INDEX_FILE_SUBSTITUTED} ${INDEX_FILE}
