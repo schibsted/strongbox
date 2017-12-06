@@ -21,6 +21,7 @@ Strongbox has been used in production since mid-2016 and is now used extensively
 <p align="center">
   <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-building-blocks.png" width="70%">
 </p>
+
 ## Getting started
 Head over to our [web page](https://schibsted.github.io/strongbox/#install) for a quick start. For more detailed information please visit the [Wiki](https://github.com/schibsted/strongbox/wiki).
 
