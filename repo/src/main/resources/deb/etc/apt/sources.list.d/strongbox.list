@@ -1,1 +1,1 @@
-deb http://dl.bintray.com/strongbox/strongbox-deb debian main
+deb [arch=amd64] http://dl.bintray.com/strongbox/strongbox-deb debian main
