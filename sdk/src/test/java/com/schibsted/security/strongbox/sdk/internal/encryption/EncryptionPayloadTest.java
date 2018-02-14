@@ -146,14 +146,6 @@ public class EncryptionPayloadTest {
     }
 
     @Test
-    public void ensureNotCommutative() {
-        byte[] sha1 = EncryptionPayload.computeSHA(State.ENABLED, notAfter, Optional.empty());
-        byte[] sha2 = EncryptionPayload.computeSHA(State.ENABLED, Optional.empty(), notAfter);
-
-        assertNotEquals(sha1, sha2, "Should not be able to reorder and have the same hash");
-    }
-
-    @Test
     public void testEquals() {
         EncryptionPayload samePayload = new EncryptionPayload(value, userData, created, createdBy, modified,
                 modifiedBy, comment);

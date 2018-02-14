@@ -138,7 +138,7 @@ public class GenericDynamoDBTest {
                 new AttributeValueUpdate()
                         .withAction(AttributeAction.PUT)
                         .withValue(new AttributeValue()
-                                .withS(Encoder.base64encode(rawSecretEntry.sha1OfEncryptionPayload()))));
+                                .withS(rawSecretEntry.sha1OfEncryptionPayload())));
 
         // Create the expected conditions map.
         Map<String, ExpectedAttributeValue> expected = new HashMap<>();
@@ -146,7 +146,7 @@ public class GenericDynamoDBTest {
             expected.put(KEY_ATTRIBUTE_NAME.toString(), new ExpectedAttributeValue(true).withValue(
                     new AttributeValue(rawSecretEntry.secretIdentifier.name)));
             expected.put(OPTIMISTIC_LOCKING_ATTRIBUTE_NAME, new ExpectedAttributeValue(true).withValue(
-                    new AttributeValue(Encoder.sha1(expectedRawSecretEntry.get().encryptedPayload))));
+                    new AttributeValue(expectedRawSecretEntry.get().sha1OfEncryptionPayload())));
         } else {
             expected.put(KEY_ATTRIBUTE_NAME.toString(), new ExpectedAttributeValue(false));
         }
