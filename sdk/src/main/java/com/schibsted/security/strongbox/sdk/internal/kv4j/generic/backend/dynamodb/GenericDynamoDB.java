@@ -78,7 +78,7 @@ import java.util.stream.Stream;
  */
 public class GenericDynamoDB<Entry, Primary> implements GenericStore<Entry, Primary>, ManagedResource, AutoCloseable {
     private static final Logger log = LoggerFactory.getLogger(GenericDynamoDB.class);
-    private static final int SLEEP_TIME = 500;
+    private static final int SLEEP_TIME = 5000;
     private static final int MAX_RETRIES = 30;
 
     private AmazonDynamoDB client;
