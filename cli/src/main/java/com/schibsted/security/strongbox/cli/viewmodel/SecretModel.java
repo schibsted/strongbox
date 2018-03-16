@@ -37,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -170,7 +171,7 @@ public class SecretModel implements AutoCloseable {
 
         BestEffortShredder.shred(chars);
 
-        return byteBuffer.array();
+        return Arrays.copyOf(byteBuffer.array(), byteBuffer.limit());
     }
 
     private static int booleanIfExists(String value) {
