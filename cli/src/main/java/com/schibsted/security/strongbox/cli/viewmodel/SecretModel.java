@@ -168,10 +168,13 @@ public class SecretModel implements AutoCloseable {
     private byte[] asBytes(char[] chars) {
         CharBuffer charBuffer = CharBuffer.wrap(chars);
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
 
         BestEffortShredder.shred(chars);
+        BestEffortShredder.shred(charBuffer.array());
+        BestEffortShredder.shred(byteBuffer.array());
 
-        return Arrays.copyOf(byteBuffer.array(), byteBuffer.limit());
+        return bytes;
     }
 
     private static int booleanIfExists(String value) {
