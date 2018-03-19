@@ -170,7 +170,6 @@ public class SecretModel implements AutoCloseable {
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
         byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
 
-        BestEffortShredder.shred(chars);
         BestEffortShredder.shred(charBuffer.array());
         BestEffortShredder.shred(byteBuffer.array());
 
