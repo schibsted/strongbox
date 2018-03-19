@@ -144,7 +144,7 @@ public class SecretModel implements AutoCloseable {
                 if (secretValue == null) {
                     throw new IllegalArgumentException("A secret value must be specified");
                 }
-                return asBytes(secretValue);
+                return SecretValueConverter.asBytes(secretValue);
             } else {
                 // Piped in
                 return IOUtils.toByteArray(inputStream);
@@ -162,15 +162,6 @@ public class SecretModel implements AutoCloseable {
         } catch (IOException e) {
             throw new RuntimeException(String.format("Failed to read secret value from file '%s'", valueFile), e);
         }
-    }
-
-    private byte[] asBytes(char[] chars) {
-        CharBuffer charBuffer = CharBuffer.wrap(chars);
-        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
-
-        BestEffortShredder.shred(chars);
-
-        return byteBuffer.array();
     }
 
     private static int booleanIfExists(String value) {

@@ -8,6 +8,9 @@ import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShredd
 import com.schibsted.security.strongbox.sdk.types.SecretType;
 import com.schibsted.security.strongbox.sdk.types.SecretValue;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -27,5 +30,16 @@ public class SecretValueConverter {
         } else {
             return new SecretValue(value, secretType);
         }
+    }
+
+    public static byte[] asBytes(char[] chars) {
+        CharBuffer charBuffer = CharBuffer.wrap(chars);
+        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
+
+        BestEffortShredder.shred(charBuffer.array());
+        BestEffortShredder.shred(byteBuffer.array());
+
+        return bytes;
     }
 }
