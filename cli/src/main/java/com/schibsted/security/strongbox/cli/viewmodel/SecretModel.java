@@ -37,7 +37,6 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -145,7 +144,7 @@ public class SecretModel implements AutoCloseable {
                 if (secretValue == null) {
                     throw new IllegalArgumentException("A secret value must be specified");
                 }
-                return asBytes(secretValue);
+                return SecretValueConverter.asBytes(secretValue);
             } else {
                 // Piped in
                 return IOUtils.toByteArray(inputStream);
@@ -163,17 +162,6 @@ public class SecretModel implements AutoCloseable {
         } catch (IOException e) {
             throw new RuntimeException(String.format("Failed to read secret value from file '%s'", valueFile), e);
         }
-    }
-
-    private byte[] asBytes(char[] chars) {
-        CharBuffer charBuffer = CharBuffer.wrap(chars);
-        ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
-        byte[] bytes = Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
-
-        BestEffortShredder.shred(charBuffer.array());
-        BestEffortShredder.shred(byteBuffer.array());
-
-        return bytes;
     }
 
     private static int booleanIfExists(String value) {
