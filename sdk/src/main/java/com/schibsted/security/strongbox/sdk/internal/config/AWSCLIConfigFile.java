@@ -59,6 +59,7 @@ public class AWSCLIConfigFile {
                     Section sectionToUpdate = sections.computeIfAbsent(currentSection.orElse(""), Section::new);
                     sectionToUpdate.addProperty(property);
                 }
+                lineNumber++;
             }
 
             return new Config(sections);
