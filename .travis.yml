@@ -1,8 +1,13 @@
 language: java
 jdk:
   - oraclejdk8
-script: ./script/cibuild
+before_script: npm install -g snyk
+script:
+  - ./script/cibuild
+  - snyk auth $snyk_token
+  - snyk test
 before_deploy: ./script/cipackage
+after_deploy: snyk monitor
 
 before_cache: ./script/cicleanup
 after_script: ./script/cicleanup
