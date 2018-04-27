@@ -1,7 +1,14 @@
 language: java
 jdk:
   - oraclejdk8
-script: ./script/cibuild
+before_script: npm install -g snyk
+script:
+  - ./script/cibuild
+  - snyk auth $snyk_token
+  - snyk monitor --file=sdk/build.gradle
+  - snyk monitor --file=archaius/build.gradle
+  - snyk monitor --file=cli/build.gradle
+  - snyk monitor --file=spring-boot-starter/build.gradle
 before_deploy: ./script/cipackage
 
 before_cache: ./script/cicleanup
