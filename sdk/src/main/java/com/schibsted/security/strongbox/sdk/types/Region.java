@@ -22,6 +22,7 @@ public enum Region {
     EU_WEST_1("eu-west-1"),
     EU_WEST_2("eu-west-2"),
     EU_WEST_3("eu-west-3"),
+    EU_NORTH_1("eu-north-1"),
     EU_CENTRAL_1("eu-central-1"),
     AP_SOUTH_1("ap-south-1"),
     AP_SOUTHEAST_1("ap-southeast-1"),
