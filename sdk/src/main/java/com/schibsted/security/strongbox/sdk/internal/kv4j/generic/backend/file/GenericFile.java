@@ -5,6 +5,7 @@
 package com.schibsted.security.strongbox.sdk.internal.kv4j.generic.backend.file;
 
 import com.google.common.collect.Lists;
+import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShredder;
 import com.schibsted.security.strongbox.sdk.internal.encryption.EncryptionContext;
 import com.schibsted.security.strongbox.sdk.internal.encryption.Encryptor;
 import com.schibsted.security.strongbox.sdk.exceptions.AlreadyExistsException;
@@ -13,6 +14,7 @@ import com.schibsted.security.strongbox.sdk.exceptions.FieldAccessException;
 import com.schibsted.security.strongbox.sdk.exceptions.NoFieldMatchingAnnotationException;
 import com.schibsted.security.strongbox.sdk.exceptions.ParseException;
 import com.schibsted.security.strongbox.sdk.exceptions.SerializationException;
+import com.schibsted.security.strongbox.sdk.exceptions.StateCorruptionException;
 import com.schibsted.security.strongbox.sdk.exceptions.UnexpectedStateException;
 import com.schibsted.security.strongbox.sdk.exceptions.UnsupportedTypeException;
 import com.schibsted.security.strongbox.sdk.internal.converter.Encoder;
@@ -538,7 +540,15 @@ public class GenericFile<Entry, Primary, Secondary extends Comparable<? super Se
         readWriteLock.writeLock().lock();
 
         try {
-            byte[] ciphertext = encryptor.encrypt(toByteArray(), encryptionContext);
+            byte[] plaintext = toByteArray();
+            byte[] ciphertext = encryptor.encrypt(plaintext, encryptionContext);
+
+            if (plaintext != ciphertext) {
+                BestEffortShredder.shred(plaintext);
+            } else {
+                throw new StateCorruptionException("Internal error (file a bug): clearing the plaintext would corrupt the ciphertext!");
+            }
+
             Files.write(file.toPath(), prependVersion(ciphertext));
         } catch (IOException e) {
             throw new SerializationException(String.format("Failed to serialize to file: '%s'", file.getPath()), e);

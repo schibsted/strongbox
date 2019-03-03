@@ -5,6 +5,7 @@
 package com.schibsted.security.strongbox.sdk.internal.impl;
 
 import com.schibsted.security.strongbox.sdk.exceptions.AlreadyExistsException;
+import com.schibsted.security.strongbox.sdk.exceptions.StateCorruptionException;
 import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShredder;
 import com.schibsted.security.strongbox.sdk.internal.encryption.DefaultEncryptionContext;
 import com.schibsted.security.strongbox.sdk.internal.encryption.EncryptionContext;
@@ -116,7 +117,14 @@ public class DefaultSecretsGroup implements SecretsGroup {
         EncryptionContext encryptionContext = new DefaultEncryptionContext(groupIdentifier, secret.secretIdentifier, version, secret.state, secret.notBefore, secret.notAfter);
         EncryptionPayload encryptionPayload = new EncryptionPayload(secret.secretValue, secret.userData, created, secret.createdBy, modified, modifiedBy, secret.comment);
 
-        byte[] encryptedPayload = encryptor.encrypt(encryptionPayload.toByteArray(), encryptionContext);
+        byte[] plaintext = encryptionPayload.toByteArray();
+        byte[] encryptedPayload = encryptor.encrypt(plaintext, encryptionContext);
+
+        if (plaintext != encryptedPayload) {
+            BestEffortShredder.shred(plaintext);
+        } else {
+            throw new StateCorruptionException("Internal error (file a bug): clearing the plaintext would corrupt the ciphertext!");
+        }
 
         return new RawSecretEntry(secret.secretIdentifier, version, secret.state, secret.notBefore, secret.notAfter, encryptedPayload);
     }

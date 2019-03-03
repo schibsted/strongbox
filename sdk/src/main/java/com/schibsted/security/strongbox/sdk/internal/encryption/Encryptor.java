@@ -13,6 +13,33 @@ public interface Encryptor {
     String encrypt(String data, EncryptionContext context);
     String decrypt(String data, EncryptionContext context);
 
+    /**
+     * Encrypt the {@code data} using the {@code context}.
+     *
+     * The {@code data} is left unchanged and the returned array is allocated
+     * by the method. This allows the caller of this method to safely use or
+     * clear the {@code data} afterwards.
+     *
+     * @param data
+     *        Plaintext to be encrypted
+     * @param context
+     *        Encryption Context
+     * @return encrypted {@code data}
+     */
     byte[] encrypt(byte[] data, EncryptionContext context);
+
+    /**
+     * Decrypt the {@code data} using the {@code context}.
+     *
+     * The {@code data} is left unchanged and the returned array is allocated
+     * by the method. This allows the caller of this method to safely use or
+     * clear the {@code data} afterwards.
+     *
+     * @param data
+     *        Ciphertext to be decrypted
+     * @param context
+     *        Encryption Context
+     * @return decrypted {@code data}
+     */
     byte[] decrypt(byte[] data, EncryptionContext context);
 }

@@ -21,6 +21,7 @@ import org.testng.annotations.Test;
 import java.nio.ByteBuffer;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -53,12 +54,12 @@ public class GenericFileTest {
 
         @Override
         public byte[] encrypt(byte[] data, EncryptionContext context) {
-            return data;
+            return Arrays.copyOf(data, data.length);
         }
 
         @Override
         public byte[] decrypt(byte[] data, EncryptionContext context) {
-            return data;
+            return Arrays.copyOf(data, data.length);
         }
     }
 

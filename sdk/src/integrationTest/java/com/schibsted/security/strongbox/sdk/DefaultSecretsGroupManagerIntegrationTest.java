@@ -10,8 +10,11 @@ import com.amazonaws.regions.Regions;
 import com.schibsted.security.strongbox.sdk.exceptions.AlreadyExistsException;
 import com.schibsted.security.strongbox.sdk.exceptions.DoesNotExistException;
 import com.schibsted.security.strongbox.sdk.exceptions.SecretsGroupException;
+import com.schibsted.security.strongbox.sdk.exceptions.StateCorruptionException;
 import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
 import com.schibsted.security.strongbox.sdk.internal.converter.Encoder;
+import com.schibsted.security.strongbox.sdk.internal.encryption.EncryptionContext;
+import com.schibsted.security.strongbox.sdk.internal.encryption.Encryptor;
 import com.schibsted.security.strongbox.sdk.internal.types.config.UserConfig;
 import com.schibsted.security.strongbox.sdk.types.Comment;
 import com.schibsted.security.strongbox.sdk.types.EncryptionStrength;
@@ -32,6 +35,8 @@ import org.testng.annotations.Test;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -251,6 +256,45 @@ public class DefaultSecretsGroupManagerIntegrationTest {
         testGetSecrets(secretsGroup);
         testManageSecrets(secretsGroup);
     }
+
+    /**
+     * The contract of the {@code Encryptor} is to allocate a new array and leave the plaintext unchanged.
+     *
+     * Currently the only implementation of {@code Encryptor} is using {@code AwsCrypto}, which conforms to this
+     * contract, but does not promise to. This test is to catch if this assumption changes in the future.
+     *
+     * The {@code BestEffortShredder} will potentially result in corrupted state of new or updated secrets. Which is
+     * why the test to verify that the ciphertext array is not the same array as the plaintext is done before invoking
+     * {@code BestEffortShredder}.
+     */
+    @Test(groups = "main-user-context")
+    public void testEncryptorAssumption() {
+        Encryptor encryptor = ((DefaultSecretsGroupManager)secretsGroupManager).encryptor(identifier);
+
+        byte value = 42;
+        byte[] plaintext = createPlaintext(10, value);
+
+        EncryptionContext encryptionContext = HashMap::new;
+
+        byte[] ciphertext = encryptor.encrypt(plaintext, encryptionContext);
+
+        if (ciphertext == plaintext) {
+            throw new StateCorruptionException("DANGER: The encryptor returned the input array as the output; this will corrupt state so it needs to be investigated!");
+        }
+
+        for (byte element : plaintext) {
+            if (element != value) {
+                throw new StateCorruptionException("DANGER: The encryptor changed the plaintext; this might corrupt state so it needs to be investigated!");
+            }
+        }
+    }
+
+    private byte[] createPlaintext(int capacity, byte value) {
+        byte[] plaintext = new byte[capacity];
+        Arrays.fill(plaintext, value);
+        return plaintext;
+    }
+
 
     @Test(groups = "main-user-context", expectedExceptions = AlreadyExistsException.class)
     public void testCreateAlreadyExisting() {
