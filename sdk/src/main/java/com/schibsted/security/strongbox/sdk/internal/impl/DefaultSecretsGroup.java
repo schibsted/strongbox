@@ -71,8 +71,6 @@ public class DefaultSecretsGroup implements SecretsGroup {
             RawSecretEntry entry = createEntry(newSecretEntry, 1);
             store.create(entry);
 
-            entry.bestEffortShred();
-
             return entry;
         } catch (AlreadyExistsException e) {
             throw new AlreadyExistsException(String.format("A secret named '%s' already exists", newSecretEntry.secretIdentifier.name), e);
