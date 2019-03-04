@@ -21,6 +21,7 @@ import com.schibsted.security.strongbox.sdk.types.EncryptionStrength;
 import com.schibsted.security.strongbox.sdk.types.NewSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.Principal;
 import com.schibsted.security.strongbox.sdk.types.Region;
+import com.schibsted.security.strongbox.sdk.types.RawSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 import com.schibsted.security.strongbox.sdk.types.SecretMetadata;
 import com.schibsted.security.strongbox.sdk.types.SecretType;
@@ -28,10 +29,13 @@ import com.schibsted.security.strongbox.sdk.types.SecretValue;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupIdentifier;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupInfo;
 import com.schibsted.security.strongbox.sdk.types.State;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -74,6 +78,9 @@ public class DefaultSecretsGroupManagerIntegrationTest {
     private static final SecretValue secretOneVersionOneValue = new SecretValue("0123", SecretType.OPAQUE);
     private static final SecretValue secretOneValue = new SecretValue("1234", SecretType.OPAQUE);
     private static final SecretValue secretTwoValue = new SecretValue("#$%^&*()!@", SecretType.OPAQUE);
+
+    private static final ZonedDateTime notBefore = ZonedDateTime.of(2020,1,3,4,5,6,7, ZoneId.of("UTC"));
+    private static final ZonedDateTime notAfter = ZonedDateTime.of(2020,2,3,4,5,6,7, ZoneId.of("UTC"));
 
     private static void setUpSecrets() {
         SecretsGroup secretsGroup = secretsGroupManager.get(identifier);
@@ -165,8 +172,16 @@ public class DefaultSecretsGroupManagerIntegrationTest {
     private void testManageSecrets(SecretsGroup secretsGroup) {
         // Create a new secret.
         SecretIdentifier anotherIdentifier = new SecretIdentifier("anotherSecret");
-        NewSecretEntry anotherSecret = new NewSecretEntry(anotherIdentifier, new SecretValue("1234", SecretType.OPAQUE), State.ENABLED);
-        secretsGroup.create(anotherSecret);
+
+        NewSecretEntry anotherSecret = new NewSecretEntry(anotherIdentifier,
+                new SecretValue("1234", SecretType.OPAQUE),
+                State.ENABLED,
+                Optional.of(notBefore),
+                Optional.of(notAfter),
+                Optional.empty());
+
+        RawSecretEntry rawSecretEntry = secretsGroup.create(anotherSecret);
+        verifyRawSecretEntry(rawSecretEntry, anotherIdentifier);
 
         // Add a new version.
         NewSecretEntry anotherSecretV2 = new NewSecretEntry(anotherIdentifier, new SecretValue("foobar", SecretType.OPAQUE), State.ENABLED);
@@ -180,6 +195,14 @@ public class DefaultSecretsGroupManagerIntegrationTest {
 
         // Delete the secret.
         secretsGroup.delete(anotherIdentifier);
+    }
+
+    private void verifyRawSecretEntry(RawSecretEntry rawSecretEntry, SecretIdentifier secretIdentifier) {
+        assertThat(rawSecretEntry.secretIdentifier, is(secretIdentifier));
+        assertThat(rawSecretEntry.version, is(1L));
+        assertThat(rawSecretEntry.state, is(State.ENABLED));
+        assertThat(rawSecretEntry.notBefore.get(), is(notBefore));
+        assertThat(rawSecretEntry.notAfter.get(), is(notAfter));
     }
 
     @BeforeClass
