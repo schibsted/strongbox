@@ -56,6 +56,7 @@ public class SecretEntryView extends StackPane {
 
             if (secretMetadata.isPresent()) {
                 this.rawSecretEntry = secretsGroup.update(secretMetadata.get());
+                secretMetadata.get().bestEffortShred();
                 outputNonEncrypted();
             }
         });

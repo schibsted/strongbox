@@ -4,12 +4,14 @@
 
 package com.schibsted.security.strongbox.sdk.types;
 
+import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShred;
+
 import java.util.Optional;
 
 /**
  * @author stiankri
  */
-public final class SecretMetadata {
+public final class SecretMetadata implements BestEffortShred {
     public final SecretIdentifier secretIdentifier;
     public final long version;
     public final Optional<State> state;
@@ -30,5 +32,11 @@ public final class SecretMetadata {
         this.modifiedBy = modifiedBy;
         this.userData = userData;
         this.comment = comment;
+    }
+
+    @Override
+    public void bestEffortShred() {
+        userData.ifPresent(e -> e.ifPresent(UserData::bestEffortShred));
+        comment.ifPresent(e -> e.ifPresent(Comment::bestEffortShred));
     }
 }

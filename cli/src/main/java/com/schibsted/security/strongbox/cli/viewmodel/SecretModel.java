@@ -179,6 +179,7 @@ public class SecretModel implements AutoCloseable {
 
         SecretMetadata secretMetadata = new SecretMetadata(new SecretIdentifier(secretName), version, state, Optional.empty(), Optional.empty(), extractComment(comment).map(Optional::of));
         secretsGroup.update(secretMetadata);
+        secretMetadata.bestEffortShred();
     }
 
     private long parseVersion(String version) {

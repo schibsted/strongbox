@@ -10,14 +10,18 @@ import com.amazonaws.regions.Regions;
 import com.schibsted.security.strongbox.sdk.exceptions.AlreadyExistsException;
 import com.schibsted.security.strongbox.sdk.exceptions.DoesNotExistException;
 import com.schibsted.security.strongbox.sdk.exceptions.SecretsGroupException;
+import com.schibsted.security.strongbox.sdk.exceptions.StateCorruptionException;
 import com.schibsted.security.strongbox.sdk.impl.DefaultSecretsGroupManager;
 import com.schibsted.security.strongbox.sdk.internal.converter.Encoder;
+import com.schibsted.security.strongbox.sdk.internal.encryption.EncryptionContext;
+import com.schibsted.security.strongbox.sdk.internal.encryption.Encryptor;
 import com.schibsted.security.strongbox.sdk.internal.types.config.UserConfig;
 import com.schibsted.security.strongbox.sdk.types.Comment;
 import com.schibsted.security.strongbox.sdk.types.EncryptionStrength;
 import com.schibsted.security.strongbox.sdk.types.NewSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.Principal;
 import com.schibsted.security.strongbox.sdk.types.Region;
+import com.schibsted.security.strongbox.sdk.types.RawSecretEntry;
 import com.schibsted.security.strongbox.sdk.types.SecretIdentifier;
 import com.schibsted.security.strongbox.sdk.types.SecretMetadata;
 import com.schibsted.security.strongbox.sdk.types.SecretType;
@@ -25,13 +29,18 @@ import com.schibsted.security.strongbox.sdk.types.SecretValue;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupIdentifier;
 import com.schibsted.security.strongbox.sdk.types.SecretsGroupInfo;
 import com.schibsted.security.strongbox.sdk.types.State;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -69,6 +78,9 @@ public class DefaultSecretsGroupManagerIntegrationTest {
     private static final SecretValue secretOneVersionOneValue = new SecretValue("0123", SecretType.OPAQUE);
     private static final SecretValue secretOneValue = new SecretValue("1234", SecretType.OPAQUE);
     private static final SecretValue secretTwoValue = new SecretValue("#$%^&*()!@", SecretType.OPAQUE);
+
+    private static final ZonedDateTime notBefore = ZonedDateTime.of(2020,1,3,4,5,6,7, ZoneId.of("UTC"));
+    private static final ZonedDateTime notAfter = ZonedDateTime.of(2020,2,3,4,5,6,7, ZoneId.of("UTC"));
 
     private static void setUpSecrets() {
         SecretsGroup secretsGroup = secretsGroupManager.get(identifier);
@@ -160,8 +172,16 @@ public class DefaultSecretsGroupManagerIntegrationTest {
     private void testManageSecrets(SecretsGroup secretsGroup) {
         // Create a new secret.
         SecretIdentifier anotherIdentifier = new SecretIdentifier("anotherSecret");
-        NewSecretEntry anotherSecret = new NewSecretEntry(anotherIdentifier, new SecretValue("1234", SecretType.OPAQUE), State.ENABLED);
-        secretsGroup.create(anotherSecret);
+
+        NewSecretEntry anotherSecret = new NewSecretEntry(anotherIdentifier,
+                new SecretValue("1234", SecretType.OPAQUE),
+                State.ENABLED,
+                Optional.of(notBefore),
+                Optional.of(notAfter),
+                Optional.empty());
+
+        RawSecretEntry rawSecretEntry = secretsGroup.create(anotherSecret);
+        verifyRawSecretEntry(rawSecretEntry, anotherIdentifier);
 
         // Add a new version.
         NewSecretEntry anotherSecretV2 = new NewSecretEntry(anotherIdentifier, new SecretValue("foobar", SecretType.OPAQUE), State.ENABLED);
@@ -175,6 +195,14 @@ public class DefaultSecretsGroupManagerIntegrationTest {
 
         // Delete the secret.
         secretsGroup.delete(anotherIdentifier);
+    }
+
+    private void verifyRawSecretEntry(RawSecretEntry rawSecretEntry, SecretIdentifier secretIdentifier) {
+        assertThat(rawSecretEntry.secretIdentifier, is(secretIdentifier));
+        assertThat(rawSecretEntry.version, is(1L));
+        assertThat(rawSecretEntry.state, is(State.ENABLED));
+        assertThat(rawSecretEntry.notBefore.get(), is(notBefore));
+        assertThat(rawSecretEntry.notAfter.get(), is(notAfter));
     }
 
     @BeforeClass
@@ -251,6 +279,45 @@ public class DefaultSecretsGroupManagerIntegrationTest {
         testGetSecrets(secretsGroup);
         testManageSecrets(secretsGroup);
     }
+
+    /**
+     * The contract of the {@code Encryptor} is to allocate a new array and leave the plaintext unchanged.
+     *
+     * Currently the only implementation of {@code Encryptor} is using {@code AwsCrypto}, which conforms to this
+     * contract, but does not promise to. This test is to catch if this assumption changes in the future.
+     *
+     * The {@code BestEffortShredder} will potentially result in corrupted state of new or updated secrets. Which is
+     * why the test to verify that the ciphertext array is not the same array as the plaintext is done before invoking
+     * {@code BestEffortShredder}.
+     */
+    @Test(groups = "main-user-context")
+    public void testEncryptorAssumption() {
+        Encryptor encryptor = ((DefaultSecretsGroupManager)secretsGroupManager).encryptor(identifier);
+
+        byte value = 42;
+        byte[] plaintext = createPlaintext(10, value);
+
+        EncryptionContext encryptionContext = HashMap::new;
+
+        byte[] ciphertext = encryptor.encrypt(plaintext, encryptionContext);
+
+        if (ciphertext == plaintext) {
+            throw new StateCorruptionException("DANGER: The encryptor returned the input array as the output; this will corrupt state so it needs to be investigated!");
+        }
+
+        for (byte element : plaintext) {
+            if (element != value) {
+                throw new StateCorruptionException("DANGER: The encryptor changed the plaintext; this might corrupt state so it needs to be investigated!");
+            }
+        }
+    }
+
+    private byte[] createPlaintext(int capacity, byte value) {
+        byte[] plaintext = new byte[capacity];
+        Arrays.fill(plaintext, value);
+        return plaintext;
+    }
+
 
     @Test(groups = "main-user-context", expectedExceptions = AlreadyExistsException.class)
     public void testCreateAlreadyExisting() {
