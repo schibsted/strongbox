@@ -55,8 +55,6 @@ deploy:
       branch: master
   # DEB
   - provider: bintray
-    edge:
-      branch: v1.8.47  
     file: "bintray/descriptor-deb.json"
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
@@ -65,8 +63,6 @@ deploy:
       branch: master
   # RPM
   - provider: bintray
-    edge:
-      branch: v1.8.47  
     file: "bintray/descriptor-rpm.json"
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
@@ -75,8 +71,6 @@ deploy:
       branch: master
  # Tarball
   - provider: bintray
-    edge:
-      branch: v1.8.47  
     file: "bintray/descriptor-tar.json"
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
