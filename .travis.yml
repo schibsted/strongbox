@@ -1,6 +1,8 @@
 language: java
-jdk:
-  - oraclejdk8
+before_install:
+  - source ./script/installjdk
+  - echo $JAVA_HOME
+  - java -version
 script: ./script/cibuild
 before_deploy: ./script/cipackage
 

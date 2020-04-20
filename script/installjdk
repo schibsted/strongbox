@@ -1,0 +1,19 @@
+CWD=$PWD
+BASE=${HOME}/corretto-8/
+FILE_NAME=amazon-corretto-8-x64-linux-jdk.tar.gz
+
+if [ -d $BASE ]; then
+  rm -rf $BASE
+fi
+
+mkdir $BASE
+cd $BASE
+
+wget https://corretto.aws/downloads/latest/$FILE_NAME
+tar -xf $FILE_NAME --strip-components 1 
+rm $FILE_NAME
+
+cd $CWD
+
+export JAVA_HOME=$BASE
+export PATH=$JAVA_HOME/bin:$PATH
