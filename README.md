@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/schibsted/strongbox">
-    <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-logo.png?sanitize=true">
+    <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-logo.png">
   </a>
 </p>
 <p align="center">
