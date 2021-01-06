@@ -6,6 +6,7 @@ import static java.lang.System.getenv
 
 apply plugin: 'jacoco'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'java-library'
 
 group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
@@ -16,7 +17,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
-    implementation "com.amazonaws:aws-java-sdk-core:$awsVersion"
+    api "com.amazonaws:aws-java-sdk-core:$awsVersion"
     implementation "com.amazonaws:aws-java-sdk-dynamodb:$awsVersion"
     implementation "com.amazonaws:aws-java-sdk-kms:$awsVersion"
     implementation "com.amazonaws:aws-java-sdk-iam:$awsVersion"
