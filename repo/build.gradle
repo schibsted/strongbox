@@ -5,7 +5,7 @@
 import java.time.Instant
 
 plugins {
-    id 'nebula.ospackage' version '3.4.0'
+    id 'nebula.ospackage' version '8.4.1'
 }
 
 apply plugin: 'nebula.deb'

@@ -11,10 +11,10 @@ buildscript {
 
     dependencies {
         //Check for the latest version here: https://plugins.gradle.org/plugin/com.jfrog.artifactory
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0"
-        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
-        classpath "com.netflix.nebula:gradle-lint-plugin:7.9.1"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.18.3"
+        classpath "com.github.jengelman.gradle.plugins:shadow:6.1.0"
+        classpath "com.netflix.nebula:gradle-lint-plugin:16.17.0"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
     }
 }
 
@@ -47,14 +47,15 @@ allprojects {
     ext {
         airlineVersion = '0.8'
         apacheCommonsVersion = '1.2'
-        archaiusVersion = '0.7.5'
+        archaiusVersion = '0.7.7'
         awsEncryptionVersion = '0.0.1'
         awsVersion = '1.11.124'
         // can't update guava to latest version until airline is fixed, see https://github.com/airlift/airline/pull/53
         guavaVersion = '20.0'
         hamcrestVersion = '1.3'
         jacksonVersion = '2.8.9'
-        mockitoVersion = '2.8.47'
+        jaxbVersion = "2.3.1"
+        mockitoVersion = '3.7.0'
         slf4jVersion = '1.7.25'
         springVersion = "4.2.6.RELEASE"
         springBootVersion = "1.3.5.RELEASE"
@@ -63,8 +64,7 @@ allprojects {
     }
 
     jacoco {
-        // Broken in newer versions. Need this version for now.
-        toolVersion = '0.7.4+'
+        toolVersion = '0.8.6+'
     }
 
     shadowJar {
@@ -79,6 +79,9 @@ allprojects {
 }
 
 subprojects {
+    dependencies {
+        implementation "javax.xml.bind:jaxb-api:$jaxbVersion"
+    }
     test {
         // enable TestNG support (default is JUnit)
         useTestNG()
@@ -123,7 +126,7 @@ idea {
 }
 
 configurations {
-    integrationTestCompile.extendsFrom testCompile
+    integrationTestImplementation.extendsFrom testImplementation
     integrationTestRuntime.extendsFrom testRuntime
 }
 

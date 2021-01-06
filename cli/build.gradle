@@ -7,8 +7,9 @@ import java.time.Instant
 import static java.lang.System.getenv
 
 plugins {
-    id 'nebula.ospackage' version '3.4.0'
+    id 'nebula.ospackage' version '8.4.1'
     id "org.ajoberstar.grgit" version "1.4.2"
+    id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 apply plugin: 'application'
@@ -18,25 +19,30 @@ apply plugin: 'signing'
 mainClassName = 'com.schibsted.security.strongbox.cli.StrongboxCLI'
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls' ]
+}
+
 dependencies {
-    compile project(':sdk')
+    implementation project(':sdk')
 
-    compile "com.amazonaws:aws-java-sdk-sts:$awsVersion"
-    compile "com.amazonaws:aws-java-sdk-core:$awsVersion"
+    implementation "com.amazonaws:aws-java-sdk-sts:$awsVersion"
+    implementation "com.amazonaws:aws-java-sdk-core:$awsVersion"
 
-    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
-    compile "io.airlift:airline:$airlineVersion"
+    implementation "io.airlift:airline:$airlineVersion"
 
     runtime "org.slf4j:slf4j-jcl:$slf4jVersion"
 
-    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
-    testCompile "org.hamcrest:hamcrest-core:$hamcrestVersion"
-    testCompile ("org.testng:testng:$testngVersion") {
+    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testImplementation "org.hamcrest:hamcrest-core:$hamcrestVersion"
+    testImplementation ("org.testng:testng:$testngVersion") {
         exclude module : 'junit'
     }
 }

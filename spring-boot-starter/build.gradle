@@ -11,20 +11,20 @@ group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
 dependencies {
-    compile project(':sdk')
-    compile "org.springframework.boot:spring-boot:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
-    compile "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
-    compile "org.springframework:spring-context:$springVersion"
-    compile "org.springframework:spring-core:$springVersion"
-    compile "org.springframework:spring-beans:$springVersion"
-    compile "com.amazonaws:aws-java-sdk-core:$awsVersion"
-    compile "commons-logging:commons-logging:$apacheCommonsVersion"
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation project(':sdk')
+    implementation "org.springframework.boot:spring-boot:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    implementation "org.springframework.cloud:spring-cloud-context:$springCloudVersion"
+    implementation "org.springframework:spring-context:$springVersion"
+    implementation "org.springframework:spring-core:$springVersion"
+    implementation "org.springframework:spring-beans:$springVersion"
+    implementation "com.amazonaws:aws-java-sdk-core:$awsVersion"
+    implementation "commons-logging:commons-logging:$apacheCommonsVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
 
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.6'
-    testCompile "org.spockframework:spock-core:1.1-groovy-2.4-rc-3"
-    testRuntime "cglib:cglib-nodep:3.2.0"
+    testImplementation 'org.codehaus.groovy:groovy:2.5.14'
+    testImplementation "org.spockframework:spock-core:1.3-groovy-2.5"
+    testRuntimeOnly "cglib:cglib-nodep:3.3.0"
 }
 
 task sourceJar(type: Jar) {
