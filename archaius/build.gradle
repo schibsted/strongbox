@@ -11,16 +11,16 @@ apply plugin: 'com.jfrog.bintray'
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
 dependencies {
-    compile project(':sdk')
+    implementation project(':sdk')
 
-    compile "com.netflix.archaius:archaius-core:$archaiusVersion"
-    compile "com.google.guava:guava:$guavaVersion"
-    testCompile "commons-configuration:commons-configuration:$apacheCommonsVersion"
+    implementation "com.netflix.archaius:archaius-core:$archaiusVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+    testImplementation "commons-configuration:commons-configuration:$apacheCommonsVersion"
 
-    testCompile ("org.testng:testng:$testngVersion") {
+    testImplementation ("org.testng:testng:$testngVersion") {
         exclude module : 'junit'
     }
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }
 
 task sourceJar(type: Jar) {
@@ -93,9 +93,9 @@ publishing {
                 }
             }
         }
-        shaded(MavenPublication) {
+        shaded(MavenPublication) { publication ->
             artifactId = 'strongbox-' + project.name + '-shaded'
-            from components.shadow
+            from project.shadow.component(publication)
         }
     }
 }
