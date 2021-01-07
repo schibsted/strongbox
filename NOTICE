@@ -38,6 +38,10 @@ FasterXML Jackson Core
   LICENSE: Apache 2.0,
            https://github.com/FasterXML/jackson-core
 
+JAXB
+  LICENSE: GPL 2.0 with Class-path Exception
+           https://github.com/javaee/jaxb-v2/blob/master/LICENSE
+
 # TRANSITIVE DEPENDENCIES FOR THE STRONGBOX SDK
 
 Amazon Ion Java
@@ -82,6 +86,10 @@ Apache HttpComponents Core
   LICENSE: Apache 2.0,
            https://github.com/apache/httpcomponents-core/blob/master/LICENSE.txt
   NOTICE:  https://github.com/apache/httpcomponents-core/blob/master/NOTICE.txt
+
+Activation
+  LICENSE: GPL 2.0 with Class-path Exception
+	   https://github.com/javaee/activation/blob/master/LICENSE.txt
 
 # ADDITIONAL STRONGBOX CLI DEPENDENCIES
 
