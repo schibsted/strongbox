@@ -72,37 +72,6 @@ public class EncryptionPayload implements BestEffortShred {
         }
     }
 
-    public static byte[] computeSHA(State state, Optional<ZonedDateTime> notBefore, Optional<ZonedDateTime> notAfter) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-
-            messageDigest.update(state.asByte());
-            messageDigest.update(toByteArray(notBefore));
-            messageDigest.update(toByteArray(notAfter));
-
-            return messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new SerializationException("Failed to get SHA for encryption payload", e);
-        }
-    }
-
-    private static byte[] toByteArray(Optional<ZonedDateTime> date) {
-        ByteBuffer buffer = ByteBuffer.allocate(9);
-        if (date.isPresent()) {
-            buffer.put((byte)1);
-            buffer.putLong(FormattedTimestamp.epoch(date.get()));
-        } else {
-            buffer.put((byte)0);
-            buffer.putLong(0);
-        }
-        return buffer.array();
-    }
-
-    public static boolean verifyDataIntegrity(State state, Optional<ZonedDateTime> notBefore, Optional<ZonedDateTime> notAfter, byte[] sha) {
-        return Arrays.equals(computeSHA(state, notBefore, notAfter), sha);
-    }
-
-
     public byte[] toByteArray() {
         byte[] userData = extractByteArray(this.userData.map(UserData::asByteArray));
         byte[] comment = extractByteArray(this.comment.map(Comment::asByteArray));

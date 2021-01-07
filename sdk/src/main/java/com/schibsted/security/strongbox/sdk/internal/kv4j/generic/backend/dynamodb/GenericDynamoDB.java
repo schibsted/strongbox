@@ -369,9 +369,19 @@ public class GenericDynamoDB<Entry, Primary> implements GenericStore<Entry, Prim
         return expected;
     }
 
+    /**
+     * We can use the sha1 of the encryption payload as the key for the whole Entry because
+     * the encryption payload contains both the encrypted data as well as the encryption context
+     * which in turn contains the rest of the data in the Entry. This is due to how the AWS
+     * Encryption SDK is implemented. This implicit nature is unfortunate as it is not obvious
+     * and it relies on the AWS Encryption SDK to keep this behaviour.
+     *
+     * @param entry RawSecretEntry
+     * @return sha1 of entry
+     */
     private String sha(Entry entry) {
         RawSecretEntry rse = (RawSecretEntry) entry;
-        return Encoder.base64encode(rse.sha1OfEncryptionPayload());
+        return rse.sha1OfEncryptionPayload();
     }
 
     private Map<String, AttributeValueUpdate> createAttributes(Entry entry) {

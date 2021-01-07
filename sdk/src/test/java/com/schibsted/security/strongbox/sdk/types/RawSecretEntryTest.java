@@ -50,6 +50,11 @@ public class RawSecretEntryTest {
     }
 
     @Test
+    public void sha1() {
+        assertThat(rawSecretEntry.sha1OfEncryptionPayload(), is(Encoder.sha1(rawSecretEntry.encryptedPayload)));
+    }
+
+    @Test
     public void equals() {
         // Wrong type.
         assertFalse(rawSecretEntry.equals(secretIdentifier));

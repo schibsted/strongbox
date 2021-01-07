@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.schibsted.security.strongbox.sdk.internal.converter.Encoder;
 import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShred;
 import com.schibsted.security.strongbox.sdk.internal.encryption.BestEffortShredder;
 import com.schibsted.security.strongbox.sdk.exceptions.ParseException;
@@ -97,14 +98,13 @@ public final class RawSecretEntry implements BestEffortShred {
         }
     }
 
-    public byte[] sha1OfEncryptionPayload() {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-            messageDigest.update(encryptedPayload);
-            return messageDigest.digest();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Failed to compute sha1 of encryption payload", e);
-        }
+    /**
+     * This method is used for optimistic locking and not for security purposes
+     *
+     * @return sha1 of encryptedPayload
+     */
+    public String sha1OfEncryptionPayload() {
+        return Encoder.sha1(encryptedPayload);
     }
 
     @Override
