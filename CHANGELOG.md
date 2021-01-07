@@ -2,6 +2,9 @@
 
 [The released artifacts can be found in Bintray](https://bintray.com/strongbox)
 
+## 0.3.2 (2021-1-7)
+ - Support newer versions of Java by including jaxb-api
+
 ## 0.2.13 (2017-12-4)
 - Archaius derived property support
 - Automated homebrew release
