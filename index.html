@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Strongbox</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-icon.png?sanitize=true" />
+    <style>
+        .tab-content {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            background-color : #EEE;
+        }
+
+        .nav-tabs {
+            margin-bottom: 10;
+        }
+
+        .nav-tabs > a {
+            background-color:#FFF;
+            color: black
+        }
+
+        .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            background-color: #EEE;
+            border-bottom: 1px solid #EEE;
+        }
+
+        .nav-tabs .nav-link {
+
+            border-bottom: 1px solid #ddd;
+        }
+
+        pre {
+          background-color: #f8f9fa;
+          color: #bd4147;
+          padding: 10px;
+        }
+    </style>
+  </head>
+  <body>
+<div class="col-xs-12" style="height:20px;"></div>
+<div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills float-right">
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/schibsted/strongbox">GitHub<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/schibsted/strongbox/wiki">Wiki</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/schibsted/strongbox/issues">Issues</a>
+            </li>
+          </ul>
+        </nav>
+  <a href="https://github.com/schibsted/strongbox">
+    <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-logo.svg?sanitize=true" width="250">
+  </a>
+      </div>
+
+<div class="col-xs-12" style="height:20px;"></div>
+      <div class="alert alert-primary">
+        <b>March 2019: Strongbox is in low maintenance mode; it will continue to receive minor updates, but we recommended new users to check out <a href="https://aws.amazon.com/secrets-manager/">AWS Secrets Manager</a> (which was launched after Strongbox was open sourced), as well as <a href="https://www.vaultproject.io/">HashiCorp Vault</a>.</b>
+      </div>
+
+      <div class="jumbotron">
+        <h1 class="display-4">Secret Management made Easy</h1>
+        <p class="lead">Strongbox is a secret manager for AWS. Manage and access secrets via the GUI, CLI or Java SDK.</p>
+<div>
+        <p><a class="btn btn-lg btn-success" href="#install" role="button">Install</a></p>
+</div>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>Serverless</h4>
+          <p>Strongbox will allocate and configure the required AWS resources for you: a DynamoDB table, a KMS key and IAM policies. Strongbox itself is a client side library, so there are no services to maintain.</p>
+
+          <h4>Simple access model</h4>
+          <p>Grant read-only or admin access to a group of secrets for individual roles, users, or groups.</p>
+
+          <h4>Encryption</h4>
+          <p>Secrets and most of its metadata is encrypted using the AWS Encryption SDK and AWS KMS.</p>
+
+        </div>
+
+        <div class="col-lg-6">
+
+          <h4>Compatible with the AWS CLI</h4>
+          <p>Strongbox supports the normal ways of specifying credentials and configuration including <code>~/.aws/credentials</code>, <code>~/.aws/config</code>, environment variables, and MFA support.</p>
+          <p>In most cases you can use your existing config with Strongbox.</p>
+
+          <h4>Storage</h4>
+          <p>The default store is AWS DynamoDB, but files can also be used.</p>
+
+          <h4>Backup</h4>
+          <p>Secrets Groups can be backed up to encrypted files.</p>
+        </div>
+      </div>
+
+
+    </div>
+
+  <br/>
+
+  <div class="container">
+      <h3 id="comparison">Comparison</h3>
+
+      <table class="table">
+          <thead>
+          <tr>
+              <th></th>
+              <th>Strongbox</th>
+              <th>AWS Parameter Store</th>
+              <th>Hashicorp Vault<sup>1</sup></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+              <th scope="row">Auth</th>
+              <td>AWS IAM</td>
+              <td>AWS IAM</td>
+              <td>AWS IAM and others</td>
+          </tr>
+          <tr>
+              <th scope="row">Serverless</th>
+              <td>yes</td>
+              <td>yes</td>
+              <td>no</td>
+          </tr>
+          <tr>
+              <th scope="row">GUI</th>
+              <td>yes</td>
+              <td>yes</td>
+              <td>paid version</td>
+          </tr>
+          <tr>
+              <th scope="row">Max secret size</th>
+              <td>50kB</td>
+              <td>4kB</td>
+              <td>depends on backend, often more than 50kB</td>
+          </tr>
+          <tr>
+              <th scope="row">Max number of secrets</th>
+              <td>2<sup>64</sup></td>
+              <td>10 000</td>
+              <td>depends on backend, unlimited in theory</td>
+          </tr>
+          <tr>
+              <th scope="row">Supports secret versioning</th>
+              <td>yes</td>
+              <td>yes</td>
+              <td>no</td>
+          </tr>
+          <tr>
+              <th scope="row">Max number of secret versions</th>
+              <td>2<sup>64</sup></td>
+              <td>100 past values</td>
+              <td>N/A</td>
+          </tr>
+          <tr>
+              <th scope="row">Multiple active versions of secret</th>
+              <td>yes</td>
+              <td>no</td>
+              <td>N/A</td>
+          </tr>
+          <tr>
+              <th scope="row">Max decryption rate</th>
+              <td>bound by KMS (~1200 d/s)</td>
+              <td>bound by KMS (~1200 d/s)</td>
+              <td>depends on available resources</td>
+          </tr>
+          <tr>
+              <th scope="row">Comments</th>
+              <td>yes, encrypted</td>
+              <td>yes, unencrypted</td>
+              <td>no</td>
+          </tr>
+          <tr>
+              <th scope="row">Secret types</th>
+              <td>string, binary</td>
+              <td>string</td>
+              <td>string</td>
+          </tr>
+          <tr>
+              <th scope="row">Convenience support for file secrets</th>
+              <td>yes</td>
+              <td>no</td>
+              <td>no</td>
+          </tr>
+          <tr>
+              <th scope="row">Secret value expiration</th>
+              <td>yes</td>
+              <td>no</td>
+              <td>no<sup>2</sup></td>
+          </tr>
+          <tr>
+              <th scope="row">Encrypted metadata</th>
+              <td>partial<sup>3</sup> </td>
+              <td>no</td>
+              <td>partial</td>
+          </tr>
+          <tr>
+              <th scope="row">Padding to obfuscate length</th>
+              <td>yes</td>
+              <td>no</td>
+              <td>no</td>
+          </tr>
+          <tr>
+              <th scope="row">Encrypted backups</th>
+              <td>yes, using file backend</td>
+              <td>no</td>
+              <td>no</td>
+          </tr>
+          <tr>
+              <th scope="row">Cost (per month)</th>
+              <td>$1 per KMS key, from ~$1 per DynamoDB table</td>
+              <td>$1 per KMS key (can share 1 key across all secrets)</td>
+              <td>cost of running the open source version of Vault (there are also paid options)</td>
+          </tr>
+          </tbody>
+      </table>
+
+      <p>
+          <sup>1: Assuming Key/Value or Cubbyhole Secret Backends.</sup>
+          <br>
+          <sup>2: TTL is about telling the client how often they should refresh, not when the secret value itself expires.</sup>
+          <br>
+          <sup>3: Only the metadata that is needed for fast filtering is exposed, e.g. name, version, notBefore, notAfter, and state (enabled, disabled, compromised). All other data is padded and encrypted, including: comment, created/modified timestamps, and up to 50kB of user data.
+          The integrity of the data that is not encrypted is protected against tampering via the encryption context of the data that is encrypted.</sup>
+      </p>
+  </div>
+
+<br/>
+
+    <div role="main" class="container">
+
+    <h3>Usage</h3>
+
+    <h4 id="install">Install</h4>
+        <ul>
+            <li>
+                <b>Please note that Strongbox requires <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java/JavaFX 8</a>
+                    (we have some <a href="https://github.com/schibsted/strongbox/issues?q=is%3Aissue+is%3Aopen+label%3Ajava9">issues with Java 9</a>).</b>
+            </li>
+            <li>
+                <i>Prerequisite</i>: <code>~/.aws/credentials</code> needs to be configured, e.g. by installing the <a href="https://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-bundle-other-os">AWS CLI</a> and running <code>aws configure</code>
+            </li>
+            <li>
+                For details and troubleshooting please refer to the <a href="https://github.com/schibsted/strongbox/wiki/Install-the-CLI">Wiki</a>.
+            </li>
+        </ul>
+
+	<nav class="nav nav-tabs" id="myTab" role="tablist">
+	  <a class="nav-item nav-link active" id="nav-brew-tab" data-toggle="tab" href="#nav-brew" role="tab" aria-controls="nav-brew" aria-selected="true">Homebrew</a>
+	  <a class="nav-item nav-link" id="nav-rpm-tab" data-toggle="tab" href="#nav-rpm" role="tab" aria-controls="nav-rpm" aria-selected="false">RPM</a>
+	  <a class="nav-item nav-link" id="nav-deb-tab" data-toggle="tab" href="#nav-deb" role="tab" aria-controls="nav-deb" aria-selected="false">Deb</a>
+	  <a class="nav-item nav-link" id="nav-gradle-tab" data-toggle="tab" href="#nav-gradle" role="tab" aria-controls="nav-gradle" aria-selected="false">Gradle</a>
+	</nav>
+
+	<div class="tab-content" id="nav-tabContent">
+	  <div class="tab-pane show active" id="nav-brew" role="tabpanel" aria-labelledby="nav-brew-tab">
+          <i>Prerequisite: <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java/JavaFX</a></i>
+          <ol>
+              <li>
+                  <div>
+                      Add the <b>Strongbox tap</b>:
+                  </div>
+                  <pre>brew tap schibsted/homebrew-strongbox https://github.com/schibsted/homebrew-strongbox.git</pre>
+              </li>
+              <li>
+                  <div>
+                      Install <b>strongbox</b>:
+                  </div>
+                  <pre>brew install strongbox</pre>
+              </li>
+          </ol>
+      </div>
+	  <div class="tab-pane" id="nav-rpm" role="tabpanel" aria-labelledby="nav-rpm-tab">
+          <ol>
+              <li>
+                  <div>
+                      Install <b>strongbox-release</b> package, which will add Strongbox repository configuration files and GPG keys:
+                  </div>
+                  <pre>yum install https://github.com/schibsted/strongbox/raw/repos/strongbox-release-1-1.noarch.rpm</pre>
+              </li>
+              <li>
+                  <div>
+                  Install <b>strongbox-cli</b>:
+                  </div>
+                  <pre>yum install strongbox-cli</pre>
+              </li>
+          </ol>
+      </div>
+	  <div class="tab-pane" id="nav-deb" role="tabpanel" aria-labelledby="nav-deb-tab">
+          <ol>
+              <li>
+                  <div>
+                      Download and install <b>strongbox-release</b> package, which ships Strongbox repository configuration files and GPG keys:
+                  </div>
+                  <pre>wget -O /tmp/strongbox-release_1-1_all.deb https://github.com/schibsted/strongbox/raw/repos/strongbox-release_1-1_all.deb && dpkg -i /tmp/strongbox-release_1-1_all.deb</pre>
+              </li>
+              <li>
+                  <div>
+                      Install <b>strongbox-cli</b>:
+                  </div>
+                  <pre>apt-get update && apt-get install strongbox-cli</pre>
+              </li>
+          </ol>
+      </div>
+	  <div class="tab-pane" id="nav-gradle" role="tabpanel" aria-labelledby="nav-gradle-tab">
+
+          <ol>
+              <li>
+                  <div>
+                      Add <b>jcenter</b> to you repositories:
+                  </div>
+                  <pre>repositories {
+    jcenter()
+}</pre>
+              </li>
+              <li>
+                  <div>
+                      Add <b>strongbox-sdk</b> to you dependencies
+                  </div>
+                  <pre>compile 'com.schibsted.security:strongbox-sdk:0.3.2'</pre>
+              </li>
+          </ol>
+
+      </div>
+	</div>
+     </p>
+
+    <p>
+
+        <br/>
+
+    <h4>Create a Secrets Group</h4>
+
+        <p>
+            A Secrets Group is a collection of secrets that are managed together. When you create a Secrets Group,
+            <b>Strongbox will allocate</b> <b>a DynamoDB table</b>, <b>a KMS Encryption Key</b>, and <b>two IAM Policies</b>: one for read-only access to the Secrets Group, and one for admin access.
+        </p>
+        <p>
+            The KMS key will be used for envelope encryption using the AWS Encryption SDK. DynamoDB will store all the data, most of which is encrypted.
+            The IAM policies will limit the access to the DynamoDB table and the KMS key as appropriate for the respective access level.
+        </p>
+        <p>
+            <i>You can omit <code>--region &lt;region&gt;</code> if you have specified a region in <code>~/.aws/config</code>. You can specify an <b>AWS profile</b> using <code>--profile &lt;profile&gt;</code>, otherwise the <b>default</b> profile will be used.
+               <a href="https://github.com/schibsted/strongbox/wiki/MFA">Assume role and MFA</a> config can also be specified in <code>~/.aws/config</code>.</i>
+        </p>
+
+	<nav class="nav nav-tabs" id="myTab2" role="tablist">
+	  <a class="nav-item nav-link active" id="nav-sg-gui" data-toggle="tab" href="#sg-gui" role="tab" aria-controls="sg-gui" aria-selected="true">GUI</a>
+	  <a class="nav-item nav-link" id="nav-sg-cli" data-toggle="tab" href="#sg-cli" role="tab" aria-controls="sg-cli" aria-selected="false">CLI</a>
+	  <a class="nav-item nav-link" id="nav-sg-sdk" data-toggle="tab" href="#sg-sdk" role="tab" aria-controls="sg-sdk" aria-selected="false">Java SDK</a>
+	</nav>
+
+	<div class="tab-content" id="nav-tabContent2">
+	  <div class="tab-pane show active" id="sg-gui" role="tabpanel" aria-labelledby="nav-sg-gui">
+          <p>
+              Launch via the CLI:
+          </p>
+          <p>
+              <pre>strongbox --region eu-west-1 gui</pre>
+          </p>
+          <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/create-secrets-group.png?sanitize=true" class="img-fluid">
+      </div>
+	  <div class="tab-pane" id="sg-cli" role="tabpanel" aria-labelledby="nav-sg-cli">
+          <pre>strongbox --region eu-west-1 group create team.project</pre>
+      </div>
+	  <div class="tab-pane" id="sg-sdk" role="tabpanel" aria-labelledby="nav-sg-sdk">
+              <pre><pre>SecretsGroupManager sgm = new DefaultSecretsGroupManager();
+sgm.create(new SecretsGroupIdentifier(Region.EU_WEST_1, "team.project"));</pre></pre>
+      </div>
+	</div>
+
+
+     </p>
+
+    <br/>
+
+    <p>
+
+    <h4>Create a Secret</h4>
+        <p>
+            You can create a secret from an existing value, from a file or by generating one using KMS.
+            When you create a secret it will be encrypted using the KMS Encryption SDK and stored in DynamoDB.
+        </p>
+
+        <nav class="nav nav-tabs" id="myTab3" role="tablist">
+            <a class="nav-item nav-link active" id="nav-cs-gui" data-toggle="tab" href="#cs-gui" role="tab" aria-controls="cs-gui" aria-selected="true">GUI</a>
+            <a class="nav-item nav-link" id="nav-cs-cli" data-toggle="tab" href="#cs-cli" role="tab" aria-controls="cs-cli" aria-selected="false">CLI</a>
+            <a class="nav-item nav-link" id="nav-cs-sdk" data-toggle="tab" href="#cs-sdk" role="tab" aria-controls="cs-sdk" aria-selected="false">Java SDK</a>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent3">
+            <div class="tab-pane show active" id="cs-gui" role="tabpanel" aria-labelledby="nav-cs-gui">
+                <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/create-secret.png?sanitize=true" class="img-fluid">
+            </div>
+            <div class="tab-pane" id="cs-cli" role="tabpanel" aria-labelledby="nav-cs-cli">
+                <p>
+                    The following command will prompt you to enter the secret. You can also pipe or redirect into the same command.
+                </p>
+                <p>
+                    <pre>strongbox --region eu-west-1 secret create --group team.project --name MySecret --value-from-stdin</pre>
+                </p>
+            </div>
+            <div class="tab-pane" id="cs-sdk" role="tabpanel" aria-labelledby="nav-cs-sdk">
+              <pre>SecretsGroupManager sgm = new DefaultSecretsGroupManager();
+SecretsGroup sg = sgm.get(new SecretsGroupIdentifier(Region.EU_WEST_1, "team.project"));
+sg.create(new NewSecretEntry(new SecretIdentifier("MySecret"), new SecretValue("1234", SecretType.OPAQUE), State.ENABLED));</pre>
+            </div>
+        </div>
+
+    </p>
+
+        <br/>
+
+    <p>
+
+    <h4>Grant Read-only Access to a Secrets Group</h4>
+
+        <p>
+            Read-only access is provided on a per Secrets Group basis. To help avoid misconfiguration Strongbox generates a suitable read-only policy for you.
+            Access is granted by attaching to this policy, either using one of AWS' methods of doing so, or by using Strongbox as shown below.
+        </p>
+
+        <nav class="nav nav-tabs" id="myTab4" role="tablist">
+            <a class="nav-item nav-link active" id="nav-ra-gui" data-toggle="tab" href="#ra-gui" role="tab" aria-controls="ra-gui" aria-selected="true">GUI</a>
+            <a class="nav-item nav-link" id="nav-ra-cli" data-toggle="tab" href="#ra-cli" role="tab" aria-controls="ra-cli" aria-selected="false">CLI</a>
+            <a class="nav-item nav-link" id="nav-ra-sdk" data-toggle="tab" href="#ra-sdk" role="tab" aria-controls="ra-sdk" aria-selected="false">Java SDK</a>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent4">
+            <div class="tab-pane show active" id="ra-gui" role="tabpanel" aria-labelledby="nav-ra-gui">
+                <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/grant-access.png?sanitize=true" class="img-fluid">
+            </div>
+            <div class="tab-pane" id="ra-cli" role="tabpanel" aria-labelledby="nav-ra-cli">
+                <pre>strongbox --region eu-west-1 group attach-readonly --group team.project --type role my-role</pre>
+            </div>
+            <div class="tab-pane" id="ra-sdk" role="tabpanel" aria-labelledby="nav-ra-sdk">
+              <pre>SecretsGroupManager sgm = new DefaultSecretsGroupManager();
+SecretsGroupIdentifier group = new SecretsGroupIdentifier(Region.EU_WEST_1, "team.project");
+Principal principal = new Principal(PrincipalType.ROLE, "my-role");
+sgm.attachReadOnly(group, principal);</pre>
+            </div>
+        </div>
+
+    </p>
+        <br/>
+
+        <p>
+    <h4>Fetch a Secret</h4>
+
+        <p>
+            Secrets are read from DynamoDB and then decrypted using the AWS Encryption SDK.
+            In addition to the examples below there are also integrations with <a href="https://github.com/schibsted/strongbox/tree/master/spring-boot-starter">Spring Boot</a>
+            and <a href="https://github.com/schibsted/strongbox-examples/tree/master/archaius">Archaius</a>.
+        </p>
+
+        <nav class="nav nav-tabs" id="myTab5" role="tablist">
+            <a class="nav-item nav-link active" id="nav-rs-cli" data-toggle="tab" href="#rs-cli" role="tab" aria-controls="rs-cli" aria-selected="true">CLI</a>
+            <a class="nav-item nav-link" id="nav-rs-sdk" data-toggle="tab" href="#rs-sdk" role="tab" aria-controls="rs-sdk" aria-selected="false">Java SDK</a>
+            <a class="nav-item nav-link" id="nav-rs-gui" data-toggle="tab" href="#rs-gui" role="tab" aria-controls="rs-gui" aria-selected="false">GUI</a>
+        </nav>
+
+        <div class="tab-content" id="nav-tabContent5">
+            <div class="tab-pane show active" id="rs-cli" role="tabpanel" aria-labelledby="nav-rs-cli">
+                <p>
+                    Get the most recent secret
+                </p>
+                <p>
+                    <pre>strongbox --region eu-west-1 secret get --group team.project --name MySecret</pre>
+                </p>
+
+                <p>
+                    Get a specific version of a secret
+                </p>
+                <p>
+                    <pre>strongbox --region eu-west-1 secret get --group team.project --name MySecret --version 1</pre>
+                </p>
+
+                <p>
+                    Redirect the value to a file (works for both string and binary secrets)
+                </p>
+                <p>
+                    <pre>strongbox --region eu-west-1 secret get --group team.project --name MySecret > my.file</pre>
+                </p>
+                <p>
+                    For more examples see the <a href="https://github.com/schibsted/strongbox/wiki/Fetch-Secrets-with-the-CLI">Wiki</a>.
+                </p>
+            </div>
+            <div class="tab-pane" id="rs-sdk" role="tabpanel" aria-labelledby="nav-rs-sdk">
+                <p>
+                    Get the Secrets Group
+                </p>
+                <pre>SecretsGroupIdentifier group = new SecretsGroupIdentifier(Region.EU_WEST_1, "team.project");
+SimpleSecretsGroup sg = new DefaultSimpleSecretsGroup(group);</pre>
+                <p>
+                    Get the most recent version of a String secret
+                </p>
+                <p>
+                  <pre>sg.getStringSecret("MySecret");</pre>
+                </p>
+                <p>
+                    Get a specific version of a String secret
+                </p>
+                <p>
+                    <pre>sg.getStringSecret("MySecret", 1);</pre>
+                </p>
+                <p>
+                    Get a specific version of a binary secret
+                </p>
+                <p>
+                    <pre>sg.getBinarySecret("MySecret", 1);</pre>
+                </p>
+                <p>
+                    Get all String secrets
+                </p>
+                <p>
+                    <pre>List&lt;StringSecretEntry&gt; all = sg.getAllStringSecrets();</pre>
+                </p>
+                <p>
+                    For a complete example see the <a href="https://github.com/schibsted/strongbox-examples/tree/master/sdk">example repo</a>.
+                </p>
+                <p>
+                    For an overview of additional functionality see the Javadoc for <a href="https://schibsted.github.io/strongbox/javadoc/sdk/com/schibsted/security/strongbox/sdk/SecretsGroup.html">SecretsGroup</a>
+                    and <a href="https://schibsted.github.io/strongbox/javadoc/sdk/com/schibsted/security/strongbox/sdk/SimpleSecretsGroup.html">SimpleSecretsGroup</a>.
+                </p>
+            </div>
+            <div class="tab-pane" id="rs-gui" role="tabpanel" aria-labelledby="nav-rs-gui">
+                <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/read-secret.png?sanitize=true" class="img-fluid">
+            </div>
+        </div>
+
+
+    </p>
+
+      <footer class="footer">
+<div class="text-center">
+        <p>&copy; Schibsted Products & Technology AS 2017</p>
+</div>
+      </footer>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  </body>
+</html>
