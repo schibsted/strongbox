@@ -58,6 +58,7 @@ deploy:
     file: "bintray/descriptor-deb.json"
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
+    skip_cleanup: true
     on:
       tags: true
       branch: master
@@ -66,6 +67,7 @@ deploy:
     file: "bintray/descriptor-rpm.json"
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
+    skip_cleanup: true
     on:
       tags: true
       branch: master
@@ -74,6 +76,7 @@ deploy:
     file: "bintray/descriptor-tar.json"
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
+    skip_cleanup: true
     on:
       tags: true
       branch: master
