@@ -24,11 +24,12 @@ jobs:
       run: echo $JAVA_HOME
     - name: HOME
       run: echo $HOME
+    - name: PATH
+      run: echo $PATH      
     - name: JAVA_HOME
       run: java -version
       env:
           JAVA_HOME: $HOME/corretto-8/
-          PATH: $JAVA_HOME/bin:%PATH
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
