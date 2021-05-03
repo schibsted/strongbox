@@ -17,7 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install JDK
-      run: source ./script/installjdk
+      run: chmod +x ./script/installjdk    
+    - name: Install JDK
+      run: ./script/installjdk
     - name: JAVA_HOME
       run: echo $JAVA_HOME
     - name: HOME
