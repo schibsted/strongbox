@@ -1,5 +1,5 @@
 CWD=$PWD
-BASE=${HOME}/corretto-8/
+BASE=./corretto-8/
 FILE_NAME=amazon-corretto-8-x64-linux-jdk.tar.gz
 
 if [ -d $BASE ]; then
