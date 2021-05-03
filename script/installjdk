@@ -6,6 +6,7 @@ if [ -d $BASE ]; then
   rm -rf $BASE
 fi
 
+echo $BASE
 mkdir $BASE
 cd $BASE
 
