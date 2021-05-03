@@ -16,12 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Grant execute permission for gradlew
-      run: ls ./script/
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./script/installjdk
-    - name: Grant execute permission for gradlew
-      run: ./script/installjdk
+    - name: Install JDK
+      run: source ./script/installjdk
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
