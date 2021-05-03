@@ -20,6 +20,8 @@ jobs:
       run: source ./script/installjdk
     - name: JAVA_HOME
       run: echo $JAVA_HOME
+    - name: HOME
+      run: echo $HOME      
     - name: JAVA_HOME
       run: java -version
     - name: Grant execute permission for gradlew
