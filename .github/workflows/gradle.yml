@@ -21,7 +21,9 @@ jobs:
     - name: JAVA_HOME
       run: echo $JAVA_HOME
     - name: HOME
-      run: echo $HOME      
+      run: echo $HOME
+    - name: ls java
+      run: ls ./corretto-8/
     - name: JAVA_HOME
       run: java -version
     - name: Grant execute permission for gradlew
