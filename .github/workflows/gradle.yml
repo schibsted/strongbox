@@ -35,5 +35,5 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
       env:
-          JAVA_HOME: $HOME/corretto-8/
+          JAVA_HOME: /home/runner/corretto-8/
 
