@@ -32,3 +32,6 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+      env:
+          JAVA_HOME: $HOME/corretto-8/
+          PATH: $JAVA_HOME/bin:%PATH
