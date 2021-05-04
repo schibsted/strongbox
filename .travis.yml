@@ -39,14 +39,6 @@ env:
     - secure: "cfS4wv0NyyRpm7ttRKYK4bd6Sd1LO0LQc0NrgJbarm9DjtV88LxEwQPbPq+qEEoH6F/GGlBbp/oFdjg+Mf/rflTzJxaHqz1bAEOxdT6bE/C6lWHuhrVyKoyUG+ovRtRiGZjbPAsBKIEZRKk6EHXvRRZiJKerbl5aKXwRvfVuD9k16cXxUiHUJxoL3rndjxP3kBgW9lK/RmudO83ZCX2ped32mcqNhIr1iZZCvSVJk4eB7RiZ/+KZiGv3/8OsXV1z0em8lz8rcrVdGm9IgKiiq2rZ7vJ6/vo68q0hL1XqH2o/TLPoKdsbsndmcM+7/JZbz71iMK5DM9bwPGq24EtzqyJ0bPuYxbl3fUv57PpBwSP/pLlp+eTlwpwvcoZMe3RDtlFduIdeIzl3pqOIkajBNad8kDA12UxM0UCCkdvsldVOxFa3sG2BWR4UkMNUgMKckFyPw2RBDgVrcpuW5fcES6BuQX8y6K6Bb8Zo0M5XBHF3Igpt0Ed6X+ZwbTpazkeW4YlIDujGQ45KNvKnGmJVOyhjzRtOt+4Wb7nZpIYG0xkqdCRhARa5qMjuksl2GM6xb1RhLBRthX/iKdGYsXzqJxrQIBez8FS6C4eRsP4/2kiBJMazf39J0miO8clVMAgsdQ4XUemgtqPc/NdAqbFxYlS5NQ4d5k0ST+6MPkyN3+s="
 
 deploy:
-  # Documentation
-  - provider: pages
-    skip_cleanup: true
-    github_token: $GITHUB_TOKEN
-    local_dir: build/gh-pages/
-    on:
-      tags: true
-      branch: master
   # Maven
   - provider: script
     script: ./gradlew -info bintrayUpload
@@ -77,13 +69,6 @@ deploy:
     user: $BINTRAY_USER
     key: $BINTRAY_KEY
     skip_cleanup: true
-    on:
-      tags: true
-      branch: master
-  # Homebrew
-  - provider: script
-    skip_cleanup: true
-    script: script/deploy-homebrew-formula.sh
     on:
       tags: true
       branch: master
