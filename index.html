@@ -65,7 +65,7 @@
 
 <div class="col-xs-12" style="height:20px;"></div>
       <div class="alert alert-primary">
-        <b>March 2019: Strongbox is in low maintenance mode; it will continue to receive minor updates, but we recommended new users to check out <a href="https://aws.amazon.com/secrets-manager/">AWS Secrets Manager</a> (which was launched after Strongbox was open sourced), as well as <a href="https://www.vaultproject.io/">HashiCorp Vault</a>.</b>
+        <b>May 2021: Strongbox should be considered deprecated (it will continue to receive minor updates). We recommended to check out <a href="https://aws.amazon.com/secrets-manager/">AWS Secrets Manager</a> (which was launched after Strongbox was open sourced), as well as <a href="https://www.vaultproject.io/">HashiCorp Vault</a>.</b>
       </div>
 
       <div class="jumbotron">
@@ -245,10 +245,6 @@
     <h4 id="install">Install</h4>
         <ul>
             <li>
-                <b>Please note that Strongbox requires <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java/JavaFX 8</a>
-                    (we have some <a href="https://github.com/schibsted/strongbox/issues?q=is%3Aissue+is%3Aopen+label%3Ajava9">issues with Java 9</a>).</b>
-            </li>
-            <li>
                 <i>Prerequisite</i>: <code>~/.aws/credentials</code> needs to be configured, e.g. by installing the <a href="https://docs.aws.amazon.com/cli/latest/userguide/installing.html#install-bundle-other-os">AWS CLI</a> and running <code>aws configure</code>
             </li>
             <li>
@@ -257,59 +253,23 @@
         </ul>
 
 	<nav class="nav nav-tabs" id="myTab" role="tablist">
-	  <a class="nav-item nav-link active" id="nav-brew-tab" data-toggle="tab" href="#nav-brew" role="tab" aria-controls="nav-brew" aria-selected="true">Homebrew</a>
-	  <a class="nav-item nav-link" id="nav-rpm-tab" data-toggle="tab" href="#nav-rpm" role="tab" aria-controls="nav-rpm" aria-selected="false">RPM</a>
-	  <a class="nav-item nav-link" id="nav-deb-tab" data-toggle="tab" href="#nav-deb" role="tab" aria-controls="nav-deb" aria-selected="false">Deb</a>
-	  <a class="nav-item nav-link" id="nav-gradle-tab" data-toggle="tab" href="#nav-gradle" role="tab" aria-controls="nav-gradle" aria-selected="false">Gradle</a>
+	  <a class="nav-item nav-link active" id="nav-brew-tab" data-toggle="tab" href="#nav-brew" role="tab" aria-controls="nav-brew" aria-selected="true">CLI</a>
+	  <a class="nav-item nav-link" id="nav-gradle-tab" data-toggle="tab" href="#nav-gradle" role="tab" aria-controls="nav-gradle" aria-selected="false">SDK</a>
 	</nav>
 
 	<div class="tab-content" id="nav-tabContent">
 	  <div class="tab-pane show active" id="nav-brew" role="tabpanel" aria-labelledby="nav-brew-tab">
-          <i>Prerequisite: <a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">Java/JavaFX</a></i>
           <ol>
               <li>
                   <div>
-                      Add the <b>Strongbox tap</b>:
+		      If you want to use the GUI, use <a href="https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html">Corretto 8</a></i> as the JDK.
+	              Otherwise <a href="https://adoptopenjdk.net/">JDK 8 or newer</a> should work.
                   </div>
-                  <pre>brew tap schibsted/homebrew-strongbox https://github.com/schibsted/homebrew-strongbox.git</pre>
               </li>
               <li>
                   <div>
-                      Install <b>strongbox</b>:
+			  Get the latest tarball from <a href="https://github.com/schibsted/strongbox/releases">releases</a>.
                   </div>
-                  <pre>brew install strongbox</pre>
-              </li>
-          </ol>
-      </div>
-	  <div class="tab-pane" id="nav-rpm" role="tabpanel" aria-labelledby="nav-rpm-tab">
-          <ol>
-              <li>
-                  <div>
-                      Install <b>strongbox-release</b> package, which will add Strongbox repository configuration files and GPG keys:
-                  </div>
-                  <pre>yum install https://github.com/schibsted/strongbox/raw/repos/strongbox-release-1-1.noarch.rpm</pre>
-              </li>
-              <li>
-                  <div>
-                  Install <b>strongbox-cli</b>:
-                  </div>
-                  <pre>yum install strongbox-cli</pre>
-              </li>
-          </ol>
-      </div>
-	  <div class="tab-pane" id="nav-deb" role="tabpanel" aria-labelledby="nav-deb-tab">
-          <ol>
-              <li>
-                  <div>
-                      Download and install <b>strongbox-release</b> package, which ships Strongbox repository configuration files and GPG keys:
-                  </div>
-                  <pre>wget -O /tmp/strongbox-release_1-1_all.deb https://github.com/schibsted/strongbox/raw/repos/strongbox-release_1-1_all.deb && dpkg -i /tmp/strongbox-release_1-1_all.deb</pre>
-              </li>
-              <li>
-                  <div>
-                      Install <b>strongbox-cli</b>:
-                  </div>
-                  <pre>apt-get update && apt-get install strongbox-cli</pre>
               </li>
           </ol>
       </div>
