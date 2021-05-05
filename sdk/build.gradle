@@ -6,6 +6,8 @@ import static java.lang.System.getenv
 
 apply plugin: 'jacoco'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'signing'
+apply plugin: 'maven'
 
 group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
@@ -73,7 +75,21 @@ task jacocoIntegrationTestReport(type: JacocoReport) {
 }
 
 task sourceJar(type: Jar) {
+    classifier = 'sources'
     from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives javadocJar, sourceJar
+}
+
+signing {
+    sign configurations.archives
 }
 
 shadowJar {
@@ -115,6 +131,51 @@ publishing {
             from components.shadow
         }
     }
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Strongbox SDK'
+        packaging 'jar'
+        description 'A secret management solution'
+        url 'https://github.com/schibsted/strongbox'
+
+        scm {
+          connection 'scm:git:git://github.com/schibsted/strongbox.git'
+          developerConnection 'scm:git:ssh://github.com:schibsted/strongbox.git'
+          url 'https://github.com/schibsted/strongbox'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            name 'Stian Kristoffersen'
+            email 'strongbox@schibsted.com'
+            organization 'Schibsted'
+            organizationUrl 'https://schibsted.com'
+          }
+        }
+      }
+    }
+  }
 }
 
 javadoc {
