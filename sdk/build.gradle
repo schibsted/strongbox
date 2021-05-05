@@ -5,7 +5,6 @@
 import static java.lang.System.getenv
 
 apply plugin: 'jacoco'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'signing'
 apply plugin: 'maven'
 
@@ -180,21 +179,4 @@ uploadArchives {
 
 javadoc {
     exclude("**/internal/**")
-}
-
-bintray {
-    user = getenv('BINTRAY_USER')
-    key = getenv('BINTRAY_KEY')
-    publications = ['mavenJava']
-    publish = true
-    pkg {
-        repo = 'strongbox-maven'
-        name = 'strongbox-sdk'
-        userOrg = 'strongbox'
-        licenses = ['Apache-2.0']
-        websiteUrl = 'https://github.com/schibsted/strongbox'
-        issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
-        vcsUrl = 'https://github.com/schibsted/strongbox.git'
-        publicDownloadNumbers = false
-    }
 }

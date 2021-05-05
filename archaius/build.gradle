@@ -6,8 +6,6 @@ group = projectGroup
 
 import static java.lang.System.getenv
 
-apply plugin: 'com.jfrog.bintray'
-
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
 dependencies {
@@ -97,22 +95,5 @@ publishing {
             artifactId = 'strongbox-' + project.name + '-shaded'
             from components.shadow
         }
-    }
-}
-
-bintray {
-    user = getenv('BINTRAY_USER')
-    key = getenv('BINTRAY_KEY')
-    publications = ['mavenJava']
-    publish = true
-    pkg {
-        repo = 'strongbox-maven'
-        name = 'strongbox-archaius'
-        userOrg = 'strongbox'
-        licenses = ['Apache-2.0']
-        websiteUrl = 'https://github.com/schibsted/strongbox'
-        issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
-        vcsUrl = 'https://github.com/schibsted/strongbox.git'
-        publicDownloadNumbers = false
     }
 }
