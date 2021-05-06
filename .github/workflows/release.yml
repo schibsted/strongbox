@@ -1,0 +1,41 @@
+name: Create release of CLI
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install JDK
+      run: ./script/installjdk
+    - name: Build with Gradle
+      run: ./gradlew cliTar
+      env:
+          JAVA_HOME: /home/runner/corretto-8/
+          GITHUB_REF: ${{ github.ref }}
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cli/build/distributions/strongbox-cli.tar.gz
+        asset_name: strongbox-cli.tar.gz
+        asset_content_type: application/x-gzip
