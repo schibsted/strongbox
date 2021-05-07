@@ -16,7 +16,7 @@ apply plugin: 'nebula.deb'
 apply plugin: 'signing'
 
 mainClassName = 'com.schibsted.security.strongbox.cli.StrongboxCLI'
-version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
+version = getenv('GITHUB_REF') ? getenv('GITHUB_REF').replace("refs/tags/","") : "0.0.1";
 
 dependencies {
     compile project(':sdk')
@@ -118,7 +118,7 @@ task cliRpm(type: Rpm, dependsOn: "installDist") {
 task cliTar(type: Tar, dependsOn: "installDist") {
     from(installDist)
     into('strongbox-cli')
-    archiveName = 'strongbox-cli-' + version + '.tar.gz'
+    archiveName = 'strongbox-cli.tar.gz'
 
     extension = 'tar.gz'
     compression = Compression.GZIP

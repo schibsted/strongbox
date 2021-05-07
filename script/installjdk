@@ -17,3 +17,4 @@ cd $CWD
 
 export JAVA_HOME=$BASE
 export PATH=$JAVA_HOME/bin:$PATH
+echo "$JAVA_HOME/bin" >> $GITHUB_PATH

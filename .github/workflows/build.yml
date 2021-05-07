@@ -1,0 +1,21 @@
+name: Build gradle project
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install JDK
+      run: ./script/installjdk
+    - name: Build with Gradle
+      run: ./gradlew -PossrhUsername="" -PossrhPassword="" test
+      env:
+          JAVA_HOME: /home/runner/corretto-8/
