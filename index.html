@@ -271,6 +271,18 @@
 			  Get the latest tarball from <a href="https://github.com/schibsted/strongbox/releases">releases</a>.
                   </div>
               </li>
+	      <li>
+                  <div>
+			  Extract
+                  </div>
+		  <pre>tar xf strongbox-cli.tar.gz</pre>
+              </li>
+	      <li>
+                  <div>
+			  Run
+                  </div>
+		  <pre>strongbox-cli/bin/strongbox</pre>
+              </li>	
           </ol>
       </div>
 	  <div class="tab-pane" id="nav-gradle" role="tabpanel" aria-labelledby="nav-gradle-tab">
@@ -278,17 +290,17 @@
           <ol>
               <li>
                   <div>
-                      Add <b>jcenter</b> to you repositories:
+                      Add <b>Maven Central</b> to you repositories:
                   </div>
                   <pre>repositories {
-    jcenter()
+    mavenCentral()
 }</pre>
               </li>
               <li>
                   <div>
                       Add <b>strongbox-sdk</b> to you dependencies
                   </div>
-                  <pre>compile 'com.schibsted.security:strongbox-sdk:0.3.2'</pre>
+                  <pre>compile 'com.schibsted.security:strongbox-sdk:0.4.0'</pre>
               </li>
           </ol>
 
