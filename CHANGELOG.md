@@ -1,6 +1,13 @@
 # Changelog
 
-[The released artifacts can be found in Bintray](https://bintray.com/strongbox)
+- [CLI in Releases](https://github.com/schibsted/strongbox/releases)
+- [Java SDK in Maven Central](https://search.maven.org/artifact/com.schibsted.security/strongbox-sdk)
+
+## 0.4.0 (2021-5-7) - Bintray Sunset
+- Publish Java SDK to [Maven Central](https://search.maven.org/artifact/com.schibsted.security/strongbox-sdk) instead of [JCenter](https://mvnrepository.com/artifact/com.schibsted.security/strongbox-sdk?repo=jcenter)
+- Stop publishing Archaius and Spring Boot Java libraries
+- Stop publishing RPM and Debian packages 
+- Drop support for Homebrew
 
 ## 0.3.2 (2021-1-7)
  - Support newer versions of Java by including jaxb-api

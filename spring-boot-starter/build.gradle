@@ -4,7 +4,6 @@
 import static java.lang.System.getenv
 
 apply plugin: 'jacoco'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'groovy'
 
 group = projectGroup
@@ -93,22 +92,5 @@ publishing {
                 }
             }
         }
-    }
-}
-
-bintray {
-    user = getenv('BINTRAY_USER')
-    key = getenv('BINTRAY_KEY')
-    publications = ['mavenJava']
-    publish = true
-    pkg {
-        repo = 'strongbox-maven'
-        name = 'strongbox-spring-boot-starter'
-        userOrg = 'strongbox'
-        licenses = ['Apache-2.0']
-        websiteUrl = 'https://github.com/schibsted/strongbox'
-        issueTrackerUrl = 'https://github.com/schibsted/strongbox/issues'
-        vcsUrl = 'https://github.com/schibsted/strongbox.git'
-        publicDownloadNumbers = false
     }
 }
