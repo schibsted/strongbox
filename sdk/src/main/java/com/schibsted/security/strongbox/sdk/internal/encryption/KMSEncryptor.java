@@ -6,13 +6,14 @@ package com.schibsted.security.strongbox.sdk.internal.encryption;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.encryptionsdk.AwsCrypto;
+import com.amazonaws.encryptionsdk.CommitmentPolicy;
 import com.amazonaws.encryptionsdk.CryptoAlgorithm;
 import com.amazonaws.encryptionsdk.CryptoResult;
 import com.amazonaws.encryptionsdk.exception.AwsCryptoException;
 import com.amazonaws.encryptionsdk.kms.KmsMasterKey;
 import com.amazonaws.encryptionsdk.kms.KmsMasterKeyProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.RegionUtils;
+import com.amazonaws.services.kms.AWSKMSClient;
+import com.amazonaws.services.kms.AWSKMSClientBuilder;
 import com.schibsted.security.strongbox.sdk.exceptions.UnlimitedEncryptionNotSetException;
 import com.schibsted.security.strongbox.sdk.internal.interfaces.ManagedResource;
 import com.schibsted.security.strongbox.sdk.types.ClientConfiguration;
@@ -60,7 +61,13 @@ public class KMSEncryptor implements Encryptor, ManagedResource {
                                                SecretsGroupIdentifier groupIdentifier,
                                                EncryptionStrength encryptionStrength) {
         KMSManager manager = KMSManager.fromCredentials(awsCredentials, clientConfiguration, groupIdentifier);
-        return new KMSEncryptor(manager, awsCredentials, clientConfiguration, groupIdentifier, new AwsCrypto(), encryptionStrength);
+
+        AwsCrypto awsCrypto = AwsCrypto.builder()
+                .withCommitmentPolicy(CommitmentPolicy.ForbidEncryptAllowDecrypt)
+                .withMaxEncryptedDataKeys(1)
+                .build();
+
+        return new KMSEncryptor(manager, awsCredentials, clientConfiguration, groupIdentifier, awsCrypto, encryptionStrength);
     }
 
     /**
@@ -174,8 +181,17 @@ public class KMSEncryptor implements Encryptor, ManagedResource {
 
     protected KmsMasterKeyProvider getProvider() {
         if (!prov.isPresent()) {
-            Region region = RegionUtils.getRegion(groupIdentifier.region.getName());
-            prov = Optional.of(new KmsMasterKeyProvider(awsCredentials, region, transformAndVerifyOrThrow(clientConfiguration), getKeyArn()));
+            AWSKMSClientBuilder kmsClientBuilder = AWSKMSClient.builder()
+                    .withCredentials(awsCredentials)
+                    .withRegion(groupIdentifier.region.getName())
+                    .withClientConfiguration(transformAndVerifyOrThrow(clientConfiguration));
+
+            KmsMasterKeyProvider provider = KmsMasterKeyProvider.builder()
+                    .withClientBuilder(kmsClientBuilder)
+                    .withDefaultRegion(groupIdentifier.region.getName())
+                    .buildStrict(getKeyArn());
+
+            prov = Optional.of(provider);
         }
         return prov.get();
     }

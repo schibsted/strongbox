@@ -48,8 +48,8 @@ allprojects {
         airlineVersion = '0.8'
         apacheCommonsVersion = '1.2'
         archaiusVersion = '0.7.5'
-        awsEncryptionVersion = '0.0.1'
-        awsVersion = '1.11.124'
+        awsEncryptionVersion = '2.4.0'
+        awsVersion = '1.12.395'
         // can't update guava to latest version until airline is fixed, see https://github.com/airlift/airline/pull/53
         guavaVersion = '20.0'
         hamcrestVersion = '1.3'
