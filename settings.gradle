@@ -4,6 +4,3 @@
 
 include 'sdk'
 include 'cli'
-include 'archaius'
-include 'repo'
-include 'spring-boot-starter'
