@@ -3,6 +3,9 @@
 - [CLI in Releases](https://github.com/schibsted/strongbox/releases)
 - [Java SDK in Maven Central](https://search.maven.org/artifact/com.schibsted.security/strongbox-sdk)
 
+## 0.5.0 (2023-2-15) - Security Update
+- Upgrade AWS Encryption SDK dependency due to [GHSA-55xh-53m6-936r](https://github.com/aws/aws-encryption-sdk-java/security/advisories/GHSA-55xh-53m6-936r)
+
 ## 0.4.0 (2021-5-7) - Bintray Sunset
 - Publish Java SDK to [Maven Central](https://search.maven.org/artifact/com.schibsted.security/strongbox-sdk) instead of [JCenter](https://mvnrepository.com/artifact/com.schibsted.security/strongbox-sdk?repo=jcenter)
 - Stop publishing Archaius and Spring Boot Java libraries

@@ -8,11 +8,9 @@
   <a href="https://snyk.io/test/github/schibsted/strongbox"><img src="https://snyk.io/test/github/schibsted/strongbox/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/schibsted/strongbox" style="max-width:100%;"></a>
 </p>
 
-**May 2021: Strongbox should be considered deprecated (it will continue to receive minor updates). We recommended to check out [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) (which was launched after Strongbox was open sourced), as well as [HashiCorp Vault](https://www.vaultproject.io/). Changes related to the [Bintray Sunset](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/) is covered in [#91](https://github.com/schibsted/strongbox/issues/91).**
+**Strongbox is not actively maintained. Alternatives include [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) (which was launched after Strongbox was open sourced).**
 
 Strongbox is a CLI/GUI and SDK to manage, store, and retrieve secrets (access tokens, encryption keys, private certificates, etc). Strongbox is a client-side convenience layer on top of AWS KMS, DynamoDB and IAM. It manages the AWS resources for you and configure them in a secure way.
-
-Strongbox has been used in production since mid-2016 and is now used extensively within Schibsted. 
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-building-blocks.png" width="70%">
