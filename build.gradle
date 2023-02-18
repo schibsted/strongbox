@@ -30,7 +30,7 @@ allprojects {
     apply plugin: 'nebula.lint'
 
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
     archivesBaseName = 'strongbox-' + project.name
@@ -51,9 +51,9 @@ allprojects {
         awsEncryptionVersion = '2.4.0'
         awsVersion = '1.12.395'
         // can't update guava to latest version until airline is fixed, see https://github.com/airlift/airline/pull/53
-        guavaVersion = '20.0'
+        guavaVersion = '31.1-jre'
         hamcrestVersion = '1.3'
-        jacksonVersion = '2.8.9'
+        jacksonVersion = '2.14.2'
         jaxbVersion = '2.3.1'
         mockitoVersion = '2.8.47'
         slf4jVersion = '1.7.25'
