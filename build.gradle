@@ -6,15 +6,12 @@ import static java.lang.System.getenv
 
 buildscript {
     repositories {
-        jcenter()
+        gradlePluginPortal()
     }
 
     dependencies {
         //Check for the latest version here: https://plugins.gradle.org/plugin/com.jfrog.artifactory
-        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0"
-        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
-        classpath "com.netflix.nebula:gradle-lint-plugin:7.9.1"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "com.netflix.nebula:gradle-lint-plugin:16.26.0"
     }
 }
 
@@ -24,9 +21,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
     apply plugin: 'maven-publish'
-    apply plugin: "com.jfrog.artifactory"
     apply plugin: 'jacoco'
-    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'nebula.lint'
 
     repositories {
@@ -67,21 +62,11 @@ allprojects {
         // Broken in newer versions. Need this version for now.
         toolVersion = '0.7.4+'
     }
-
-    shadowJar {
-        relocate 'com.amazonaws', 'shaded.com.amazonaws'
-        relocate 'com.fasterxml', 'shaded.com.fasterxml'
-        relocate 'com.google', 'shaded.com.google'
-        relocate 'org.bouncycastle', 'shaded.org.bouncycastle'
-        relocate 'org.slf4j', 'shaded.org.slf4j'
-        relocate 'org.apache', 'shaded.org.apache'
-        relocate 'org.joda', 'shaded.org.joda'
-    }
 }
 
 subprojects {
     dependencies {
-        compile "javax.xml.bind:jaxb-api:$jaxbVersion"
+        implementation("javax.xml.bind:jaxb-api:$jaxbVersion")
     }
     test {
         // enable TestNG support (default is JUnit)
