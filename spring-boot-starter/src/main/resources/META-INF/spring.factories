@@ -1,3 +1,0 @@
-org.springframework.cloud.bootstrap.BootstrapConfiguration=\
-com.schibsted.security.strongbox.springboot.StrongboxBootstrapConfiguration,\
-com.schibsted.security.strongbox.springboot.StrongboxPropertySourceLocator
