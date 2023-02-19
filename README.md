@@ -5,7 +5,6 @@
 </p>
 <p align="center">
   <a href="https://github.com/schibsted/strongbox/actions/workflows/build.yml"><img src="https://github.com/schibsted/strongbox/actions/workflows/build.yml/badge.svg"></a>
-  <a href="https://snyk.io/test/github/schibsted/strongbox"><img src="https://snyk.io/test/github/schibsted/strongbox/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/schibsted/strongbox" style="max-width:100%;"></a>
 </p>
 
 **Strongbox is not actively maintained. Alternatives include [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) (which was launched after Strongbox was open sourced).**
