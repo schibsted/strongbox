@@ -12,6 +12,7 @@ buildscript {
     dependencies {
         //Check for the latest version here: https://plugins.gradle.org/plugin/com.jfrog.artifactory
         classpath "com.netflix.nebula:gradle-lint-plugin:16.26.0"
+	classpath "org.owasp:dependency-check-gradle:8.1.0"
     }
 }
 
@@ -23,6 +24,7 @@ allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'jacoco'
     apply plugin: 'nebula.lint'
+    apply plugin: "org.owasp.dependencycheck"
 
     repositories {
         mavenCentral()
