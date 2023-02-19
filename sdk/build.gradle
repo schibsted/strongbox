@@ -11,6 +11,17 @@ apply plugin: 'maven'
 group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
+
+sourceSets {
+    integrationTest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+
+        java.srcDir file('src/integrationTest/java')
+        resources.srcDir file('src/integrationTest/resources')
+    }
+}
+
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion")
@@ -33,21 +44,9 @@ dependencies {
         exclude module : 'junit'
     }
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
-}
 
-configurations {
-    integrationTestCompile.extendsFrom testCompile
-    integrationTestRuntime.extendsFrom testRuntime
-}
-
-sourceSets {
-    integrationTest {
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
-
-        java.srcDir file('src/integrationTest/java')
-        resources.srcDir file('src/integrationTest/resources')
-    }
+    integrationTestImplementation configurations.implementation
+    integrationTestImplementation configurations.testImplementation
 }
 
 task integrationTest(type: Test) {
