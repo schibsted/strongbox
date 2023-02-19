@@ -1,6 +1,9 @@
+set -e
+
 CWD=$PWD
 BASE=${HOME}/corretto-8/
-FILE_NAME=amazon-corretto-8-x64-linux-jdk.tar.gz
+FILE_NAME=amazon-corretto-11-x64-linux-jdk.tar.gz
+FILE_NAME_SIG=$FILE_NAME.sig
 
 if [ -d $BASE ]; then
   rm -rf $BASE
@@ -10,6 +13,11 @@ mkdir $BASE
 cd $BASE
 
 wget https://corretto.aws/downloads/latest/$FILE_NAME
+wget https://corretto.aws/downloads/latest/$FILE_NAME_SIG
+
+gpg --import $CWD/script/$FILE_NAME.pub
+gpg --verify $FILE_NAME_SIG $FILE_NAME
+
 tar -xf $FILE_NAME --strip-components 1 
 rm $FILE_NAME
 
