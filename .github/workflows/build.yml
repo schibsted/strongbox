@@ -16,6 +16,6 @@ jobs:
     - name: Install JDK
       run: ./script/installjdk
     - name: Build with Gradle
-      run: ./gradlew -PossrhUsername="" -PossrhPassword="" test
+      run: ./gradlew -PossrhUsername="" -PossrhPassword="" test dependencyCheckAnalyze
       env:
           JAVA_HOME: /home/runner/corretto-8/
