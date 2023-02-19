@@ -9,6 +9,15 @@ import static java.lang.System.getenv
 plugins {
     id 'nebula.ospackage' version '3.4.0'
     id "org.ajoberstar.grgit" version "1.4.2"
+    id 'org.openjfx.javafxplugin' version '0.0.13' apply false
+}
+
+if (JavaVersion.current().java11Compatible) {
+    apply plugin: 'org.openjfx.javafxplugin'
+    javafx {
+        version = "11.0.2"
+        modules = [ 'javafx.controls' ]
+    }
 }
 
 apply plugin: 'application'
