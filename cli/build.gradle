@@ -7,7 +7,6 @@ import java.time.Instant
 import static java.lang.System.getenv
 
 plugins {
-    id 'nebula.ospackage' version '3.4.0'
     id "org.ajoberstar.grgit" version "1.4.2"
     id 'org.openjfx.javafxplugin' version '0.0.13' apply false
 }
@@ -21,7 +20,6 @@ if (JavaVersion.current().java11Compatible) {
 }
 
 apply plugin: 'application'
-apply plugin: 'nebula.deb'
 apply plugin: 'signing'
 
 mainClassName = 'com.schibsted.security.strongbox.cli.StrongboxCLI'
@@ -66,36 +64,6 @@ installDist {
     }
 }
 
-ospackage {
-    packageName = "strongbox-cli"
-
-    user = 'root'
-    from(installDist)
-    into '/opt/strongbox-cli'
-    prefix '/opt'
-
-    ext.repo = Grgit.open(project.file('..'))
-    epoch = Instant.now().epochSecond
-    release = "${repo.head().abbreviatedId}"
-    println "Inferred release: $release"
-
-    release = "1"
-
-    url = "https://github.com/schibsted/strongbox"
-    vendor = "Schibsted Products & Technology AS"
-    packageDescription = "This package contains GUI and CLI tools to manage and fetch secrets."
-    summary = "Strongbox is a secrets management solution using Amazon Web Services."
-
-    os = LINUX
-
-    if(getenv('GPG_SIGNING_KEY_PASSPHRASE') && project.hasProperty('signing.keyId') && project.hasProperty('signing.secretKeyRingFile')) {
-            signingKeyId project.getProperty('signing.keyId')
-            signingKeyPassphrase getenv('GPG_SIGNING_KEY_PASSPHRASE')
-            signingKeyRingFile file(project.getProperty('signing.secretKeyRingFile'))
-            println "Signing package with key ID " + signingKeyId
-    }
-}
-
 jar {
     manifest {
         attributes("Implementation-Version": version)
@@ -108,20 +76,6 @@ tasks.withType(Jar) {
         include 'LICENSE', 'NOTICE'
         into 'META-INF'
     }
-}
-
-task cliDeb(type: Deb, dependsOn: "installDist") {
-    requires('java8-runtime-headless')
-
-    link('/usr/bin/strongbox', '/opt/strongbox-cli/bin/strongbox', 0550)
-}
-
-task cliRpm(type: Rpm, dependsOn: "installDist") {
-    arch = X86_64
-
-    requires('java-1.8.0')
-
-    link('/usr/bin/strongbox', '/opt/strongbox-cli/bin/strongbox', 0550)
 }
 
 task cliTar(type: Tar, dependsOn: "installDist") {
