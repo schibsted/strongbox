@@ -87,6 +87,7 @@ artifacts {
 }
 
 signing {
+    required { version != '0.0.1' }
     sign configurations.archives
 }
 
