@@ -64,6 +64,12 @@ allprojects {
         // Broken in newer versions. Need this version for now.
         toolVersion = '0.8.6+'
     }
+
+    dependencyCheck {
+      cve {
+        startYear = 2021
+      }
+    }
 }
 
 subprojects {
