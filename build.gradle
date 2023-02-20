@@ -12,16 +12,19 @@ buildscript {
     dependencies {
         //Check for the latest version here: https://plugins.gradle.org/plugin/com.jfrog.artifactory
         classpath "com.netflix.nebula:gradle-lint-plugin:16.26.0"
-	classpath "org.owasp:dependency-check-gradle:8.1.0"
+        classpath "org.owasp:dependency-check-gradle:8.1.0"
+        classpath "io.github.gradle-nexus:publish-plugin:1.1.0"
     }
 }
 
+group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
+
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
-    apply plugin: 'maven-publish'
     apply plugin: 'jacoco'
     apply plugin: 'nebula.lint'
     apply plugin: "org.owasp.dependencycheck"
@@ -126,4 +129,13 @@ configurations {
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username.set(ossrhUsername)
+            password.set(ossrhPassword)
+        }
+    }
 }

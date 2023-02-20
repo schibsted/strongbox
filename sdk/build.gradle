@@ -6,11 +6,15 @@ import static java.lang.System.getenv
 
 apply plugin: 'jacoco'
 apply plugin: 'signing'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 group = projectGroup
 version = getenv('TRAVIS_TAG') ? getenv('TRAVIS_TAG') : "0.0.1";
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 
 sourceSets {
     integrationTest {
@@ -41,7 +45,7 @@ dependencies {
     testImplementation("org.hamcrest:hamcrest-all:$hamcrestVersion")
     testImplementation("org.hamcrest:hamcrest-core:$hamcrestVersion")
     testImplementation("org.testng:testng:$testngVersion") {
-        exclude module : 'junit'
+        exclude module: 'junit'
     }
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
 
@@ -68,27 +72,8 @@ jacocoTestReport {
 }
 
 task jacocoIntegrationTestReport(type: JacocoReport) {
-   sourceSets sourceSets.main
-   executionData integrationTest
-}
-
-task sourceJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-artifacts {
-    archives javadocJar, sourceJar
-}
-
-signing {
-    required { version != '0.0.1' }
-    sign configurations.archives
+    sourceSets sourceSets.main
+    executionData integrationTest
 }
 
 tasks.withType(Jar) {
@@ -103,69 +88,35 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId 'strongbox-' + project.name
             from components.java
-            artifact sourceJar {
-                classifier "sources"
-            }
-            pom.withXml {
-                asNode().with {
-                    appendNode('name', 'Strongbox SDK')
-                    appendNode('description', 'A secret management solution')
-                    appendNode('url', 'https://github.com/schibsted/strongbox')
-                    appendNode('licenses').with {
-                        appendNode('license').with {
-                            appendNode('name', 'Apache-2.0')
-                            appendNode('url', 'https://github.com/schibsted/strongbox/blob/master/LICENSE')
-                        }
+            pom {
+                name.set("Strongbox SDK")
+                description.set("A secret management solution")
+                url.set("https://github.com/schibsted/strongbox")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
+                }
+                developers {
+                    developer {
+                        name.set("Stian Kristoffersen")
+                        email.set("strongbox@schibsted.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/schibsted/strongbox.git")
+                    developerConnection.set("scm:git:ssh://github.com:schibsted/strongbox.git")
+                    url.set("https://github.com/schibsted/strongbox")
                 }
             }
         }
     }
 }
 
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
-
-      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
-
-      pom.project {
-        name 'Strongbox SDK'
-        packaging 'jar'
-        description 'A secret management solution'
-        url 'https://github.com/schibsted/strongbox'
-
-        scm {
-          connection 'scm:git:git://github.com/schibsted/strongbox.git'
-          developerConnection 'scm:git:ssh://github.com:schibsted/strongbox.git'
-          url 'https://github.com/schibsted/strongbox'
-        }
-
-        licenses {
-          license {
-            name 'The Apache License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          }
-        }
-
-        developers {
-          developer {
-            name 'Stian Kristoffersen'
-            email 'strongbox@schibsted.com'
-            organization 'Schibsted'
-            organizationUrl 'https://schibsted.com'
-          }
-        }
-      }
-    }
-  }
+signing {
+    required { version != '0.0.1' }
+    sign publishing.publications.mavenJava
 }
 
 javadoc {
