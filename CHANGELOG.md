@@ -3,6 +3,18 @@
 - [CLI in Releases](https://github.com/schibsted/strongbox/releases)
 - [Java SDK in Maven Central](https://search.maven.org/artifact/com.schibsted.security/strongbox-sdk)
 
+## 0.6.0 (2023-2-20)
+- Security upgrade of FasterXML and Guava
+- The Strongbox SDK signatures (.asc) use SHA-512 rarther than SHA-1
+- The Strongbox GUI joins the SDK/CLI in running on recent JDK/JRE versions as well as Corretto 8
+
+Houskeeping:
+- The JDK used for development and releases has been upgraded from 8 to 11, still targeting 8
+- Gradle has been upgraded from 3.2.1 to 8.0.1 (Java 8 -> Java 19)
+- Gradle verification of dependencies (GPG/SHA-512)
+- OWASP Dependency Check Gradle plugin
+- './gradlew build' works out of the box
+
 ## 0.5.0 (2023-2-15) - Security Update
 - Upgrade AWS Encryption SDK dependency due to [GHSA-55xh-53m6-936r](https://github.com/aws/aws-encryption-sdk-java/security/advisories/GHSA-55xh-53m6-936r)
 
