@@ -66,7 +66,7 @@ installDist {
 
 jar {
     manifest {
-        attributes("Implementation-Version": version)
+        attributes("Implementation-Version": this.version)
         Grgit.hashCode();
     }
 }
@@ -81,9 +81,9 @@ tasks.withType(Jar) {
 task cliTar(type: Tar, dependsOn: "installDist") {
     from(installDist)
     into('strongbox-cli')
-    archiveName = 'strongbox-cli.tar.gz'
+    archiveFileName.set("strongbox-cli.tar.gz")
+    archiveExtension.set("tar.gz")
 
-    extension = 'tar.gz'
     compression = Compression.GZIP
 }
 

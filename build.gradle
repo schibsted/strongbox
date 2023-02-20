@@ -11,7 +11,7 @@ buildscript {
 
     dependencies {
         //Check for the latest version here: https://plugins.gradle.org/plugin/com.jfrog.artifactory
-        classpath "com.netflix.nebula:gradle-lint-plugin:16.26.0"
+        classpath "com.netflix.nebula:gradle-lint-plugin:18.0.3"
         classpath "org.owasp:dependency-check-gradle:8.1.0"
         classpath "io.github.gradle-nexus:publish-plugin:1.1.0"
     }
