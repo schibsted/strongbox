@@ -26,6 +26,11 @@ sourceSets {
     }
 }
 
+configurations {
+    integrationTestImplementation.extendsFrom(implementation)
+    integrationTestImplementation.extendsFrom(testImplementation)
+}
+
 dependencies {
     implementation("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion")
@@ -48,9 +53,6 @@ dependencies {
         exclude module: 'junit'
     }
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
-
-    integrationTestImplementation configurations.implementation
-    integrationTestImplementation configurations.testImplementation
 }
 
 task integrationTest(type: Test) {
@@ -66,8 +68,9 @@ task integrationTest(type: Test) {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
-        html.enabled false
+        xml.required = true
+        csv.required = false
+        html.required = false
     }
 }
 
