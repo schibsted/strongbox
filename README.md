@@ -3,11 +3,8 @@
     <img src="https://raw.githubusercontent.com/schibsted/strongbox/images/strongbox-logo.png">
   </a>
 </p>
-<p align="center">
-  <a href="https://github.com/schibsted/strongbox/actions/workflows/build.yml"><img src="https://github.com/schibsted/strongbox/actions/workflows/build.yml/badge.svg"></a>
-</p>
 
-**Strongbox is not actively maintained. Alternatives include [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) (which was launched after Strongbox was open sourced).**
+**Strongbox is archived. Alternatives include [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) (which was launched after Strongbox was open sourced).**
 
 Strongbox is a CLI/GUI and SDK to manage, store, and retrieve secrets (access tokens, encryption keys, private certificates, etc). Strongbox is a client-side convenience layer on top of AWS KMS, DynamoDB and IAM. It manages the AWS resources for you and configure them in a secure way.
 
